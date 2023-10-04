@@ -1,20 +1,18 @@
 #!/usr/bin/env python3
 
-
-from dataclasses import dataclass
 import requests
 import time
 import json
 import os
-from threading import Lock
-from  datetime import datetime
-try:
-    import udi_interface
-    logging = udi_interface.LOGGER
-    Custom = udi_interface.Custom
-except ImportError:
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
+#from threading import Lock
+#from  datetime import datetime
+#try:
+#    import udi_interface
+#    logging = udi_interface.LOGGER
+#    Custom = udi_interface.Custom
+#except ImportError:
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 import time
 from requests_oauth2 import OAuth2BearerToken
@@ -138,13 +136,12 @@ class netatmoCloudApi(object):
 
 '''
         
-
 class NetatmoCloudAccess(object):
-    def __init__(self,  client_ID, client_SECRET, scope ):
+    def __init__(self, client_ID, client_SECRET, scope ):
        
-        netatmo_URL = "https://api.netatmo.com"
-        tokenURL = "/oauth2/token"
-        authorizeURL = "/oauth2/authorize?"
+        netatmo_URL = 'https://api.netatmo.com'
+        tokenURL = '/oauth2/token'
+        authorizeURL = '/oauth2/authorize?'
 
         self.tokenURL =   netatmo_URL + tokenURL
         self.authorizeURL =   netatmo_URL + authorizeURL
@@ -177,12 +174,17 @@ class NetatmoCloudAccess(object):
     def request_new_token(self):
         try:
             now = int(time.time())
-            response = requests.post( self.tokenURL,
-                    data={"grant_type": "client_credentials",
-                        "client_id" : self.uaID,
-                        "client_secret" : self.secID },
-                )
             
+            #response = requests.post( self.tokenURL,
+            #        data={"grant_type": "client_credentials",
+            #            "client_id" : self.uaID,
+            #            "client_secret" : self.secID },
+            #    )
+            
+            data = []
+            data['client_id'] = self.client_ID
+
+
             temp = response.json()
             self.token = temp
             self.token['expirationTime'] = int(self.token['expires_in'] + now )
