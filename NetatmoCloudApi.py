@@ -16,12 +16,10 @@ except ImportError:
 
 class netatmoCloudApi(object):
 
-    def __init__(self, refreshToken, client_id, client_secret):
+    def __init__(self, refreshToken):
         logging.debug('netatmoCloudApi')
         self.tokenInfo = None
         self.Rtoken = refreshToken
-        self.client_id  = client_id
-        self.client_secret = client_secret
         self.tokenExpMargin = 600 #10min
         self.netatmo_URL = "https://api.netatmo.com"
         self.AUTHORIZE = "/oauth2/authorize?"
@@ -88,9 +86,10 @@ class netatmoCloudApi(object):
         if self.Rtoken:
             data = {}
             data['grant_type'] = 'refresh_token'
-            data['client_id'] = self.client_id
-            data['client_secret'] = self.client_secret
-            data['refresh_token']= self.Rtoken
+            data['client_id'] = 'ownerapi'
+            data['client_secret'] = 'ownerapi'
+            
+            data['refresh_token']=self.Rtoken
             data['scope']='openid email offline_access'      
             resp = requests.post('https://auth.netatmo.com/oauth2/v3/token', headers= self.Header, data=data)
             S = json.loads(resp.text)

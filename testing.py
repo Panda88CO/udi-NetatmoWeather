@@ -8,11 +8,7 @@ import sys
 from datetime import datetime
 #from requests_MgcedMoauth2 import OAuth2BearerToken
 #from TeslaToken import Token
-from TeslaPWApi  import TeslaPWApi
-#from powerwall1 import Powerwall
 
-from TeslaInfo import tesla_info
-#from ISYprofile import isyHandling
 from datetime import date
 PG_CLOUD_ONLY = False
 PC = True
@@ -20,11 +16,15 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 LOGGER = logging.getLogger('testLOG')
 
+import NetatmoInit
 
 #import udi_interface
 #LOGGER = udi_interface.LOGGER
 
-
+clientID = "5ef8eee368946e70f67dfb62"
+clientSecret = "rXMozY2Ze9l6r9oUg6ZsDbBHpMarb6GTnNx"
+scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
+             'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
 #from TeslaLocalAPI import TeslaLocalAPI
 
 #testAPI = TeslaLocalAPI('christian.olgaard@gmail.com','coe123COE', '192.168.1.151' )
