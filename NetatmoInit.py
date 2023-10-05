@@ -3,7 +3,7 @@
 import requests
 import time
 import json
-import os
+
 #from threading import Lock
 #from  datetime import datetime
 #try:
@@ -136,8 +136,15 @@ class netatmoCloudApi(object):
 
 '''
         
+clientID = "65177da9bb1985366904e2ec"
+clientSecret = "vQ5C1NyOUw26JJnXfNGWrC5SZdjz4clTBgOJZp1SxWgvt"
+scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
+             'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
+scopelist1 = [ 'read_magellan', 'write_megellan']
+token = '590aba75ee261c2b548bf4c0|6f86bab8767a77e853205dd74ab5a823'
+
 class NetatmoCloudAccess(object):
-    def __init__(self, client_ID, client_SECRET, scope ):
+    def __init__(self, client_ID, client_SECRET, scope, token ):
        
         netatmo_URL = 'https://api.netatmo.com'
         tokenURL = '/oauth2/token'
@@ -148,9 +155,15 @@ class NetatmoCloudAccess(object):
         
         self.client_ID = client_ID
         self.client_secret = client_SECRET
-
+        self.Rtoken = token
+        self.tokenInfo = None
+        self.state_str = 'random_str'
         self.code = None
-        self.scope = scope
+        self.scope_str = ''
+        for str in scope:
+            self.scope_str = self.scope_str + ' ' + str
+
+        #self.scope = scope.split()
         self.redirectURL = 'https://example.com/callback-url'
 
 
@@ -181,33 +194,89 @@ class NetatmoCloudAccess(object):
             #            "client_secret" : self.secID },
             #    )
             
-            data = []
+            data = {}
             data['client_id'] = self.client_ID
+            #data['client_id'] = 'Netatmo ISY nodeserver'
+            data['client_secret'] = self.client_secret
+            data['scope'] = self.scope_str
+            data['state'] = self.state_str
+            #data['redirect_uri'] = self.redirectURL 
+            headers1 = {}
+            headers1['Content-type'] = 'application/json'
+            headers1 = {'Accept':'application/json'}
+            response = requests.post( self.authorizeURL, data=json.dumps(data), headers=headers1)
 
 
             temp = response.json()
             self.token = temp
-            self.token['expirationTime'] = int(self.token['expires_in'] + now )
+            #self.token['expirationTime'] = int(self.token['expires_in'] + now )
             return(True)
 
         except Exception as e:
             logging.debug('Exeption occcured during request_new_token : {}'.format(e))
             return(False)
 
+
+    def netatmo_refresh_token(self):
+        dateNow = int(time.time())
+        S = {}
+        if self.Rtoken:
+            data = {}
+            data['grant_type'] = 'refresh_token'
+            data['client_id'] = self.client_ID
+            data['client_secret'] = self.client_secret
+            
+            data['refresh_token']=self.Rtoken
+            headers1 = {}
+            headers1['Content-type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+            #data['scope']='openid email offline_access'      
+            resp = requests.post(self.tokenURL , headers= headers1, data=data)
+            S = json.loads(resp.text)
+            S['created_at'] = dateNow
+            if 'refresh_token' in S:
+                self.Rtoken = S['refresh_token']
+                #S['created_at'] = dateNow
+                #dataFile = open('./refreshToken.txt', 'w')
+                #dataFile.write( self.Rtoken)
+                #dataFile.close()
+
+            dataFile = open('./refreshToken.txt', 'w')
+            dataFile.write( self.Rtoken)
+            dataFile.close()
+            self.tokenInfo = S
+       
+            time.sleep(1)
+
+        #logging.debug('netatmo_refresh_token: {}'.format(S))
+        return S
+
+
+
+
+
+
+
+
+
+
+
+
+
     def refresh_token(self):
         try:
             logging.info('Refreshing Token ')
             now = int(time.time())
+
             response = requests.post( self.tokenURL,
                 data={"grant_type": "refresh_token",
-                    "client_id" :  self.uaID,
+                    "client_id" :  self.client_ID,
                     "refresh_token":self.token['refresh_token'],
                     }
             )
             temp =  response.json()
             if temp['access_token'] != self.token['access_token'] :
                 self.token = temp
-                self.client.username_pw_set(username=self.token['access_token'], password=None)
+                #self.client.username_pw_set(username=self.token['access_token'], password=None)
                 #need to check if device tokens change with new access token
             self.token['expirationTime'] = int(self.token['expires_in'] + now )
             return(True)
@@ -217,7 +286,7 @@ class NetatmoCloudAccess(object):
             return(self.request_new_token())
 
     def get_access_token(self):
-        self.tokenLock.acquire()
+        #self.tokenLock.acquire()
         now = int(time.time())
         if self.token == None:
             self.request_new_token()
@@ -226,13 +295,13 @@ class NetatmoCloudAccess(object):
         #    if now > self.token['expirationTime']: #we lost the token
         #        self.request_new_token()
         #    else:
-        self.tokenLock.release() 
+        #self.tokenLock.release() 
 
                 
     def is_token_expired (self, accessToken):
         return(accessToken == self.token['access_token'])
         
-
+    '''
     def retrieve_device_list(self):
         try:
             data= {}
@@ -271,7 +340,8 @@ class NetatmoCloudAccess(object):
     def getDeviceList (self):
         return(self.deviceList)
 
+    '''
 
-
+test = NetatmoCloudAccess(clientID, clientSecret, scopelist1, token)
         
-
+test.netatmo_refresh_token()
