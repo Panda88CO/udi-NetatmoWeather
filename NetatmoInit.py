@@ -197,12 +197,12 @@ class NetatmoCloudAccess(object):
             data = {}
             data['client_id'] = self.client_ID
             #data['client_id'] = 'Netatmo ISY nodeserver'
-            data['client_secret'] = self.client_secret
+            #data['client_secret'] = self.client_secret
             data['scope'] = self.scope_str
             data['state'] = self.state_str
             #data['redirect_uri'] = self.redirectURL 
             headers1 = {}
-            headers1['Content-type'] = 'application/json'
+            headers1['Content-type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
             headers1 = {'Accept':'application/json'}
             response = requests.post( self.authorizeURL, data=json.dumps(data), headers=headers1)
 
