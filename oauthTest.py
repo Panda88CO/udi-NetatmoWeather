@@ -18,44 +18,58 @@ except ImportError:
     logging.basicConfig(level=logging.DEBUG)
 
 from NetatmoOauth import NetatmoCloud
-from nodes.controller import Controller
+#from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
 
 polyglot = None
 myNetatmo = None
 controller = None
-
-def configDoneHandler():
-    # We use this to discover devices, or ask to authenticate if user has not already done so
-    polyglot.Notices.clear()
-
-    accessToken = NetatmoCloud.getAccessToken()
-
-    if accessToken is None:
-        logging.info('Access token is not yet available. Please authenticate.')
-        polyglot.Notices['auth'] = 'Please initiate authentication'
-        return
-
-    controller.discoverDevices()
-
-def oauthHandler(token):
-    # When user just authorized, we need to store the tokens
-    NetatmoCloud.oauthHandler(token)
-
-    # Then proceed with device discovery
-    configDoneHandler()
+class NetatmoController(udi_interface.Node):
+    def __init__(self, polyglot, primary, address, name, myNetatmo):
+        super(NetatmoController, self).__init__(polyglot, primary, address, name)
+        logging.setLevel(10)
+        self.poly = polyglot
+        self.myNetatmo = myNetatmo
+        self.poly.subscribe(polyglot.STOP, self.stopHandler)
+        self.poly.subscribe(polyglot.CUSTOMDATA, self.myNetatmo.customDataHandler)
+        self.poly.subscribe(polyglot.CUSTOMNS, self.myNetatmo.customNsHandler)
+        self.poly.subscribe(polyglot.CUSTOMPARAMS, self.myNetatmo.customParamsHandler)
+        self.poly.subscribe(polyglot.OAUTH, self.oauthHandler)
+        self.poly.subscribe(polyglot.CONFIGDONE, self.configDoneHandler)
+        self.poly.subscribe(polyglot.ADDNODEDONE, self.addNodeDoneHandler)
 
 
-def addNodeDoneHandler(node):
-    # We will automatically query the device after discovery
-    controller.addNodeDoneHandler(node)
+    def configDoneHandler(self):
+        # We use this to discover devices, or ask to authenticate if user has not already done so
+        self.poly.Notices.clear()
 
-def stopHandler():
-    # Set nodes offline
-    for node in polyglot.nodes():
-        if hasattr(node, 'setOffline'):
-            node.setOffline()
-    polyglot.stop()
+        accessToken = NetatmoCloud.getAccessToken()
+
+        if accessToken is None:
+            logging.info('Access token is not yet available. Please authenticate.')
+            polyglot.Notices['auth'] = 'Please initiate authentication'
+            return
+
+        self.poly.discoverDevices()
+
+    def oauthHandler(self, token):
+        # When user just authorized, we need to store the tokens
+        self.myNetatmo.oauthHandler(token)
+
+        # Then proceed with device discovery
+        self.configDoneHandler()
+
+
+    def addNodeDoneHandler(self, node):
+        # We will automatically query the device after discovery
+        self.poly.addNodeDoneHandler(node)
+
+    def stopHandler(self):
+        # Set nodes offline
+        for node in polyglot.nodes():
+            if hasattr(node, 'setOffline'):
+                node.setOffline()
+        polyglot.stop()
 
 id = 'controller'
 
@@ -66,7 +80,10 @@ drivers = [
 if __name__ == "__main__":
     try:
         logging.info ('starting')
-        polyglot = Interface([])
+        logging.info('Starting TeslaEV Controller')
+        polyglot = udi_interface.Interface([])
+        #polyglot.start('0.2.31')
+
         polyglot.start({ 'version': '0.0.1', 'requestId': True })
 
         # Show the help in PG3 UI under the node's Configuration option
@@ -79,17 +96,10 @@ if __name__ == "__main__":
         myNetatmo= NetatmoCloud(polyglot)
 
         # then you need to create the controller node
-        controller = Controller(polyglot, 'controller', 'controller', 'Netatmo', myNetatmo)
+        NetatmoController(polyglot, 'controller', 'controller', 'Netatmo', myNetatmo)
 
         # subscribe to the events we want
         # polyglot.subscribe(polyglot.POLL, pollHandler)
-        polyglot.subscribe(polyglot.STOP, stopHandler)
-        polyglot.subscribe(polyglot.CUSTOMDATA, myNetatmo.customDataHandler)
-        polyglot.subscribe(polyglot.CUSTOMNS, myNetatmo.customNsHandler)
-        polyglot.subscribe(polyglot.CUSTOMPARAMS, myNetatmo.customParamsHandler)
-        polyglot.subscribe(polyglot.OAUTH, oauthHandler)
-        polyglot.subscribe(polyglot.CONFIGDONE, configDoneHandler)
-        polyglot.subscribe(polyglot.ADDNODEDONE, addNodeDoneHandler)
 
         # We can start receive events
         polyglot.ready()
