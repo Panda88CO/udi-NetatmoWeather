@@ -65,6 +65,7 @@ drivers = [
 
 if __name__ == "__main__":
     try:
+        logging.info ('starting')
         polyglot = Interface([])
         polyglot.start({ 'version': '1.0.0', 'requestId': True })
 
