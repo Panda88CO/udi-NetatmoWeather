@@ -38,12 +38,12 @@ class NetatmoCloud(OAuth):
         self.poly = polyglot
         self.oauthConfig = {
                     'name'              : 'Netatmo Cloud',                           
-                    'client_id'         : self.client_ID,
-                    'client_secret'     : self.client_SECRET,
+                    #'client_id'         : self.client_ID,
+                    #'client_secret'     : self.client_SECRET,
                     'auth_endpoint'     : '/oauth2/authorize?',
                     'token_endpoint'    : '/oauth2/token',
                     'cloudlink'         : True, 
-                    'scope'             : self.scope_str
+                    #'scope'             : self.scope_str
                     }
         self.customParams = Custom(polyglot, 'customparams')
         logging.info('External service connectivity initialized...')
@@ -65,15 +65,19 @@ class NetatmoCloud(OAuth):
         # Example for a boolean field
         if 'clientID' in self.customParams:
             self.client_ID = self.customParams['clientID'] 
+            self.oauthConfig['client_id' ] = self.client_ID 
         else:
             self.customParams['clientID'] = 'enter client_id'
             self.client_ID = None
-
+            self.oauthConfig['client_id' ] = self.client_ID 
+            
         if 'clientSecret' in self.customParams:
-            self.client_ID = self.customParams['clientSecret'] 
+            self.client_SECRET = self.customParams['clientSecret'] 
+            self.oauthConfig['clientSecret' ] = self.client_SECRET 
         else:
             self.customParams['clientID'] = 'enter client_secret'
             self.client_SECRET = None
+            self.oauthConfig['clientSecret' ] = self.client_SECRET 
 
         if 'scope' in self.customParams:
             temp = self.customParams['scope'] 
@@ -85,11 +89,13 @@ class NetatmoCloud(OAuth):
                 else:
                     logging.error(' Unknown scope provide {} - removed '.format(net_scope))
             self.scope = self.scope_str.split()
+            self.oauthConfig['scope' ] = self.client_ID 
             logging.debug('Following scopes are selected : {}'.format(self.scope_str))
         else:
             self.customParams['scope'] = 'enter desired scopes space separated'
             self.scope_str = ""
- 
+            self.oauthConfig['scope' ] = self.scope_str 
+
         if 'refresh_token' in self.customParams:
             if self.customParams['refresh_token'] is not None and self.customParams['refresh_token'] != "":
                 self.customData.token['refresh_token'] = self.customParams['refresh_token']
