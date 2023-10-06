@@ -73,11 +73,11 @@ class NetatmoCloud(OAuth):
             
         if 'clientSecret' in self.customParams:
             self.client_SECRET = self.customParams['clientSecret'] 
-            self.oauthConfig['clientSecret' ] = self.client_SECRET 
+            self.oauthConfig['client_secret' ] = self.client_SECRET 
         else:
             self.customParams['clientID'] = 'enter client_secret'
             self.client_SECRET = None
-            self.oauthConfig['clientSecret' ] = self.client_SECRET 
+            self.oauthConfig['client_secret' ] = self.client_SECRET 
 
         if 'scope' in self.customParams:
             temp = self.customParams['scope'] 
