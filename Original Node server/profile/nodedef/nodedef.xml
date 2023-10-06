@@ -1,5 +1,5 @@
 <nodeDefs>
-  <nodeDef id="Netatmo" nls="ctl">
+  <nodeDef id="controller" nls="ctl">
     <editors />
     <sts>
       <st id="ST" editor="bool" />
@@ -7,10 +7,6 @@
     <cmds>
       <sends />
       <accepts>
-        <cmd id="DISCOVER" />
-        <cmd id="REMOVE_NOTICES_ALL" />
-        <cmd id="UPDATE_PROFILE" />
-        <cmd id="QUERY_ALL" />
       </accepts>
     </cmds>
   </nodeDef>

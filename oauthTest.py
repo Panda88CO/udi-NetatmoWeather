@@ -22,7 +22,7 @@ from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
 
 polyglot = None
-NetatmoCloud = None
+myNetatmo = None
 controller = None
 
 def configDoneHandler():
@@ -57,6 +57,11 @@ def stopHandler():
             node.setOffline()
     polyglot.stop()
 
+id = 'controller'
+
+drivers = [
+        {'driver': 'ST', 'value':0, 'uom':2},
+        ]
 
 if __name__ == "__main__":
     try:
@@ -70,17 +75,17 @@ if __name__ == "__main__":
         polyglot.updateProfile()
 
         # Implements the API calls & Handles the oAuth authentication & token renewals
-        myService = NetatmoCloud(polyglot)
+        myNetatmo= NetatmoCloud(polyglot)
 
         # then you need to create the controller node
-        controller = Controller(polyglot, 'controller', 'controller', 'Name', myService)
+        controller = Controller(polyglot, 'controller', 'controller', 'Netatmo', myNetatmo)
 
         # subscribe to the events we want
         # polyglot.subscribe(polyglot.POLL, pollHandler)
         polyglot.subscribe(polyglot.STOP, stopHandler)
-        polyglot.subscribe(polyglot.CUSTOMDATA, myService.customDataHandler)
-        polyglot.subscribe(polyglot.CUSTOMNS, myService.customNsHandler)
-        polyglot.subscribe(polyglot.CUSTOMPARAMS, myService.customParamsHandler)
+        polyglot.subscribe(polyglot.CUSTOMDATA, myNetatmo.customDataHandler)
+        polyglot.subscribe(polyglot.CUSTOMNS, myNetatmo.customNsHandler)
+        polyglot.subscribe(polyglot.CUSTOMPARAMS, myNetatmo.customParamsHandler)
         polyglot.subscribe(polyglot.OAUTH, oauthHandler)
         polyglot.subscribe(polyglot.CONFIGDONE, configDoneHandler)
         polyglot.subscribe(polyglot.ADDNODEDONE, addNodeDoneHandler)
