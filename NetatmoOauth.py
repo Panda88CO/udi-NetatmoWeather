@@ -36,17 +36,10 @@ class NetatmoCloud(OAuth):
              'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
 
         self.poly = polyglot
-        self.oauthConfig = {
-                    'name'              : 'Netatmo Cloud',                           
-                    #'client_id'         : self.client_ID,
-                    #'client_secret'     : self.client_SECRET,
-                    'auth_endpoint'     : '/oauth2/authorize?',
-                    'token_endpoint'    : '/oauth2/token',
-                    'cloudlink'         : True, 
-                    #'scope'             : self.scope_str
-                    }
         self.customParams = Custom(polyglot, 'customparams')
         logging.info('External service connectivity initialized...')
+        logging.debug('oauth : {}'.format(self.oauthConfig))
+        
 
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
@@ -77,7 +70,7 @@ class NetatmoCloud(OAuth):
         else:
             self.customParams['clientID'] = 'enter client_secret'
             self.client_SECRET = None
-            self.oauthConfig['client_secret' ] = self.client_SECRET 
+            self.oauthConfig['client_secret'] = self.client_SECRET 
 
         if 'scope' in self.customParams:
             temp = self.customParams['scope'] 

@@ -80,7 +80,7 @@ drivers = [
 if __name__ == "__main__":
     try:
         logging.info ('starting')
-        logging.info('Starting TeslaEV Controller')
+        logging.info('Starting Netatmo Controller')
         polyglot = udi_interface.Interface([])
         #polyglot.start('0.2.31')
 

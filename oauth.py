@@ -60,8 +60,6 @@ MIT License
 import json
 import requests
 from datetime import timedelta, datetime
-#from udi_interface import LOGGER, Custom
-#import udiProfileHandler
 
 try:
     import udi_interface
@@ -70,6 +68,7 @@ try:
 except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
+
 '''
 OAuth is the class to manage oauth tokens to an external service
 '''
@@ -87,9 +86,11 @@ class OAuth:
         logging.debug(f"Received customData: { json.dumps(data) }")
         self.customData.load(data)
 
+
     # Gives us the oAuth config from the store
     def _customNsHandler(self, key, data):
-        # logging.info('CustomNsHandler {}'.format(key))
+        logging.info('CustomNsHandler {}'.format(key))
+        #self.customNs.load(data)
         if key == 'oauth':
             logging.info('CustomNsHandler oAuth: {}'.format(json.dumps(data)))
 

@@ -38,7 +38,7 @@ The settings for this node are:
 
 #### Client Secret
    * Your Netatmo App Client Secret
-
+###
 
 ## Requirements
 
