@@ -43,7 +43,7 @@ class NetatmoController(udi_interface.Node):
         # We use this to discover devices, or ask to authenticate if user has not already done so
         self.poly.Notices.clear()
 
-        accessToken = NetatmoCloud.getAccessToken()
+        accessToken = self.myNetatmo.getAccessToken()
 
         if accessToken is None:
             logging.info('Access token is not yet available. Please authenticate.')
@@ -93,7 +93,7 @@ if __name__ == "__main__":
         polyglot.updateProfile()
 
         # Implements the API calls & Handles the oAuth authentication & token renewals
-        myNetatmo= NetatmoCloud(polyglot)
+        myNetatmo = NetatmoCloud(polyglot)
 
         # then you need to create the controller node
         NetatmoController(polyglot, 'controller', 'controller', 'Netatmo', myNetatmo)
