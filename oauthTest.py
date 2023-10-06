@@ -67,7 +67,7 @@ if __name__ == "__main__":
     try:
         logging.info ('starting')
         polyglot = Interface([])
-        polyglot.start({ 'version': '1.0.0', 'requestId': True })
+        polyglot.start({ 'version': '0.0.1', 'requestId': True })
 
         # Show the help in PG3 UI under the node's Configuration option
         polyglot.setCustomParamsDoc()
