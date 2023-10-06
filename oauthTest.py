@@ -1,7 +1,5 @@
 
 #!/usr/bin/env python3
-
-
 """
 Polyglot v3 node server
 Copyright (C) 2023 Universal Devices
@@ -11,10 +9,17 @@ MIT License
 
 import sys
 import traceback
+try:
+    import udi_interface
+    logging = udi_interface.LOGGER
+    Custom = udi_interface.Custom
+except ImportError:
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
 
 from NetatmoOauth import NetatmoCloud
 from nodes.controller import Controller
-from udi_interface import LOGGER, Custom, Interface
+#from udi_interface import logging, Custom, Interface
 
 polyglot = None
 NetatmoCloud = None
@@ -27,7 +32,7 @@ def configDoneHandler():
     accessToken = NetatmoCloud.getAccessToken()
 
     if accessToken is None:
-        LOGGER.info('Access token is not yet available. Please authenticate.')
+        logging.info('Access token is not yet available. Please authenticate.')
         polyglot.Notices['auth'] = 'Please initiate authentication'
         return
 
@@ -90,7 +95,7 @@ if __name__ == "__main__":
         sys.exit(0)
 
     except Exception:
-        LOGGER.error(f"Error starting Nodeserver: {traceback.format_exc()}")
+        logging.error(f"Error starting Nodeserver: {traceback.format_exc()}")
         polyglot.stop()
 
 
