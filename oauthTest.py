@@ -49,13 +49,14 @@ class NetatmoController(udi_interface.Node):
             logging.info('Access token is not yet available. Please authenticate.')
             polyglot.Notices['auth'] = 'Please initiate authentication'
             return
-        else:
-            logging.debug('AccessToekn obtained {}'.format(accessToken))
+        
         self.poly.discoverDevices()
 
     def oauthHandler(self, token):
         # When user just authorized, we need to store the tokens
         self.myNetatmo.oauthHandler(token)
+        accessToken = self.myNetatmo.getAccessToken()
+        logging.debug('AccessToekn obtained {}'.format(accessToken))
 
         # Then proceed with device discovery
         self.configDoneHandler()
