@@ -12,6 +12,7 @@ Copyright (C) 2023 Universal Devices
 MIT License
 '''
 import requests
+import time
 #from udi_interface import LOGGER, Custom
 from oauth import OAuth
 try:
@@ -38,9 +39,11 @@ class NetatmoCloud(OAuth):
         self.poly = polyglot
         self.customParams = Custom(polyglot, 'customparams')
         logging.info('External service connectivity initialized...')
-        logging.debug('oauth : {}'.format(self.oauthConfig))
-
-
+        #logging.debug('oauth : {}'.format(self.oauthConfig))
+        time.sleep(1)
+        self.addOauthParameter('client_id',self.client_ID )
+        self.addOauthParameter('client_secret',self.client_SECRET )
+        self.addOauthParameter('scope',self.scope_str )
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
         super()._customDataHandler(data)
@@ -58,7 +61,7 @@ class NetatmoCloud(OAuth):
         # Example for a boolean field
         if 'clientID' in self.customParams:
             self.client_ID = self.customParams['clientID'] 
-            self.addOauthParameter('clientID',self.client_ID )
+            #self.addOauthParameter('client_id',self.client_ID )
             #self.oauthConfig['client_id'] =  self.client_ID
         else:
             self.customParams['clientID'] = 'enter client_id'
@@ -68,10 +71,10 @@ class NetatmoCloud(OAuth):
             
         if 'clientSecret' in self.customParams:
             self.client_SECRET = self.customParams['clientSecret'] 
-            self.addOauthParameter('client_secret',self.client_SECRET )
+            #self.addOauthParameter('client_secret',self.client_SECRET )
             #self.oauthConfig['client_secret'] =  self.client_SECRET
         else:
-            self.customParams['clientID'] = 'enter client_secret'
+            self.customParams['clientSecret'] = 'enter client_secret'
             self.client_SECRET = None
             
 
@@ -85,7 +88,7 @@ class NetatmoCloud(OAuth):
                 else:
                     logging.error('Unknown scope provide {} - removed '.format(net_scope))
             self.scope = self.scope_str.split()
-            self.addOauthParameter('scope',self.scope_str )
+            #self.addOauthParameter('scope',self.scope_str )
             #self.oauthConfig['scope'] = self.scope_str
             logging.debug('Following scopes are selected : {}'.format(self.scope_str))
         else:
