@@ -165,3 +165,7 @@ class OAuth:
         else:
             return None
 
+    ## Mothod to add/overwrite external oauth parameters
+    def addOauthParameter(self, key, data):
+        self.oauthConfig[key] = data
+        logging.debug('[{}] {} added to oauthConfig'.format(key, data))

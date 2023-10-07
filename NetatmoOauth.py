@@ -58,7 +58,8 @@ class NetatmoCloud(OAuth):
         # Example for a boolean field
         if 'clientID' in self.customParams:
             self.client_ID = self.customParams['clientID'] 
-            self.oauthConfig['client_id'] =  self.client_ID
+            self.addOauthParameter('clientID',self.client_ID )
+            #self.oauthConfig['client_id'] =  self.client_ID
         else:
             self.customParams['clientID'] = 'enter client_id'
             self.client_ID = None
@@ -67,7 +68,8 @@ class NetatmoCloud(OAuth):
             
         if 'clientSecret' in self.customParams:
             self.client_SECRET = self.customParams['clientSecret'] 
-            self.oauthConfig['client_secret'] =  self.client_SECRET
+            self.addOauthParameter('client_secret',self.client_SECRET )
+            #self.oauthConfig['client_secret'] =  self.client_SECRET
         else:
             self.customParams['clientID'] = 'enter client_secret'
             self.client_SECRET = None
@@ -83,7 +85,8 @@ class NetatmoCloud(OAuth):
                 else:
                     logging.error('Unknown scope provide {} - removed '.format(net_scope))
             self.scope = self.scope_str.split()
-            self.oauthConfig['scope'] = self.scope_str
+            self.addOauthParameter('scope',self.scope_str )
+            #self.oauthConfig['scope'] = self.scope_str
             logging.debug('Following scopes are selected : {}'.format(self.scope_str))
         else:
             self.customParams['scope'] = 'enter desired scopes space separated'
