@@ -44,6 +44,8 @@ class NetatmoCloud(OAuth):
         self.addOauthParameter('client_id',self.client_ID )
         self.addOauthParameter('client_secret',self.client_SECRET )
         self.addOauthParameter('scope',self.scope_str )
+        logging.debug('Netatmo init finished - oauthConfig = {}'.format(self.oauthConfig))
+
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
         super()._customDataHandler(data)
