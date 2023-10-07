@@ -41,11 +41,7 @@ class NetatmoCloud(OAuth):
         logging.info('External service connectivity initialized...')
         #logging.debug('oauth : {}'.format(self.oauthConfig))
         time.sleep(1)
-        self.addOauthParameter('client_id',self.client_ID )
-        self.addOauthParameter('client_secret',self.client_SECRET )
-        self.addOauthParameter('scope',self.scope_str )
-        logging.debug('Netatmo init finished - oauthConfig = {}'.format(self.oauthConfig))
-
+ 
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
         super()._customDataHandler(data)
@@ -158,6 +154,13 @@ class NetatmoCloud(OAuth):
 
     def getUserInfo(self):
         return self._callApi(url='/user/info')
+
+
+    def updateOauthConfig(self):
+        self.addOauthParameter('client_id',self.client_ID )
+        self.addOauthParameter('client_secret',self.client_SECRET )
+        self.addOauthParameter('scope',self.scope_str )
+        logging.debug('Netatmo init finished - oauthConfig = {}'.format(self.oauthConfig))
 
 ### Main node server code
 
