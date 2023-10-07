@@ -31,6 +31,7 @@ class NetatmoCloud(OAuth):
     def __init__(self, polyglot):
         super().__init__(polyglot)
  
+        self.apiEndpoint = yourApiEndpoint 
 
 
         self.scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
