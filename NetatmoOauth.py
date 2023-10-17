@@ -162,7 +162,7 @@ class NetatmoCloud(OAuth):
         self.addOauthParameter('client_secret',self.client_SECRET )
         self.addOauthParameter('scope',self.scope_str )
         self.addOauthParameter('state','dette er en test' )
-        self.addOauthParameter('redirect_uri','htps://my.isy/io/api/cloudlink/redirect' )
+        self.addOauthParameter('redirect_uri','https://my.isy/io/api/cloudlink/redirect' )
         self.addOauthParameter('name','Netatmo Test' )
         self.addOauthParameter('cloudlink', True )
         logging.debug('Netatmo init finished - oauthConfig = {}'.format(self.oauthConfig))
