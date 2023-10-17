@@ -86,7 +86,7 @@ if __name__ == "__main__":
         polyglot = udi_interface.Interface([])
         #polyglot.start('0.2.31')
 
-        polyglot.start({ 'version': '0.0.1', 'requestId': True })
+        polyglot.start({ 'version': '0.0.2', 'requestId': True })
 
         # Show the help in PG3 UI under the node's Configuration option
         polyglot.setCustomParamsDoc()
