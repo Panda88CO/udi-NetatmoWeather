@@ -1,10 +1,6 @@
 # controller
-ND-Netatmo-NAME = Netatmo Weather Station
-ND-Netatmo-ICON = Weather
-CMD-ctl-DISCOVER-NAME = Re-Discover
-CMD-ctl-UPDATE_PROFILE-NAME = Update Profile
-CMD-ctl-REMOVE_NOTICES_ALL-NAME = Remove Notices
-CMD-ctl-QUERY_ALL-NAME = Query All
+ND-controller-NAME = Netatmo System
+ND-controller-ICON = Weather
 ST-ctl-ST-NAME = NodeServer Online
 
 ND-main_netatmo-NAME = Main Weather Station

@@ -1,6 +1,6 @@
 {
-    "name": "Netatmo-WS",
-    "docs": "https://github.com/danielcaldentey/udi-netatmo",
+    "name": "udi-Netatmo",
+    "docs": "https://github.com/Panda88CO/udi-netatmo",
     "type": "python3",
     "executable": "mainNetatmo.py",
     "install": "install.sh",
