@@ -17,7 +17,7 @@ from lib.oauth import OAuth
 
 # Implements the API calls to your external service
 # It inherits the OAuth class
-class MyService(OAuth):
+class NetatmoCloud(OAuth):
     yourApiEndpoint = 'https://api.netatmo.com'
 
     def __init__(self, polyglot):
