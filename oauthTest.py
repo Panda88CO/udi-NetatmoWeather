@@ -13,7 +13,7 @@ MIT License
 '''
 import requests
 from udi_interface import LOGGER, Custom
-from lib.oauth import OAuth
+from oauth import OAuth
 
 # Implements the API calls to your external service
 # It inherits the OAuth class
