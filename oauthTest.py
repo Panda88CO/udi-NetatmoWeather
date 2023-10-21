@@ -12,6 +12,7 @@ Copyright (C) 2023 Universal Devices
 MIT License
 '''
 import requests
+import time
 from udi_interface import LOGGER, Custom
 from oauth import OAuth
 
@@ -132,8 +133,10 @@ class NetatmoController(udi_interface.Node):
         super(NetatmoController, self).__init__(polyglot, primary, address, name)
         logging.setLevel(10)
         self.poly = polyglot
+        self.accessToken = None
         self.myNetatmo = myNetatmo
         self.poly.subscribe(polyglot.STOP, self.stopHandler)
+        self.poly.subscribe(self.poly.START, self.start, address)
         self.poly.subscribe(polyglot.CUSTOMDATA, self.myNetatmo.customDataHandler)
         self.poly.subscribe(polyglot.CUSTOMNS, self.myNetatmo.customNsHandler)
         self.poly.subscribe(polyglot.CUSTOMPARAMS, self.myNetatmo.customParamsHandler)
@@ -141,6 +144,15 @@ class NetatmoController(udi_interface.Node):
         self.poly.subscribe(polyglot.CONFIGDONE, self.configDoneHandler)
         self.poly.subscribe(polyglot.ADDNODEDONE, self.addNodeDoneHandler)
 
+
+    def start(self):
+        logging.debug('Executing start')
+        self.accessToken = self.myNetatmo.getAccessToken()
+        while self.accessToken is None:
+            time.sleep(2)
+            logging.debug('Waiting to retrieve access token')
+            
+        logging.debug('AccessToken = {}'.format(self.accessToken))
 
     def configDoneHandler(self):
         # We use this to discover devices, or ask to authenticate if user has not already done so
