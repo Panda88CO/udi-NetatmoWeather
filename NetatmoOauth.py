@@ -51,6 +51,7 @@ class NetatmoCloud(OAuth):
         super()._customNsHandler(key, data)
 
     def oauthHandler(self, token):
+        logging.debug('oauthHandler')
         super()._oauthHandler(token)
 
     # Your service may need to access custom params as well...

@@ -169,6 +169,7 @@ class NetatmoController(udi_interface.Node):
 
     def oauthHandler(self, token):
         # When user just authorized, we need to store the tokens
+        logging.debug('oauthHandler starting')
         self.myNetatmo.oauthHandler(token)
         accessToken = self.myNetatmo.getAccessToken()
         logging.debug('AccessToekn obtained {}'.format(accessToken))
