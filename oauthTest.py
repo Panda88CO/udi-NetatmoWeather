@@ -72,6 +72,10 @@ class NetatmoController(udi_interface.Node):
         res = self.myNetatmo.get_home_info()
         logging.debug('retrieved data {}'.format(res))
 
+        res = self.myNetatmo.get_weather_info()
+        logging.debug('retrieved data {}'.format(res))
+
+
         #self.poly.discoverDevices()
 
     def oauthHandler(self, token):
