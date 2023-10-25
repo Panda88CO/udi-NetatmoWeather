@@ -22,7 +22,7 @@ try:
 except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
-from requests_oauth2 import OAuth2BearerToken
+
 
 
 # Implements the API calls to your external service
