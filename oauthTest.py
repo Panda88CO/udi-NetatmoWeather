@@ -71,6 +71,7 @@ class NetatmoController(udi_interface.Node):
         
         res = self.myNetatmo.get_home_info()
         logging.debug('retrieved data {}'.format(res))
+
         #self.poly.discoverDevices()
 
     def oauthHandler(self, token):
@@ -87,9 +88,10 @@ class NetatmoController(udi_interface.Node):
     def addNodeDoneHandler(self, node):
         # We will automatically query the device after discovery
         self.poly.addNodeDoneHandler(node)
+        self.nodeDefineDone = True
 
     def systemPoll (self, polltype):
-        if self.nodeDefineDone and self.sync_nodes_added:
+        if self.nodeDefineDone:
             logging.info('System Poll executing: {}'.format(polltype))
 
             if 'longPoll' in polltype:
