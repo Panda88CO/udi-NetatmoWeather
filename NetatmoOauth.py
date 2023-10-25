@@ -110,7 +110,7 @@ class NetatmoCloud(OAuth):
 
     def get_home_info(self):
         logging.debug('get_home_info')
-        api_str = self.apiEndpoint+'/api/homesdata'
+        api_str = '/api/homesdata'
         res = self._callApi('GET', api_str )
         logging.debug(res)
 
