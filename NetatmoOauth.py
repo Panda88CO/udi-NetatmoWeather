@@ -22,6 +22,8 @@ try:
 except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
+from requests_oauth2 import OAuth2BearerToken
+
 
 # Implements the API calls to your external service
 # It inherits the OAuth class
@@ -54,6 +56,10 @@ class NetatmoCloud(OAuth):
         logging.debug('oauthHandler')
         super()._oauthHandler(token)
 
+    def refresh_token(self):
+        logging.debug('checking token for refresh')
+        
+
     # Your service may need to access custom params as well...
     def customParamsHandler(self, data):
         self.customParams.load(data)
@@ -66,8 +72,6 @@ class NetatmoCloud(OAuth):
         else:
             self.customParams['clientID'] = 'enter client_id'
             self.client_ID = None
-  
-
             
         if 'clientSecret' in self.customParams:
             self.client_SECRET = self.customParams['clientSecret'] 
@@ -77,7 +81,6 @@ class NetatmoCloud(OAuth):
             self.customParams['clientSecret'] = 'enter client_secret'
             self.client_SECRET = None
             
-
         if 'scope' in self.customParams:
             temp = self.customParams['scope'] 
             temp1 = temp.split()
@@ -102,6 +105,12 @@ class NetatmoCloud(OAuth):
 
         #self.myParamBoolean = ('myParam' in self.customParams and self.customParams['myParam'].lower() == 'true')
         #logging.info(f"My param boolean: { self.myParamBoolean }")
+
+    def get_home_info(self):
+        logging.debug('get_home_info')
+        api_str = self.apiEndpoint+'homedata'
+        res = self._callApi('GET', api_str )
+        logging.debug(res)
 
     # Call your external service API
     def _callApi(self, method='GET', url=None, body=None):

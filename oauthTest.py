@@ -1,107 +1,3 @@
-
-#!/usr/bin/env python3
-
-### Your external service class
-'''
-Your external service class can be named anything you want, and the recommended location would be the lib folder.
-It would look like this:
-
-External service sample code
-Copyright (C) 2023 Universal Devices
-
-MIT License
-'''
-import requests
-import time
-from udi_interface import LOGGER, Custom
-from oauth import OAuth
-
-# Implements the API calls to your external service
-# It inherits the OAuth class
-class NetatmoCloud(OAuth):
-    yourApiEndpoint = 'https://api.netatmo.com'
-
-    def __init__(self, polyglot):
-        super().__init__(polyglot)
-
-        self.poly = polyglot
-        self.customParams = Custom(polyglot, 'customparams')
-        LOGGER.info('External service connectivity initialized...')
-
-    # The OAuth class needs to be hooked to these 3 handlers
-    def customDataHandler(self, data):
-        super()._customDataHandler(data)
-
-    def customNsHandler(self, key, data):
-        super()._customNsHandler(key, data)
-
-    def oauthHandler(self, token):
-        super()._oauthHandler(token)
-
-    # Your service may need to access custom params as well...
-    def customParamsHandler(self, data):
-        self.customParams.load(data)
-        # Example for a boolean field
-        self.myParamBoolean = ('myParam' in self.customParams and self.customParams['myParam'].lower() == 'true')
-        LOGGER.info(f"My param boolean: { self.myParamBoolean }")
-
-    # Call your external service API
-    def _callApi(self, method='GET', url=None, body=None):
-        # When calling an API, get the access token (it will be refreshed if necessary)
-        accessToken = self.getAccessToken()
-
-        if accessToken is None:
-            LOGGER.error('Access token is not available')
-            return None
-
-        if url is None:
-            LOGGER.error('url is required')
-            return None
-
-        completeUrl = self.yourApiEndpoint + url
-
-        headers = {
-            'Authorization': f"Bearer { accessToken }"
-        }
-
-        if method in [ 'PATCH', 'POST'] and body is None:
-            LOGGER.error(f"body is required when using { method } { completeUrl }")
-
-        try:
-            if method == 'GET':
-                response = requests.get(completeUrl, headers=headers)
-            elif method == 'DELETE':
-                response = requests.delete(completeUrl, headers=headers)
-            elif method == 'PATCH':
-                response = requests.patch(completeUrl, headers=headers, json=body)
-            elif method == 'POST':
-                response = requests.post(completeUrl, headers=headers, json=body)
-            elif method == 'PUT':
-                response = requests.put(completeUrl, headers=headers)
-
-            response.raise_for_status()
-            try:
-                return response.json()
-            except requests.exceptions.JSONDecodeError:
-                return response.text
-
-        except requests.exceptions.HTTPError as error:
-            LOGGER.error(f"Call { method } { completeUrl } failed: { error }")
-            return None
-
-    # Then implement your service specific APIs
-    def getAllDevices(self):
-        return self._callApi(url='/devices')
-
-    def unsubscribe(self):
-        return self._callApi(method='DELETE', url='/subscription')
-
-    def getUserInfo(self):
-        return self._callApi(url='/user/info')
-
-### Main node server code
-
-
 #!/usr/bin/env python3
 
 """
@@ -112,6 +8,7 @@ MIT License
 """
 
 import sys
+import time
 import traceback
 try:
     import udi_interface
@@ -143,7 +40,7 @@ class NetatmoController(udi_interface.Node):
         self.poly.subscribe(polyglot.OAUTH, self.oauthHandler)
         self.poly.subscribe(polyglot.CONFIGDONE, self.configDoneHandler)
         self.poly.subscribe(polyglot.ADDNODEDONE, self.addNodeDoneHandler)
-
+        self.poly.subscribe(self.poly.POLL, self.systemPoll)
 
     def start(self):
         logging.debug('Executing start')
@@ -153,6 +50,8 @@ class NetatmoController(udi_interface.Node):
             logging.debug('Waiting to retrieve access token')
             
         logging.debug('AccessToken = {}'.format(self.accessToken))
+        res = self.myNetatmo.get_home_info()
+        logging.debug('retrieved data {}'.format(res))
 
     def configDoneHandler(self):
         # We use this to discover devices, or ask to authenticate if user has not already done so
@@ -181,6 +80,33 @@ class NetatmoController(udi_interface.Node):
     def addNodeDoneHandler(self, node):
         # We will automatically query the device after discovery
         self.poly.addNodeDoneHandler(node)
+
+    def systemPoll (self, polltype):
+        if self.nodeDefineDone and self.sync_nodes_added:
+            logging.info('System Poll executing: {}'.format(polltype))
+
+            if 'longPoll' in polltype:
+                #Keep token current
+                #self.node.setDriver('GV0', self.temp_unit, True, True)
+                try:
+                    self.myNetatmo.refresh_token()
+                    self.blink.refresh_data()
+                    nodes = self.poly.getNodes()
+                    for nde in nodes:
+                        if nde != 'setup':   # but not the setup node
+                            logging.debug('updating node {} data'.format(nde))
+                            nodes[nde].updateISYdrivers()
+                         
+                except Exception as e:
+                    logging.debug('Exeption occcured : {}'.format(e))
+   
+                
+            if 'shortPoll' in polltype:
+                self.heartbeat()
+                self.myNetatmo.refresh_token()
+        else:
+            logging.info('System Poll - Waiting for all nodes to be added')
+
 
     def stopHandler(self):
         # Set nodes offline
