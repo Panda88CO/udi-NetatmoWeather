@@ -165,7 +165,7 @@ class NetatmoController(udi_interface.Node):
             polyglot.Notices['auth'] = 'Please initiate authentication'
             return
         
-        self.poly.discoverDevices()
+        #self.poly.discoverDevices()
 
     def oauthHandler(self, token):
         # When user just authorized, we need to store the tokens
