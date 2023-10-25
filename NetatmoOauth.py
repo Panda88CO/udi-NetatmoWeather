@@ -110,7 +110,7 @@ class NetatmoCloud(OAuth):
 
     def get_home_info(self):
         logging.debug('get_home_info')
-        api_str = self.apiEndpoint+'/api/homedata'
+        api_str = self.apiEndpoint+'/api/homesdata'
         res = self._callApi('GET', api_str )
         logging.debug(res)
 
@@ -135,6 +135,7 @@ class NetatmoCloud(OAuth):
 
         if method in [ 'PATCH', 'POST'] and body is None:
             logging.error(f"body is required when using { method } { completeUrl }")
+        logging.debug(' call info url={}, header= {}, body = {}'.format(completeUrl, headers, body))
 
         try:
             if method == 'GET':
