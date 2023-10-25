@@ -103,6 +103,8 @@ class NetatmoCloud(OAuth):
             if self.customParams['refresh_token'] is not None and self.customParams['refresh_token'] != "":
                 self.customData.token['refresh_token'] = self.customParams['refresh_token']
 
+
+        self.updateOauthConfig()
         #self.myParamBoolean = ('myParam' in self.customParams and self.customParams['myParam'].lower() == 'true')
         #logging.info(f"My param boolean: { self.myParamBoolean }")
 
@@ -175,7 +177,7 @@ class NetatmoCloud(OAuth):
         #self.addOauthParameter('redirect_uri','https://my.isy/io/api/cloudlink/redirect' )
         self.addOauthParameter('name','Netatmo Test' )
         self.addOauthParameter('cloudlink', True )
-        logging.debug('Netatmo init finished - oauthConfig = {}'.format(self.oauthConfig))
+        logging.debug('updateOauthConfig = {}'.format(self.oauthConfig))
 
 ### Main node server code
 

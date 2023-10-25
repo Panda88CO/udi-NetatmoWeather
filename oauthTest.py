@@ -42,6 +42,11 @@ class NetatmoController(udi_interface.Node):
         self.poly.subscribe(polyglot.ADDNODEDONE, self.addNodeDoneHandler)
         self.poly.subscribe(self.poly.POLL, self.systemPoll)
 
+        self.poly.updateProfile()
+        self.poly.ready()
+        self.poly.addNode(self)
+
+
     def start(self):
         logging.debug('Executing start')
         self.accessToken = self.myNetatmo.getAccessToken()
@@ -64,6 +69,8 @@ class NetatmoController(udi_interface.Node):
             polyglot.Notices['auth'] = 'Please initiate authentication'
             return
         
+        res = self.myNetatmo.get_home_info()
+        logging.debug('retrieved data {}'.format(res))
         #self.poly.discoverDevices()
 
     def oauthHandler(self, token):
