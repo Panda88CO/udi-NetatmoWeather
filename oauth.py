@@ -80,6 +80,7 @@ class OAuth:
          # This is the oauth configuration from the node server store
         self.oauthConfig = {}
         self.init = True
+        self.polyglot = polyglot
 
 
     # customData contains current oAuth tokens: self.customData['tokens']
@@ -126,13 +127,17 @@ class OAuth:
     def _oAuthTokensRefresh(self):
         logging.info('Refreshing oAuth tokens')
         logging.debug(f"Token before: { self.customData.token }")
-        data = {
-            'grant_type': 'refresh_token',
-            'refresh_token': self.customData.token['refresh_token'],
-            'client_id': self.oauthConfig['client_id'],
-            'client_secret': self.oauthConfig['client_secret']
-        }
-
+        if self.customData.token:
+            data = {
+                'grant_type': 'refresh_token',
+                'refresh_token': self.customData.token['refresh_token'],
+                'client_id': self.oauthConfig['client_id'],
+                'client_secret': self.oauthConfig['client_secret']
+            }
+        else:
+            logging.info('Access token is not yet available. Please authenticate.')
+            self.polyglot.Notices['auth'] = 'Please initiate authentication'
+            return(None)
         try:
             response = requests.post(self.oauthConfig['token_endpoint'], data=data)
             response.raise_for_status()
