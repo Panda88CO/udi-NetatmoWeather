@@ -91,7 +91,7 @@ class NetatmoCloud(OAuth):
                 else:
                     logging.error('Unknown scope provide {} - removed '.format(net_scope))
             self.scope = self.scope_str.split()
-            '''
+            
             attempts = 0
             while not self.customData and attempts <3:
                 attempts = attempts + 1
@@ -102,12 +102,13 @@ class NetatmoCloud(OAuth):
                     if self.scope_str != self.customData['scope']:
                        #scope changed - we need to generate a new token/refresh token
                        logging.debug('scope has changed - need to get new token')
+                       self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
                        self.customData['scope'] = self.scope_str
-                       self.customData['token'] = None
                 else:                    
+                    self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
                     self.customData['scope'] = self.scope_str
-                    self.customData['token'] = None
-            '''
+
+
             #self.addOauthParameter('scope',self.scope_str )
             #self.oauthConfig['scope'] = self.scope_str
             logging.debug('Following scopes are selected : {}'.format(self.scope_str))

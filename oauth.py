@@ -80,7 +80,7 @@ class OAuth:
          # This is the oauth configuration from the node server store
         self.oauthConfig = {}
         self.init = True
-        self.polyglot = polyglot
+        self.poly = polyglot
 
 
     # customData contains current oAuth tokens: self.customData['tokens']
@@ -136,7 +136,7 @@ class OAuth:
             }
         else:
             logging.info('Access token is not yet available. Please authenticate.')
-            self.polyglot.Notices['auth'] = 'Please initiate authentication'
+            self.poly.Notices['auth'] = 'Please initiate authentication'
             return(None)
         try:
             response = requests.post(self.oauthConfig['token_endpoint'], data=data)
