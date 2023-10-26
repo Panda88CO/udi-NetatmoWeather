@@ -62,7 +62,7 @@ class NetatmoController(udi_interface.Node):
         # We use this to discover devices, or ask to authenticate if user has not already done so
         self.poly.Notices.clear()
         self.myNetatmo.updateOauthConfig()
-        accessToken = self.myNetatmo._refreshAccessToken()
+        accessToken = self.myNetatmo._oAuthTokensRefresh()
 
         if accessToken is None:
             logging.info('Access token is not yet available. Please authenticate.')
