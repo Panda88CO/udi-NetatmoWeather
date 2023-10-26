@@ -32,9 +32,8 @@ class NetatmoCloud(OAuth):
 
     def __init__(self, polyglot):
         super().__init__(polyglot)
- 
+        self.scope_str = None
         self.apiEndpoint = 'https://api.netatmo.com'
-
 
         self.scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
              'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
@@ -91,6 +90,22 @@ class NetatmoCloud(OAuth):
                 else:
                     logging.error('Unknown scope provide {} - removed '.format(net_scope))
             self.scope = self.scope_str.split()
+            attempts = 0
+            while not self.customData and attempts <3:
+                attempts = attempts + 1
+                time.sleep(1)
+
+            if self.customData:
+                if 'scope' in self.customData:
+                    if self.scope_str != self.customData['scope']:
+                       #scope changed - we need to generate a new token/refresh token
+                       logging.debug('scope has changed - need to get new token')
+                       self.customData['scope'] = self.scope_str
+                       self.customData['token'] = None
+                else:                    
+                    self.customData['scope'] = self.scope_str
+                    self.customData['token'] = None
+
             #self.addOauthParameter('scope',self.scope_str )
             #self.oauthConfig['scope'] = self.scope_str
             logging.debug('Following scopes are selected : {}'.format(self.scope_str))

@@ -79,6 +79,7 @@ class OAuth:
     
          # This is the oauth configuration from the node server store
         self.oauthConfig = {}
+        self.init = True
 
 
     # customData contains current oAuth tokens: self.customData['tokens']
