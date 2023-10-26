@@ -31,6 +31,7 @@ class NetatmoController(udi_interface.Node):
         logging.setLevel(10)
         self.poly = polyglot
         self.accessToken = None
+        self.nodeDefineDone = False
         self.myNetatmo = myNetatmo
         self.poly.subscribe(polyglot.STOP, self.stopHandler)
         self.poly.subscribe(self.poly.START, self.start, address)
