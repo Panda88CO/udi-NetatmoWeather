@@ -103,7 +103,7 @@ class NetatmoController(udi_interface.Node):
                 #self.node.setDriver('GV0', self.temp_unit, True, True)
                 try:
                     self.myNetatmo.refresh_token()
-                    self.blink.refresh_data()
+                    #self.blink.refresh_data()
                     nodes = self.poly.getNodes()
                     for nde in nodes:
                         if nde != 'setup':   # but not the setup node
