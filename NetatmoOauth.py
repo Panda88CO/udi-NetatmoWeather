@@ -35,7 +35,8 @@ class NetatmoCloud(OAuth):
         self.scope_str = None
         self.apiEndpoint = 'https://api.netatmo.com'
 
-        self.scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
+
+        self.scopeList = ['read_station', 'write_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
              'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
 
         self.poly = polyglot
@@ -128,6 +129,13 @@ class NetatmoCloud(OAuth):
         api_str = '/api/homesdata'
         res = self._callApi('GET', api_str )
         logging.debug(res)
+
+    def get_weather_info(self):
+        logging.debug('get_weather_info')
+        api_str = '/api/getstationsdata'
+        res = self._callApi('GET', api_str )
+        logging.debug(res)
+
 
     # Call your external service API
     def _callApi(self, method='GET', url=None, body=None):

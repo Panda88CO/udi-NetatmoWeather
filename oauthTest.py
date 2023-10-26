@@ -62,7 +62,7 @@ class NetatmoController(udi_interface.Node):
         # We use this to discover devices, or ask to authenticate if user has not already done so
         self.poly.Notices.clear()
         self.myNetatmo.updateOauthConfig()
-        accessToken = self.myNetatmo.getAccessToken()
+        accessToken = self.myNetatmo._oAuthTokensRefresh()
 
         if accessToken is None:
             logging.info('Access token is not yet available. Please authenticate.')
@@ -71,6 +71,10 @@ class NetatmoController(udi_interface.Node):
         
         res = self.myNetatmo.get_home_info()
         logging.debug('retrieved data {}'.format(res))
+
+        res = self.myNetatmo.get_weather_info()
+        logging.debug('retrieved data {}'.format(res))
+
 
         #self.poly.discoverDevices()
 
