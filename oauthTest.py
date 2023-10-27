@@ -62,13 +62,13 @@ class NetatmoController(udi_interface.Node):
     def configDoneHandler(self):
         # We use this to discover devices, or ask to authenticate if user has not already done so
         self.poly.Notices.clear()
-        self.myNetatmo.updateOauthConfig()
-        accessToken = self.myNetatmo._oAuthTokensRefresh()
+        #self.myNetatmo.updateOauthConfig()
+        #accessToken = self.myNetatmo._oAuthTokensRefresh()
 
-        if accessToken is None:
-            logging.info('Access token is not yet available. Please authenticate.')
-            polyglot.Notices['auth'] = 'Please initiate authentication'
-            return
+        #if accessToken is None:
+        #    logging.info('Access token is not yet available. Please authenticate.')
+        #    polyglot.Notices['auth'] = 'Please initiate authentication'
+        #    return
         
         res = self.myNetatmo.get_home_info()
         logging.debug('retrieved data {}'.format(res))

@@ -203,6 +203,7 @@ class NetatmoCloud(OAuth):
         #self.addOauthParameter('redirect_uri','https://my.isy/io/api/cloudlink/redirect' )
         self.addOauthParameter('name','Netatmo Test' )
         self.addOauthParameter('cloudlink', True )
+        self.addOauthParameter('addRedirect', True )
         logging.debug('updateOauthConfig = {}'.format(self.oauthConfig))
 
 ### Main node server code
