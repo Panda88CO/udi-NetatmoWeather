@@ -28,12 +28,12 @@ except ImportError:
 # Implements the API calls to your external service
 # It inherits the OAuth class
 class NetatmoCloud(OAuth):
-    yourApiEndpoint = 'https://api.netatmo.com'
+    yourApiEndpoint = 'https://api.netatmo.com/api'
 
     def __init__(self, polyglot):
         super().__init__(polyglot)
         self.scope_str = None
-        self.apiEndpoint = 'https://api.netatmo.com'
+        self.apiEndpoint = 'https://api.netatmo.com/api'
 
 
         self.scopeList = ['read_station', 'write_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
@@ -128,19 +128,19 @@ class NetatmoCloud(OAuth):
 
     def get_home_info(self):
         logging.debug('get_home_info')
-        api_str = '/api/homesdata'
+        api_str = '/homesdata'
         res = self._callApi('GET', api_str )
         logging.debug(res)
 
     def get_weather_info(self):
         logging.debug('get_weather_info')
-        api_str = '/api/getstationsdata'
+        api_str = '/getstationsdata'
         res = self._callApi('GET', api_str )
         logging.debug(res)
 
     def get_weather_info2(self):
         logging.debug('get_weather_info')
-        api_str = '/api/homestatus'
+        api_str = '/homestatus'
         res = self._callApi('GET', api_str )
         logging.debug(res)
 
