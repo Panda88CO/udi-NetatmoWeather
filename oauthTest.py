@@ -71,11 +71,13 @@ class NetatmoController(udi_interface.Node):
         #    return
         
         res = self.myNetatmo.get_home_info()
-        logging.debug('retrieved data {}'.format(res))
+        logging.debug('retrieved get_home_info data {}'.format(res))
 
         res = self.myNetatmo.get_weather_info()
-        logging.debug('retrieved data {}'.format(res))
+        logging.debug('retrieved get_weather_info data {}'.format(res))
 
+        res = self.myNetatmo.get_weather_info2()
+        logging.debug('retrieved get_weather_info2 data2 {}'.format(res))
 
         #self.poly.discoverDevices()
 

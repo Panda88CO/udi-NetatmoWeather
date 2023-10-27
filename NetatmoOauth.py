@@ -138,6 +138,11 @@ class NetatmoCloud(OAuth):
         res = self._callApi('GET', api_str )
         logging.debug(res)
 
+    def get_weather_info2(self):
+        logging.debug('get_weather_info')
+        api_str = '/api/homestatus'
+        res = self._callApi('GET', api_str )
+        logging.debug(res)
 
     # Call your external service API
     def _callApi(self, method='GET', url=None, body=None):
