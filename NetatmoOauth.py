@@ -34,6 +34,8 @@ class NetatmoCloud(OAuth):
         super().__init__(polyglot)
         self.scope_str = None
         self.apiEndpoint = 'https://api.netatmo.com'
+        self.client_ID = None
+        self.client_SECRET = None
 
 
         self.scopeList = ['read_station', 'write_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
@@ -54,6 +56,7 @@ class NetatmoCloud(OAuth):
 
     def oauthHandler(self, token):
         logging.debug('oauthHandler')
+        self.updateOauthConfig()
         super()._oauthHandler(token)
 
     def refresh_token(self):
@@ -104,7 +107,10 @@ class NetatmoCloud(OAuth):
                        logging.debug('scope has changed - need to get new token')
                        self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
                        self.customData['scope'] = self.scope_str
-                else:                    
+                else: 
+                    if self.oauthConfig['client_id'] is None or self.oauthConfig['client_secret'] is None:
+                        self.updateOauthConfig()    
+                    
                     self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
                     self.customData['scope'] = self.scope_str
 
