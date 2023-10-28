@@ -13,6 +13,7 @@ MIT License
 '''
 import requests
 import time
+import json
 #from udi_interface import LOGGER, Custom
 from oauth import OAuth
 try:
@@ -23,30 +24,52 @@ except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
 
-
+from datetime import timedelta, datetime
 
 # Implements the API calls to your external service
 # It inherits the OAuth class
-class NetatmoCloud(OAuth):
-    yourApiEndpoint = 'https://api.netatmo.com/api'
+class NetatmoCloud(object):
+   
 
-    def __init__(self, polyglot):
-        super().__init__(polyglot)
+    def dummy_read(self):
+        file = open("token.json", "r")
+        self.token = json.load(file)
+        file.close()
+
+        file2 = open("client_ID.txt", 'r')
+        self.client_ID  = file2.read()
+        file2.close()
+        file2 = open("client_SEC.txt", 'r')
+        self.client_SECRET = file2.read()
+        file2.close()
+
+    def __init__(self):
+        #super().__init__(polyglot)
         self.scope_str = None
         self.apiEndpoint = 'https://api.netatmo.com'
         self.client_ID = None
         self.client_SECRET = None
+        self.token = None
+        self.dummy_read()
+        self.scope = None
+        self.customData = None
+        self.homes_list = {}
+        self.module_list = {}
+        #self.token= token
+        #self.client_ID = client_id
+        #self.client_SECRET = client_secret
+        self.token_endpoint = 'https://api.netatmo.com/oauth2/token'
+        self.yourApiEndpoint = 'https://api.netatmo.com/api'
 
-
-        self.scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
+        self.scopeList = ['read_station', 'write_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
              'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
 
-        self.poly = polyglot
-        self.customParams = Custom(polyglot, 'customparams')
+        #self.poly = polyglot
+        #self.customParams = Custom(polyglot, 'customparams')
         logging.info('External service connectivity initialized...')
         #logging.debug('oauth : {}'.format(self.oauthConfig))
         time.sleep(1)
- 
+    '''
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
         super()._customDataHandler(data)
@@ -58,7 +81,7 @@ class NetatmoCloud(OAuth):
         logging.debug('oauthHandler')
         self.updateOauthConfig()
         super()._oauthHandler(token)
-
+    
     def refresh_token(self):
         logging.debug('checking token for refresh')
         
@@ -131,24 +154,48 @@ class NetatmoCloud(OAuth):
         self.updateOauthConfig()
         #self.myParamBoolean = ('myParam' in self.customParams and self.customParams['myParam'].lower() == 'true')
         #logging.info(f"My param boolean: { self.myParamBoolean }")
+        '''
+    
+
+    def process_homes_data(self, net_system):
+       
+        for home in range(0, len(net_system['homes'])):
+            tmp = net_system['homes'][home]  
+            self.homes_list[tmp['id']]= tmp['name']
+            if 'modules' in tmp:
+                self.module_list[tmp['id']]= tmp['modules']
+
+
 
     def get_home_info(self):
         logging.debug('get_home_info')
         api_str = '/homesdata'
-        res = self._callApi('GET', api_str )
-        logging.debug(res)
+        temp = self._callApi('GET', api_str )
+        self.netatmop_system = temp['body']
+        logging.debug(self.netatmop_system)
+        self.process_homes_data(self.netatmop_system)
+        return(self.homes_list)
 
-    def get_weather_info(self):
-        logging.debug('get_weather_info')
-        api_str = '/getstationsdata'
-        res = self._callApi('GET', api_str )
-        logging.debug(res)
 
-    def get_weather_info2(self):
-        logging.debug('get_weather_info')
-        api_str = '/homestatus'
-        res = self._callApi('GET', api_str )
-        logging.debug(res)
+    def get_home_status(self, home_id):
+
+        logging.debug('get_home_status')
+        if home_id:
+            api_str = '/homestatus?home_id='+str(home_id)
+        else:
+            api_str = '/homestatus'
+
+        status = self._callApi('GET', api_str)
+        logging.debug(status)
+        return(status)
+
+    def get_module_info(self, home_id):
+        if home_id in self.module_list:
+            return(self.module_list[home_id])
+        else:
+            return(None)
+        
+
 
     # Call your external service API
     def _callApi(self, method='GET', url=None, body=None):
@@ -204,7 +251,7 @@ class NetatmoCloud(OAuth):
 
     def getUserInfo(self):
         return self._callApi(url='/user/info')
-
+    '''
 
     def updateOauthConfig(self):
         self.addOauthParameter('client_id',self.client_ID )
@@ -216,6 +263,50 @@ class NetatmoCloud(OAuth):
         self.addOauthParameter('cloudlink', True )
         self.addOauthParameter('addRedirect', True )
         logging.debug('updateOauthConfig = {}'.format(self.oauthConfig))
-
+    '''
 ### Main node server code
 
+    def getAccessToken(self):
+        logging.info('Getting access token')
+        token = self.token
+
+        if token is not None:
+            expiry = token.get('expiry')
+
+            logging.info(f"Token expiry is { expiry }")
+            # If expired or expiring in less than 10 min, refresh
+            if expiry is None or datetime.fromisoformat(expiry) - timedelta(seconds=600) < datetime.now():
+                logging.info('Refresh tokens expired. Initiating refresh.')
+                self._oAuthTokensRefresh()
+            else:
+                logging.info('Refresh tokens is still valid, no need to refresh')
+
+            return self.token.get('access_token')
+        else:
+            return None
+    
+    def _oAuthTokensRefresh(self):
+        logging.info('Refreshing oAuth tokens')
+        logging.debug(f"Token before: { self.token}")
+        if self.token:
+            data = {
+                'grant_type': 'refresh_token',
+                'refresh_token': self.token['refresh_token'],
+                'client_id': self.client_ID,
+                'client_secret': self.client_SECRET
+            }
+        else:
+            logging.info('Access token is not yet available. Please authenticate.')
+            #self.poly.Notices['auth'] = 'Please initiate authentication'
+            return(None)
+        try:
+            response = requests.post(self.token_endpoint, data=data)
+            response.raise_for_status()
+            self.token = response.json()
+            logging.info('Refreshing oAuth tokens successful')
+            logging.debug(f"Token refresh result [{ type(self.token) }]: { self.token }")
+            #self._saveToken(token)
+
+        except requests.exceptions.HTTPError as error:
+            logging.error(f"Failed to refresh oAuth token: { error }")
+            # NOTE: If refresh tokens fails, we keep the existing tokens available.
