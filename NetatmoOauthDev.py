@@ -50,7 +50,7 @@ class NetatmoCloud(object):
         self.client_ID = None
         self.client_SECRET = None
         self.token = None
-        self.dummy_read()
+        self.dummy_read() #emulate oauth
         self.scope = None
         self.customData = None
         self.homes_list = {}
@@ -160,10 +160,13 @@ class NetatmoCloud(object):
     def process_homes_data(self, net_system):
        
         for home in range(0, len(net_system['homes'])):
-            tmp = net_system['homes'][home]  
-            self.homes_list[tmp['id']]= tmp['name']
+            tmp = net_system['homes'][home]
+            self.homes_list[tmp['id']]= {}
+            self.homes_list[tmp['id']]['name']= tmp['name']
+            self.homes_list[tmp['id']]['modules'] = []
             if 'modules' in tmp:
-                self.module_list[tmp['id']]= tmp['modules']
+                self.homes_list[tmp['id']]['modules'] = tmp['modules']
+
 
 
 
@@ -171,9 +174,9 @@ class NetatmoCloud(object):
         logging.debug('get_home_info')
         api_str = '/homesdata'
         temp = self._callApi('GET', api_str )
-        self.netatmop_system = temp['body']
-        logging.debug(self.netatmop_system)
-        self.process_homes_data(self.netatmop_system)
+        self.netatmo_systems = temp['body']
+        logging.debug(self.netatmo_systems)
+        self.process_homes_data(self.netatmo_systems)
         return(self.homes_list)
 
 
@@ -190,12 +193,23 @@ class NetatmoCloud(object):
         return(status)
 
     def get_module_info(self, home_id):
-        if home_id in self.module_list:
-            return(self.module_list[home_id])
-        else:
-            return(None)
+        logging.debug('get_module_info')
+        modules = {}
+        if home_id in self.homes_list:
+            for tmp in range(0,len(self.homes_list[home_id]['modules'])):
+                modules[self.homes_list[home_id]['modules'][tmp]['id']] = self.homes_list[home_id]['modules'][tmp]
+        return(modules)
         
-
+    '''
+    def get_modules_present(self, home_id):
+        logging.debug('get_modules_present')
+        modules = {}
+        if home_id in self.homes_list:
+            for tmp in range(0,len(self.homes_list[home_id]['modules'])):
+                modules[tmp[id]] = tmp
+        return(modules)
+    '''
+            
 
     # Call your external service API
     def _callApi(self, method='GET', url=None, body=None):
