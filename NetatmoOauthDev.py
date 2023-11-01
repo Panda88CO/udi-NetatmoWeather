@@ -54,7 +54,7 @@ class NetatmoCloud(object):
         self.scope = None
         self.customData = None
         self.homes_list = {}
-        self.module_list = {}
+        #self.module_list = {}
         #self.token= token
         #self.client_ID = client_id
         #self.client_SECRET = client_secret
@@ -158,37 +158,48 @@ class NetatmoCloud(object):
     
 
     def process_homes_data(self, net_system):
-       
+        homes_list = {}
         for home in range(0, len(net_system['homes'])):
             tmp = net_system['homes'][home]
-            self.homes_list[tmp['id']]= {}
-            self.homes_list[tmp['id']]['name']= tmp['name']
-            self.homes_list[tmp['id']]['modules'] = []
+            homes_list[tmp['id']]= {}
+            homes_list[tmp['id']]['name']= tmp['name']
+            homes_list[tmp['id']]['modules'] = {}
+            homes_list[tmp['id']]['modules_types'] = []
             if 'modules' in tmp:
-                self.homes_list[tmp['id']]['modules'] = tmp['modules']
+                for mod in range(0,len(tmp['modules'])):
+                    homes_list[tmp['id']]['modules'][tmp['modules'][mod]['id']] = tmp['modules'][mod]
+                    homes_list[tmp['id']]['modules_types'].append( tmp['modules'][mod]['type'] )
+        return(homes_list)
 
 
 
-
-    def get_home_info(self):
+    def get_homes_info(self):
         logging.debug('get_home_info')
         api_str = '/homesdata'
         temp = self._callApi('GET', api_str )
         self.netatmo_systems = temp['body']
         logging.debug(self.netatmo_systems)
-        self.process_homes_data(self.netatmo_systems)
+        self.homes_list = self.process_homes_data(self.netatmo_systems)
         return(self.homes_list)
 
 
     def get_home_status(self, home_id):
-
+        status = {}
         logging.debug('get_home_status')
         if home_id:
             api_str = '/homestatus?home_id='+str(home_id)
-        else:
-            api_str = '/homestatus'
+        #else:
+        #    api_str = '/homestatus'
 
-        status = self._callApi('GET', api_str)
+        tmp = self._callApi('GET', api_str)
+        tmp = tmp['body']['home']
+        status[home_id] = home_id #tmp['body']['body']['home']
+        if 'modules' in tmp:
+            status['modules'] = {}
+            status['modules_types'] = []
+            for mod in range(0,len(tmp['modules'])):
+                status['modules'][tmp['modules'][mod]['id']]= tmp['modules'][mod]
+                status['modules_types'].append(tmp['modules'][mod]['type'])
         logging.debug(status)
         return(status)
 
@@ -196,9 +207,7 @@ class NetatmoCloud(object):
         logging.debug('get_module_info')
         modules = {}
         if home_id in self.homes_list:
-            for tmp in range(0,len(self.homes_list[home_id]['modules'])):
-                modules[self.homes_list[home_id]['modules'][tmp]['id']] = self.homes_list[home_id]['modules'][tmp]
-        return(modules)
+            return(self.homes_list[home_id]['modules'])
         
     '''
     def get_modules_present(self, home_id):
