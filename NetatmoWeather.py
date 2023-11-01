@@ -125,9 +125,9 @@ class NetatmoWeather (NetatmoCloud):
                             else:
                                 self.weather_data[home_id][module_type][module_adr][data] =inst_mod_adr[data]
 
-                        
 
-        
+
+        NEED TO FINISH HERE
 
 
     def get_main_module_data(self, data):
