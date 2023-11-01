@@ -1,7 +1,7 @@
 
 from  NetatmoWeather import NetatmoWeather
 
-
+import time
 
 net = NetatmoWeather()
 
@@ -15,4 +15,10 @@ for id in home_ids:
         test3 = net.update_weather_info_cloud(id)
         #test4 = net.update_weather_info_cloud()
         net.update_weather_info_instant(id)
+        
+        data_main = net.get_main_module_data(id, tmp)
+
+        time.sleep(60)
+        net.update_weather_info_instant(id)
+        test3 = net.update_weather_info_cloud(id)
 
