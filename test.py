@@ -16,7 +16,7 @@ id_tahoe = '60a013f74afaa9259c61dfea'
 #for id in home_ids:
 id = id_test
 tmp = net.get_module_info(id)
-tmp2 = net.get_home_status()
+tmp2 = net.get_home_status(id)
 #main_mods = net.get_main_modules(id)
 #indoor_mods = net.get_indoor_modules(id)
 #outdoor_mods = net.get_outdoor_modules(id)

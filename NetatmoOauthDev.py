@@ -194,14 +194,15 @@ class NetatmoCloud(object):
 
         tmp = self._callApi('GET', api_str)
         tmp = tmp['body']['home']
-        status[home_id] = home_id #tmp['body']['body']['home']
-        if 'modules' in tmp:
-            status['modules'] = {}
-            status['modules_types'] = []
-            for mod in range(0,len(tmp['modules'])):
-                status['modules'][tmp['modules'][mod]['id']]= tmp['modules'][mod]
-                status['modules_types'].append(tmp['modules'][mod]['type'])
-        logging.debug(status)
+        if 'errors' not in tmp:
+            status[home_id] = home_id #tmp['body']['body']['home']
+            if 'modules' in tmp:
+                status['modules'] = {}
+                status['modules_types'] = []
+                for mod in range(0,len(tmp['modules'])):
+                    status['modules'][tmp['modules'][mod]['id']]= tmp['modules'][mod]
+                    status['modules_types'].append(tmp['modules'][mod]['type'])
+            logging.debug(status)
         return(status)
 
     def get_module_info(self, home_id):
@@ -256,6 +257,7 @@ class NetatmoCloud(object):
     # Call your external service API
     def _callApi(self, method='GET', url=None, body=None):
         # When calling an API, get the access token (it will be refreshed if necessary)
+        #$Content_Type = "application/x-www-form-urlencoded;charset=UTF-8";
         accessToken = self.getAccessToken()
 
         if accessToken is None:
