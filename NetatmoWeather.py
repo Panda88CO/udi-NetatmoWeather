@@ -3,7 +3,7 @@
 from  NetatmoOauthDev import NetatmoCloud 
 import urllib.parse
 
-from oauth import OAuth
+#from oauth import OAuth
 try:
     import udi_interface
     logging = udi_interface.LOGGER
@@ -182,51 +182,34 @@ class NetatmoWeather (NetatmoCloud):
 
     def get_main_modules(self, home_id):
         '''get_main_modules '''
-        return(self._get_weather_modules(home_id, self.MAIN_mod))
+        return(self._get_modules(home_id, self.MAIN_mod))
     
 
     def get_indoor_modules(self, home_id):
         '''get_indoor_modules '''
-        return(self._get_weather_modules(home_id, self.INDOOR_mod))        
+        return(self._get_modules(home_id, self.INDOOR_mod))        
 
 
-    def get_outoor_modules(self, home_id):
+    def get_outdoor_modules(self, home_id):
         '''get_outdoor_modules '''
-        return(self._get_weather_modules(home_id, self.OUTDOOR_mod))    
+        return(self._get_modules(home_id, self.OUTDOOR_mod))    
     
     
     def get_rain_modules(self, home_id):
         '''get_rain_modules '''
-        return(self._get_weather_modules(home_id, self.RAIN_mod))    
+        return(self._get_modules(home_id, self.RAIN_mod))    
 
 
     def get_wind_modules(self, home_id):
         '''get_wind_modules '''
-        return(self._get_weather_modules(home_id, self.WIND_mod))    
-
-    def _get_weather_modules(self, home_id, mod_type):
-        '''get list of weather modules of type attached to house_id'''
-        mod_list = []
-        if home_id in self.homes_list and mod_type in self.modules_possible:
-            if type in self.homes_list[home_id]['modules_types']:
-                mod_list = []
-                for module in self.homes_list[home_id]:
-                    if self.homes_list[home_id][module]['type'] == mod_type:
-                        mod_list.append({module:self.homes_list[home_id][module]['name']})
-                
-            else:
-                logging.error('{} not foiund in system'.format(type))
-        else:
-            logging.error('No data found for {} {}'.format(home_id, mod_type))
-        return(mod_list)
-
+        return(self._get_modules(home_id, self.WIND_mod))    
 
 
     def _get_weather_data(self, home_id, dev_id, type):
         '''Get data function'''
         if home_id in self.weather_data:
             if type in self.weather_data[home_id]:
-                if dev_id in self.weather_data[home_id][type]
+                if dev_id in self.weather_data[home_id][type]:
                     return(self.weather_data[home_id][type][dev_id])
         else:
             logging.error('No data fouond for {0} {1}'.format(home_id, dev_id))
@@ -234,27 +217,26 @@ class NetatmoWeather (NetatmoCloud):
     def get_main_module_data(self, home_id, dev_id):
         '''Get data from main module'''
         logging.debug('get_main_module_data')
-
-        data_list = ['Temperature', 'CO2', 'Humidity', 'Noise', 'Pressure', 'AbsolutePressure', 'min_temp', 'max_temp', 'date_max_temp', 'date_min_temp', 'temp_trend', 'reachable']
-        return(self._get_weather_data(home_id, dev_id, self.MAIN_mod))
+        #data_list = ['Temperature', 'CO2', 'Humidity', 'Noise', 'Pressure', 'AbsolutePressure', 'min_temp', 'max_temp', 'date_max_temp', 'date_min_temp', 'temp_trend', 'reachable']
+        return(self._get_weather_data(home_id, dev_id, self.MAIN_mod, self.))
         
 
     def get_indoor_module_data(self, home_id, dev_id=None):
         logging.debug('get_indoor_module_data')
-        data_list = ['temperature', 'co2', 'humidity', 'last_seen', 'battery_state', 'ts']
+        #data_list = ['temperature', 'co2', 'humidity', 'last_seen', 'battery_state', 'ts']
         return(self._get_weather_data(home_id, dev_id, self.INDOOR_mod))
 
     def get_outdoor_module_data(self, home_id, dev_id=None):
         logging.debug('get_outdoor_module_data')
-        data_list = ['temperature', 'co2', 'humidity', 'last_seen', 'battery_state', 'ts']
+        #data_list = ['temperature', 'co2', 'humidity', 'last_seen', 'battery_state', 'ts']
         return(self._get_weather_data(home_id, dev_id, self.OUTDOOR_mod))
 
     def get_rain_module_data(self, home_id, dev_id=None):
         logging.debug('get_rain_module_data')
-        data_list = ['rain', 'sum_rain_1', 'sum_rail_24', 'last_seen', 'battery_state', 'ts']
+        #data_list = ['rain', 'sum_rain_1', 'sum_rail_24', 'last_seen', 'battery_state', 'ts']
         return(self._get_weather_data(home_id, dev_id, self.RAIN_mod))
 
     def get_wind_module_data(self, home_id, dev_id=None):
         logging.debug('get_wind_module_data')
-        data_list = ['wind_strength', 'wind_angle', 'wind+gust', 'wind_gust_angle', 'last_seen', 'battery_state', 'ts']
+        #data_list = ['wind_strength', 'wind_angle', 'wind+gust', 'wind_gust_angle', 'last_seen', 'battery_state', 'ts']
         return(self._get_weather_data(home_id, dev_id, self.WIND_mod))

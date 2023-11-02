@@ -204,21 +204,53 @@ class NetatmoCloud(object):
         return(status)
 
     def get_module_info(self, home_id):
+        '''get_module_info'''
         logging.debug('get_module_info')
-        modules = {}
         if home_id in self.homes_list:
             return(self.homes_list[home_id]['modules'])
         
-    '''
+    def get_module_types(self, home_id):
+        '''get_module_types'''
+        if home_id in self.homes_list:
+            return(self.homes_list[home_id]['modules_types'])
+
+    def get_home_name(self, home_id):
+        '''get_home_name'''
+        if home_id in self.homes_list:
+            return(self.homes_list[home_id]['name'])
+
     def get_modules_present(self, home_id):
+        '''get_modules_present'''
         logging.debug('get_modules_present')
         modules = {}
         if home_id in self.homes_list:
             for tmp in range(0,len(self.homes_list[home_id]['modules'])):
                 modules[tmp[id]] = tmp
         return(modules)
-    '''
+    
+
+    def _get_modules(self, home_id, mod_type):
+        '''get list of weather modules of type attached to house_id'''
+        try:
+            mod_dict = {}
+            if home_id in self.homes_list:
+                if mod_type in self.homes_list[home_id]['modules_types']:
+                    for module in self.homes_list[home_id]['modules']:
+                        if self.homes_list[home_id]['modules'][module]['type'] == mod_type:
+                            mod_dict[module] = self.homes_list[home_id]['modules'][module]['name']
+                    
+                else:
+                    logging.error('{} not found in system'.format(type))
+            else:
+                logging.error('No data found for {} {}'.format(home_id, mod_type))
+            return(mod_dict)
+    
+        except Exception as e:
+            logging.error('Exception : {}'.format(e))
+            return(None)
             
+    
+    
 
     # Call your external service API
     def _callApi(self, method='GET', url=None, body=None):
