@@ -14,6 +14,7 @@ MIT License
 import requests
 import time
 import json
+import urllib.parse
 #from udi_interface import LOGGER, Custom
 from oauth import OAuth
 try:
@@ -187,9 +188,9 @@ class NetatmoCloud(object):
         status = {}
         logging.debug('get_home_status')
         if home_id:
-            api_str = '/homestatus?home_id='+str(home_id)
-        #else:
-        #    api_str = '/homestatus'
+            home_id_str = urllib.parse.quote_plus(home_id )
+            api_str = '/homestatus?home_id='+str(home_id_str)
+
 
         tmp = self._callApi('GET', api_str)
         tmp = tmp['body']['home']

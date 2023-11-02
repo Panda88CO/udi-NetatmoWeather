@@ -218,7 +218,7 @@ class NetatmoWeather (NetatmoCloud):
         '''Get data from main module'''
         logging.debug('get_main_module_data')
         #data_list = ['Temperature', 'CO2', 'Humidity', 'Noise', 'Pressure', 'AbsolutePressure', 'min_temp', 'max_temp', 'date_max_temp', 'date_min_temp', 'temp_trend', 'reachable']
-        return(self._get_weather_data(home_id, dev_id, self.MAIN_mod, self.))
+        return(self._get_weather_data(home_id, dev_id, self.MAIN_mod))
         
 
     def get_indoor_module_data(self, home_id, dev_id=None):
