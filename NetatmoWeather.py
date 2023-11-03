@@ -104,11 +104,11 @@ class NetatmoWeather (NetatmoCloud):
         return(self.instant_data)
     
     def merge_data_str(self, data):
+        '''merge_data_str'''
         if data == 'ts':
             data_str = 'time_stamp'
         if data == 'time_utc':
-            data_str = 'time_stamp'
-               
+            data_str = 'time_stamp'               
         elif data == 'AbsolutePressure':
             data_str = 'absolute_pressure'
         elif data == 'reachable':

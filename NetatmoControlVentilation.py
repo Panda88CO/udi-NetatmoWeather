@@ -1,15 +1,9 @@
 
 #!/usr/bin/env python3
-
-from NetatmoOauthDev import NetatmoCloud
-from NetatmoControlHC import NetatmoControlHC
-from NetatmoControlLighting import NetatmoControlLighting
-from NetatmoControlPower import NetatmoControlPower
-from NetatmoControlShutter import NetatmoControlShutter
-from NetatmoControlVentilation import NetatmoControlVentilation
-
-
+from  NetatmoControlCommon import NetatmoControlCommon
 import urllib.parse
+
+from oauth import OAuth
 
 try:
     import udi_interface
@@ -21,9 +15,23 @@ except ImportError:
     
 
 
-class NetatmoControl (NetatmoCloud):
+class NetatmoControlVentilation (NetatmoControlCommon):
     def __init__(self):
         super().__init__()
         self.instant_data = {}
         self.cloud_data = {}
         self.control_data = {}
+
+        self.dev_list = ['NLG', 'NLGS', 'NLLF']
+        self.gateway_list = ['NLG', 'NLGS']
+        self.module_list = ['NLLF']
+
+
+
+
+    def update_ventilation_info(self, home_id):
+        '''update_ventilation_info'''
+
+
+
+        

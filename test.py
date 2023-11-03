@@ -8,43 +8,48 @@ odata = {}
 rdata = {}
 wdata = {}
 #net = NetatmoWeather()
-net = NetatmoControl()
-home_ids = net.get_homes_info()
+ctrl = NetatmoControl()
+weather = NetatmoWeather()
+
+home_ids = weather.get_homes_info()
 id_test = '651b5a3d5688c0b6a0099b36'
 id_saratoga = '5ea19b7f5f0d9668ce03609f'
 id_tahoe = '60a013f74afaa9259c61dfea'
 #for id in home_ids:
-id = id_test
-tmp = net.get_module_info(id)
-tmp2 = net.get_home_status(id)
-#main_mods = net.get_main_modules(id)
-#indoor_mods = net.get_indoor_modules(id)
-#outdoor_mods = net.get_outdoor_modules(id)
-#rain_mods = net.get_rain_modules(id)
-#wind_mods = net.get_wind_modules(id)
+tst_id = id_test
 
-    #test2 = net.get_home_status(id)
-#test3 = net.get_home_status()
+tmp = ctrl.get_module_info(tst_id)
+tmp2 = ctrl.get_home_status(tst_id)
+
+
+main_mods = weather.get_main_modules(tst_id)
+indoor_mods = weather.get_indoor_modules(tst_id)
+outdoor_mods = weather.get_outdoor_modules(tst_id)
+rain_mods = weather.get_rain_modules(tst_id)
+wind_mods = weather.get_wind_modules(tst_id)
+
+    #test2 = weather.get_home_status(tst_id)
+#test3 = weather.get_home_status()
 #need to change to struct
 if tmp:
-    test3 = net.update_weather_info_cloud(id)
-    #test4 = net.update_weather_info_cloud()
-    net.update_weather_info_instant(id)
+    test3 = weather.update_weather_info_cloud(tst_id)
+    #test4 = weather.update_weather_info_cloud()
+    weather.update_weather_info_instant(tst_id)
 
     
     for mod in main_mods:
-        mdata[mod] = net.get_main_module_data(id, mod)
+        mdata[mod] = weather.get_main_module_data(tst_id, mod)
     for mod in indoor_mods:
-        idata[mod] = net.get_indoor_module_data(id, mod)
+        idata[mod] = weather.get_indoor_module_data(tst_id, mod)
     for mod in outdoor_mods:
-        odata[mod] = net.get_outdoor_module_data(id, mod)
+        odata[mod] = weather.get_outdoor_module_data(tst_id, mod)
     for mod in rain_mods:
-        rdata[mod] = net.get_rain_module_data(id, mod)
+        rdata[mod] = weather.get_rain_module_data(tst_id, mod)
     for mod in wind_mods:
-        wdata[mod] = net.get_wind_module_data(id, mod)
+        wdata[mod] = weather.get_wind_module_data(tst_id, mod)
                     
     time.sleep(60)
-    net.update_weather_info_instant(id)
-    test3 = net.update_weather_info_cloud(id)
+    weather.update_weather_info_instant(tst_id)
+    test3 = weather.update_weather_info_cloud(tst_id)
 
 
