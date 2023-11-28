@@ -7,20 +7,22 @@ idata = {}
 odata = {}
 rdata = {}
 wdata = {}
-#net = NetatmoWeather()
-ctrl = NetatmoControl()
-weather = NetatmoWeather()
 
-home_ids = weather.get_homes_info()
+
+weather = NetatmoWeather()
+ctrl = NetatmoControl()
+home_ids = weather.get_homes()
+#ctrl_ids = ctrl.get_homes_info()
 id_test = '651b5a3d5688c0b6a0099b36'
 id_saratoga = '5ea19b7f5f0d9668ce03609f'
 id_tahoe = '60a013f74afaa9259c61dfea'
 #for id in home_ids:
-tst_id = id_test
+tst_id = id_saratoga
 
-tmp = ctrl.get_module_info(tst_id)
-tmp2 = ctrl.get_home_status(tst_id)
 
+'''
+tmp = weather.get_module_info(tst_id)
+tmp2 = weather.get_home_status(tst_id)
 
 main_mods = weather.get_main_modules(tst_id)
 indoor_mods = weather.get_indoor_modules(tst_id)
@@ -31,8 +33,8 @@ wind_mods = weather.get_wind_modules(tst_id)
     #test2 = weather.get_home_status(tst_id)
 #test3 = weather.get_home_status()
 #need to change to struct
-if tmp:
-    test3 = weather.update_weather_info_cloud(tst_id)
+if tmp2:
+    weather.update_weather_info_cloud(tst_id)
     #test4 = weather.update_weather_info_cloud()
     weather.update_weather_info_instant(tst_id)
 
@@ -50,6 +52,16 @@ if tmp:
                     
     time.sleep(60)
     weather.update_weather_info_instant(tst_id)
-    test3 = weather.update_weather_info_cloud(tst_id)
+    weather.update_weather_info_cloud(tst_id)
+'''
 
+tst_id = id_test
+home_ids = ctrl.get_homes()
+tmp = ctrl.get_module_info(tst_id)
+tmp2 = ctrl.get_home_status(tst_id)
+
+pwr_gateways = ctrl.get_power_gateways(tst_id)
+power_mods = ctrl.get_power_modules(tst_id)
+light_gateways = ctrl.get_lighting_gateways(tst_id)
+lighting_mods = ctrl.get_lighting_modules(tst_id)
 

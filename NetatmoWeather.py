@@ -17,15 +17,16 @@ except ImportError:
 class NetatmoWeather (NetatmoCloud):
     def __init__(self):
         super().__init__()
-        self.modules_possible = ['NAMain', 'NAModule1', 'NAModule2', 'NAModule3', 'NAModule4']
+        self._dev_list  = ['NAMain', 'NAModule1', 'NAModule2', 'NAModule3', 'NAModule4']
+
         self.instant_data = {}
         self.cloud_data = {}
         self.weather_data = {}
-        self.MAIN_mod = 'NAMain'
-        self.OUTDOOR_mod = 'NAModule1'
-        self.WIND_mod = 'NAModule2'
-        self.RAIN_mod = 'NAModule3'
-        self.INDOOR_mod = 'NAModule4'
+        self.MAIN_modules = ['NAMain']
+        self.OUTDOOR_modules = ['NAModule1']
+        self.WIND_modules = ['NAModule2']
+        self.RAIN_modules = ['NAModule3']
+        self.INDOOR_modules = ['NAModule4']
 
     # should not be necesary - filtered by token    
     #def get_weather_stations (self):
@@ -40,7 +41,7 @@ class NetatmoWeather (NetatmoCloud):
             tmp = self.get_module_info(home_id)
             self.cloud_data[home_id] = {}
             for dev_id in tmp:
-                if tmp[dev_id]['type'] == self.MAIN_mod:
+                if tmp[dev_id]['type'] in self.MAIN_modules:
                     
                     dev_id_str = urllib.parse.quote_plus(dev_id )
 
@@ -62,25 +63,38 @@ class NetatmoWeather (NetatmoCloud):
                             temp_data = temp_data['body']['devices'][0]
 
                         self.cloud_data[home_id] = {}
-                        self.cloud_data[home_id][self.MAIN_mod] = {}
-                        self.cloud_data[home_id][self.INDOOR_mod] = {}
-                        self.cloud_data[home_id][self.OUTDOOR_mod] = {}
-                        self.cloud_data[home_id][self.RAIN_mod] = {}
-                        self.cloud_data[home_id][self.WIND_mod] = {}
+                        self.cloud_data[home_id]['MAIN'] = {}
+                        self.cloud_data[home_id]['INDOOR'] = {}
+                        self.cloud_data[home_id]['OUTDOOR'] = {}
+                        self.cloud_data[home_id]['RAIN'] = {}
+                        self.cloud_data[home_id]['WIND'] = {}
 
-                        self.cloud_data[home_id][self.MAIN_mod][dev_id] = temp_data['dashboard_data']
-                        self.cloud_data[home_id][self.MAIN_mod][dev_id] ['reachable'] = temp_data['reachable']
-                        self.cloud_data[home_id][self.MAIN_mod][dev_id] ['data_type'] = temp_data['data_type']
+                        self.cloud_data[home_id]['MAIN'][dev_id] = temp_data['dashboard_data']
+                        self.cloud_data[home_id]['MAIN'][dev_id] ['reachable'] = temp_data['reachable']
+                        self.cloud_data[home_id]['MAIN'][dev_id] ['data_type'] = temp_data['data_type']
 
                         for module in range(0,len(temp_data['modules'])):
                             mod = temp_data['modules'][module]
-                            self.cloud_data[home_id][mod['type']][mod['_id']] = mod['dashboard_data']
-                            self.cloud_data[home_id][mod['type']][mod['_id']]['data_type'] = mod['data_type']
+                            self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = mod['dashboard_data']
+                            self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['data_type'] = mod['data_type']
             self.merge_data()         
             return(self.cloud_data)
         except Exception as e:
             logging.error('update_weather_info_cloud failed : {}'.format(e))
             return({})
+
+
+    def module_type (self, type):
+        if type in self.MAIN_modules:
+            return('MAIN')
+        elif type in self.OUTDOOR_modules:
+            return('OUTDOOR')
+        elif type in self.INDOOR_modules:
+            return('INDOOR')
+        elif type in self.RAIN_modules:
+            return('RAIN')
+        elif type in self.WIND_modules:
+            return('WIND')                    
 
 
     def update_weather_info_instant(self, home_id):
@@ -89,15 +103,15 @@ class NetatmoWeather (NetatmoCloud):
         tmp = self.get_home_status(home_id)
         if home_id not in self.instant_data:
             self.instant_data[home_id] = {}
-            self.instant_data[home_id][self.MAIN_mod] = {}
-            self.instant_data[home_id][self.OUTDOOR_mod] = {}
-            self.instant_data[home_id][self.INDOOR_mod] = {}
-            self.instant_data[home_id][self.RAIN_mod] = {}
-            self.instant_data[home_id][self.WIND_mod] = {}
+            self.instant_data[home_id]['MAIN'] = {}
+            self.instant_data[home_id]['OUTDOOR'] = {}
+            self.instant_data[home_id]['INDOOR'] = {}
+            self.instant_data[home_id]['RAIN'] = {}
+            self.instant_data[home_id]['WIND'] = {}
         if 'modules' in tmp:
             for module in tmp['modules']:
                 #self.instant_data[home_id][module] = tmp['modules'][module]
-                self.instant_data[home_id][tmp['modules'][module]['type']][module] = tmp['modules'][module]
+                self.instant_data[home_id][self.module_type(tmp['modules'][module]['type'])][module] = tmp['modules'][module]
         else:
             self.instant_data[home_id] = {}
         self.merge_data()
@@ -180,37 +194,50 @@ class NetatmoWeather (NetatmoCloud):
         logging.debug('merge_data complete')
 
 
+    def get_homes(self):
+        '''get_homes'''
+        tmp = self.get_homes_info()
+        weather_in_homes = {}
+        for home_id in tmp:
+            found = False
+            for mod_type in tmp[home_id]['module_types']:
+                if mod_type in  self._dev_list:
+                    found = True
+            if found:
+                weather_in_homes[home_id] = tmp[home_id]
+        return(weather_in_homes)
+
     def get_main_modules(self, home_id):
         '''get_main_modules '''
-        return(self._get_modules(home_id, self.MAIN_mod))
+        return(self._get_modules(home_id, self.MAIN_modules))
     
 
     def get_indoor_modules(self, home_id):
         '''get_indoor_modules '''
-        return(self._get_modules(home_id, self.INDOOR_mod))        
+        return(self._get_modules(home_id, self.INDOOR_modules))        
 
 
     def get_outdoor_modules(self, home_id):
         '''get_outdoor_modules '''
-        return(self._get_modules(home_id, self.OUTDOOR_mod))    
+        return(self._get_modules(home_id, self.OUTDOOR_modules))    
     
     
     def get_rain_modules(self, home_id):
         '''get_rain_modules '''
-        return(self._get_modules(home_id, self.RAIN_mod))    
+        return(self._get_modules(home_id,self.RAIN_modules))    
 
 
     def get_wind_modules(self, home_id):
         '''get_wind_modules '''
-        return(self._get_modules(home_id, self.WIND_mod))    
+        return(self._get_modules(home_id, self.WIND_modules))    
 
 
-    def _get_weather_data(self, home_id, dev_id, type):
+    def _get_weather_data(self, home_id, dev_id, mod_type):
         '''Get data function'''
         if home_id in self.weather_data:
-            if type in self.weather_data[home_id]:
-                if dev_id in self.weather_data[home_id][type]:
-                    return(self.weather_data[home_id][type][dev_id])
+            if mod_type in self.weather_data[home_id]:
+                if dev_id in self.weather_data[home_id][mod_type]:
+                    return(self.weather_data[home_id][mod_type][dev_id])
         else:
             logging.error('No data fouond for {0} {1}'.format(home_id, dev_id))
 
@@ -218,25 +245,25 @@ class NetatmoWeather (NetatmoCloud):
         '''Get data from main module'''
         logging.debug('get_main_module_data')
         #data_list = ['Temperature', 'CO2', 'Humidity', 'Noise', 'Pressure', 'AbsolutePressure', 'min_temp', 'max_temp', 'date_max_temp', 'date_min_temp', 'temp_trend', 'reachable']
-        return(self._get_weather_data(home_id, dev_id, self.MAIN_mod))
+        return(self._get_weather_data(home_id, dev_id, 'MAIN'))
         
 
     def get_indoor_module_data(self, home_id, dev_id=None):
         logging.debug('get_indoor_module_data')
         #data_list = ['temperature', 'co2', 'humidity', 'last_seen', 'battery_state', 'ts']
-        return(self._get_weather_data(home_id, dev_id, self.INDOOR_mod))
+        return(self._get_weather_data(home_id, dev_id, 'INDOOR'))
 
     def get_outdoor_module_data(self, home_id, dev_id=None):
         logging.debug('get_outdoor_module_data')
         #data_list = ['temperature', 'co2', 'humidity', 'last_seen', 'battery_state', 'ts']
-        return(self._get_weather_data(home_id, dev_id, self.OUTDOOR_mod))
+        return(self._get_weather_data(home_id, dev_id, 'OUTDOOR'))
 
     def get_rain_module_data(self, home_id, dev_id=None):
         logging.debug('get_rain_module_data')
         #data_list = ['rain', 'sum_rain_1', 'sum_rail_24', 'last_seen', 'battery_state', 'ts']
-        return(self._get_weather_data(home_id, dev_id, self.RAIN_mod))
+        return(self._get_weather_data(home_id, dev_id, 'RAIN'))
 
     def get_wind_module_data(self, home_id, dev_id=None):
         logging.debug('get_wind_module_data')
         #data_list = ['wind_strength', 'wind_angle', 'wind+gust', 'wind_gust_angle', 'last_seen', 'battery_state', 'ts']
-        return(self._get_weather_data(home_id, dev_id, self.WIND_mod))
+        return(self._get_weather_data(home_id, dev_id, 'WIND'))

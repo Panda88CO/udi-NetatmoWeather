@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python3
 
-from  NetatmoControlCommon import NetatmoControlCommon
+from  NetatmoOauthDev import NetatmoCloud 
 import urllib.parse
 
 from oauth import OAuth
@@ -16,15 +16,12 @@ except ImportError:
     
 
 
-class NetatmoControlHC (NetatmoControlCommon):
+class NetatmoControlHC (NetatmoCloud):
     def __init__(self):
         super().__init__()
         self.instant_data = {}
         self.cloud_data = {}
         self.control_data = {}
-
-
-
         self.dev_list = ['BNS', 'OTH', 'OTM', 'NRV', 'BNMH', 'BNTH', 'BNFC','BNTR']
         self.gateway_list = ['BNS', 'OTH', 'BNMH']
         self.module_list = [ 'OTM', 'NRV', 'BNTH', 'BNFC','BNTR']

@@ -31,7 +31,6 @@ from datetime import timedelta, datetime
 # It inherits the OAuth class
 class NetatmoCloud(object):
    
-
     def dummy_read(self):
         file = open("token.json", "r")
         self.token = json.load(file)
@@ -165,11 +164,11 @@ class NetatmoCloud(object):
             homes_list[tmp['id']]= {}
             homes_list[tmp['id']]['name']= tmp['name']
             homes_list[tmp['id']]['modules'] = {}
-            homes_list[tmp['id']]['modules_types'] = []
+            homes_list[tmp['id']]['module_types'] = []
             if 'modules' in tmp:
                 for mod in range(0,len(tmp['modules'])):
                     homes_list[tmp['id']]['modules'][tmp['modules'][mod]['id']] = tmp['modules'][mod]
-                    homes_list[tmp['id']]['modules_types'].append( tmp['modules'][mod]['type'] )
+                    homes_list[tmp['id']]['module_types'].append( tmp['modules'][mod]['type'] )
         return(homes_list)
 
 
@@ -198,10 +197,10 @@ class NetatmoCloud(object):
             status[home_id] = home_id #tmp['body']['body']['home']
             if 'modules' in tmp:
                 status['modules'] = {}
-                status['modules_types'] = []
+                status['module_types'] = []
                 for mod in range(0,len(tmp['modules'])):
                     status['modules'][tmp['modules'][mod]['id']]= tmp['modules'][mod]
-                    status['modules_types'].append(tmp['modules'][mod]['type'])
+                    status['module_types'].append(tmp['modules'][mod]['type'])
             logging.debug(status)
         return(status)
 
@@ -209,12 +208,14 @@ class NetatmoCloud(object):
         '''get_module_info'''
         logging.debug('get_module_info')
         if home_id in self.homes_list:
+            # Find relevan modules
+
             return(self.homes_list[home_id]['modules'])
         
     def get_module_types(self, home_id):
         '''get_module_types'''
         if home_id in self.homes_list:
-            return(self.homes_list[home_id]['modules_types'])
+            return(self.homes_list[home_id]['module_types'])
 
     def get_home_name(self, home_id):
         '''get_home_name'''
@@ -231,20 +232,17 @@ class NetatmoCloud(object):
         return(modules)
     
 
-    def _get_modules(self, home_id, mod_type):
+    def _get_modules(self, home_id, mod_type_lst):
         '''get list of weather modules of type attached to house_id'''
         try:
             mod_dict = {}
             if home_id in self.homes_list:
-                if mod_type in self.homes_list[home_id]['modules_types']:
-                    for module in self.homes_list[home_id]['modules']:
-                        if self.homes_list[home_id]['modules'][module]['type'] == mod_type:
-                            mod_dict[module] = self.homes_list[home_id]['modules'][module]['name']
+               for module in self.homes_list[home_id]['modules']:
+                   if self.homes_list[home_id]['modules'][module]['type'] in mod_type_lst:
+                      mod_dict[module] = self.homes_list[home_id]['modules'][module]['name']
                     
-                else:
-                    logging.error('{} not found in system'.format(type))
             else:
-                logging.error('No data found for {} {}'.format(home_id, mod_type))
+                logging.error('No data found for {} {}'.format(home_id, mod_type_lst))
             return(mod_dict)
     
         except Exception as e:

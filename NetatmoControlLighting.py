@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python3
 
-from  NetatmoControlCommon import NetatmoControlCommon
+from  NetatmoOauthDev import NetatmoCloud 
 import urllib.parse
 
 from oauth import OAuth
@@ -16,9 +16,9 @@ except ImportError:
     
 
 
-class NetatmoControlLighting (NetatmoControlCommon):
+class NetatmoControlLighting (NetatmoCloud):
     def __init__(self):
-        super().__init__()
+        #super().__init__()
         self.instant_data = {}
         self.cloud_data = {}
         self.control_data = {}
@@ -37,3 +37,18 @@ class NetatmoControlLighting (NetatmoControlCommon):
         '''update_lighting_info'''
 
 
+    def get_modules(self, home_id):
+        '''get_modules'''
+        return(self._get_modules(home_id, self.module_list))   
+
+    def get_gateways(self, home_id):
+        '''get_modules'''
+        return(self._get_modules(home_id, self.gateway_list))  
+    
+    def get_dimmers (self, home_id):
+        '''get_dimmers'''
+        return(self._get_modules(home_id, self.dimmer_list))  
+
+    def get_switches(self, home_id):
+        '''get_switches'''
+        return(self._get_modules(home_id, self.switch_list))  

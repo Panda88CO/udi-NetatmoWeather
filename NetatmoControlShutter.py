@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python3
 
-from  NetatmoControlCommon import NetatmoControlCommon
+from  NetatmoOauthDev import NetatmoCloud 
 import urllib.parse
 
 from oauth import OAuth
@@ -16,7 +16,7 @@ except ImportError:
     
 
 
-class NetatmoControlShutter (NetatmoControlCommon):
+class NetatmoControlShutter (NetatmoCloud):
     def __init__(self):
         super().__init__()
         self.instant_data = {}
