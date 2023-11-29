@@ -205,6 +205,7 @@ class NetatmoWeather (NetatmoCloud):
                     found = True
             if found:
                 weather_in_homes[home_id] = tmp[home_id]
+        self.homes_list = weather_in_homes
         return(weather_in_homes)
 
     def get_main_modules(self, home_id):

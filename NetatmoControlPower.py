@@ -2,6 +2,7 @@
 #!/usr/bin/env python3
 
 from  NetatmoOauthDev import NetatmoCloud 
+#from NetatmoControl import NetatmoControl
 import urllib.parse
 
 from oauth import OAuth

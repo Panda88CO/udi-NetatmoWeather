@@ -43,15 +43,15 @@ class NetatmoControl (NetatmoCloud):
 
 
 
+
+
+    def initialize(self):
+        '''initialize'''
         self.power = NetatmoControlPower()
         self.lighting = NetatmoControlLighting()
         self.hot_cold = NetatmoControlHC()
         self.ventilation = NetatmoControlVentilation()
         self.shutter = NetatmoControlShutter()
-
-
-    def initialize(self):
-        '''initialize'''
 
     def get_type_devices(self, home_id, dev_list):
         '''get_type_modules'''
@@ -76,6 +76,8 @@ class NetatmoControl (NetatmoCloud):
                     found = True
             if found:
                 ctrl_in_homes[home_id] = tmp[home_id]
+        self.homes_list = ctrl_in_homes
+        self.initialize()
         return(ctrl_in_homes)
 
 
