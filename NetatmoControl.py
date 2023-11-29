@@ -33,25 +33,37 @@ class NetatmoControl (NetatmoCloud):
                          'NLV', 'NLLV', 'NLIV', 'Z3V', 'NLAV', 'BNAB', 'BNAS', 'BNMS', 'NLLF'] 
         
         self.HC_dev_list = ['BNS', 'OTH', 'OTM', 'NRV', 'BNMH', 'BNTH', 'BNFC','BNTR']
+        self.HC_gateway_list = ['BNS', 'OTH', 'BNMH']
+        self.HC_module_list = [ 'OTM', 'NRV', 'BNTH', 'BNFC','BNTR']
+
         self.Light_dev_list = ['NLG', 'NLGS', 'NLFN', 'NLL', 'NLF', 'NLFE','NLM', 'NLIS', 'NLTS', 'NLD', 'Z3L', 'BNMH', 'BNLD','BNIL', 'BN3L' ]
+        self.Light_gateway_list = ['NLG', 'NLGS', 'BNMH']
+        self.Light_module_list = [ 'NLFN', 'NLL', 'NLF', 'NLFE','NLM', 'NLIS', 'NLTS', 'NLD', 'Z3L', 'BNLD','BNIL', 'BN3L' ]
+        self.Light_dimmer_list = [ 'NLFN', 'NLF', 'NLFE',  'NLD', 'Z3L', 'BNLD','BNIL', 'BN3L' ]
+        self.Light_switch_list = [ 'NLL', 'NLM', 'NLIS',  'NLD', 'Z3L', 'BNIL', 'BN3L' ]
+
         self.Power_dev_list = ['NLG', 'NLGS', 'NLE', 'NLPS', 'NLP', 'NLPM', 'NLC', 'NLPC', 'NLPT', 'NLPO', 'NLPD', 'BNMH', 'BNMH', 'BNXM' ]
-        self.pwr_gateways_list = ['NLG', 'NLGS', 'NLE', 'BNMH']
-        self.pwr_modules_list = [ 'NLPS', 'NLP', 'NLPM', 'NLC', 'NLPC', 'NLPT', 'NLPO', 'NLPD', 'BNMH', 'BNXM' ]
+        self.Power_gateway_list = ['NLG', 'NLGS', 'NLE', 'BNMH']
+        self.Power_module_list = [ 'NLPS', 'NLP', 'NLPM', 'NLC', 'NLPC', 'NLPT', 'NLPO', 'NLPD', 'BNMH', 'BNXM' ]
 
         self.Shutter_dev_list = ['NLG', 'NLGS', 'NLV', 'NLLV', 'NLD', 'NLIV', 'Z3V', 'NLAV', 'BNMH', 'BNAB', 'BNAS', 'BNMS']
-        self.Ventilation_dev_list = ['NLG', 'NLGS', 'NLLF']
+        self.Shutter_gateway_list = ['NLG', 'NLGS',  'BNMH']
+        self.Shutter_module_list = [ 'NLV', 'NLLV', 'NLD', 'NLIV', 'Z3V', 'NLAV', 'BNAB', 'BNAS', 'BNMS']
 
+        self.Ventilation_dev_list = ['NLG', 'NLGS', 'NLLF']
+        self.Ventilation_gateway_list = ['NLG', 'NLGS']
+        self.Ventilation_module_list = ['NLLF']
 
 
 
 
     def initialize(self):
         '''initialize'''
-        self.power = NetatmoControlPower()
-        self.lighting = NetatmoControlLighting()
-        self.hot_cold = NetatmoControlHC()
-        self.ventilation = NetatmoControlVentilation()
-        self.shutter = NetatmoControlShutter()
+        #self.power = NetatmoControlPower()
+        #self.lighting = NetatmoControlLighting()
+        #self.hot_cold = NetatmoControlHC()
+        #self.ventilation = NetatmoControlVentilation()
+        #self.shutter = NetatmoControlShutter()
 
     def get_type_devices(self, home_id, dev_list):
         '''get_type_modules'''
@@ -77,7 +89,7 @@ class NetatmoControl (NetatmoCloud):
             if found:
                 ctrl_in_homes[home_id] = tmp[home_id]
         self.homes_list = ctrl_in_homes
-        self.initialize()
+        #self.initialize()
         return(ctrl_in_homes)
 
 
@@ -105,18 +117,18 @@ class NetatmoControl (NetatmoCloud):
 
     def get_power_gateways(self, home_id):
         '''get_power_gateways'''
-        self.power.get_gateways(home_id)
+        return(self._get_modules(home_id, self.Power_gateway_list)) 
 
 
     def get_power_modules(self, home_id):
         '''get_power_modules'''
-        self.power.get_modules(home_id)
+        return(self._get_modules(home_id, self.Power_module_list))   
 
     def get_lighting_gateways(self, home_id):
         '''get_lighting_gateways'''
-        self.lighting.get_gateways(home_id)
+        return(self._get_modules(home_id, self.Light_gateway_list)) 
 
 
     def get_lighting_modules(self, home_id):
         '''get_lighting_modules'''
-        self.lighting.get_modules(home_id)
+        return(self._get_modules(home_id, self.Light_module_list))   

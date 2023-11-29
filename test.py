@@ -20,7 +20,7 @@ id_tahoe = '60a013f74afaa9259c61dfea'
 tst_id = id_saratoga
 
 
-'''
+
 tmp = weather.get_module_info(tst_id)
 tmp2 = weather.get_home_status(tst_id)
 
@@ -53,7 +53,7 @@ if tmp2:
     time.sleep(60)
     weather.update_weather_info_instant(tst_id)
     weather.update_weather_info_cloud(tst_id)
-'''
+
 
 tst_id = id_test
 home_ids = ctrl.get_homes()
@@ -65,3 +65,4 @@ power_mods = ctrl.get_power_modules(tst_id)
 light_gateways = ctrl.get_lighting_gateways(tst_id)
 lighting_mods = ctrl.get_lighting_modules(tst_id)
 
+print('Done')

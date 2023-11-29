@@ -35,10 +35,4 @@ class NetatmoControlPower (NetatmoCloud):
     def update_power_info(self, home_id):
         '''update_power_info'''    
 
-    def get_modules(self, home_id):
-        '''get_modules'''
-        return(self._get_modules(home_id, self.modules_list))   
-
-    def get_gateways(self, home_id):
-        '''get_modules'''
-        return(self._get_modules(home_id, self.gateways_list))  
+    

@@ -192,8 +192,9 @@ class NetatmoCloud(object):
 
 
         tmp = self._callApi('GET', api_str)
-        tmp = tmp['body']['home']
+        tmp = tmp['body']
         if 'errors' not in tmp:
+            tmp = tmp['home']
             status[home_id] = home_id #tmp['body']['body']['home']
             if 'modules' in tmp:
                 status['modules'] = {}
@@ -202,6 +203,9 @@ class NetatmoCloud(object):
                     status['modules'][tmp['modules'][mod]['id']]= tmp['modules'][mod]
                     status['module_types'].append(tmp['modules'][mod]['type'])
             logging.debug(status)
+        else:
+            status['error'] = tmp['error']
+
         return(status)
 
     def get_module_info(self, home_id):
