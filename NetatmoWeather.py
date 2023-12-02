@@ -196,20 +196,22 @@ class NetatmoWeather (NetatmoCloud):
 
     def get_homes(self):
         '''get_homes'''
+
         tmp = self.get_homes_info()
-        weather_in_homes = {}
+        self.weather_in_homes = {}
         for home_id in tmp:
             found = False
             for mod_type in tmp[home_id]['module_types']:
                 if mod_type in  self._dev_list:
                     found = True
             if found:
-                weather_in_homes[home_id] = tmp[home_id]
-        self.homes_list = weather_in_homes
-        return(weather_in_homes)
+                self.weather_in_homes[home_id] = tmp[home_id]
+        return(self.weather_in_homes)
 
     def get_main_modules(self, home_id):
         '''get_main_modules '''
+        tmp = self._get_modules(home_id, self.MAIN_modules)
+
         return(self._get_modules(home_id, self.MAIN_modules))
     
 

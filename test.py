@@ -20,8 +20,17 @@ id_tahoe = '60a013f74afaa9259c61dfea'
 tst_id = id_saratoga
 
 
+mod_list = []
+tmp = weather.get_modules(tst_id)
+for house in home_ids:
+    house_name = home_ids[house]['name']
+    main_modules =weather.get_main_modules(house)
+    for m_module in main_modules:
+        tmp_s = weather.get_sub_modules(house, m_module)
+        for s_module in tmp_s:
+            sub_m = weather.get_module_info(s_module)
 
-tmp = weather.get_module_info(tst_id)
+
 tmp2 = weather.get_home_status(tst_id)
 
 main_mods = weather.get_main_modules(tst_id)

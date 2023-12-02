@@ -208,12 +208,11 @@ class NetatmoCloud(object):
 
         return(status)
 
-    def get_module_info(self, home_id):
-        '''get_module_info'''
-        logging.debug('get_module_info')
+    def get_modules(self, home_id):
+        '''get_modules'''
+        logging.debug('get_modules')
         if home_id in self.homes_list:
             # Find relevan modules
-
             return(self.homes_list[home_id]['modules'])
         
     def get_module_types(self, home_id):
@@ -235,6 +234,21 @@ class NetatmoCloud(object):
                 modules[tmp[id]] = tmp
         return(modules)
     
+    def get_sub_modules(self, home_id, main_module_id):
+        '''get_sub_modules'''
+        logging.debug('get_sub_modules')
+        if home_id in  self.homes_list:
+            if main_module_id in self.homes_list[home_id]['modules']:
+                if 'modules_bridged' in self.homes_list[home_id]['modules'][main_module_id]:
+                    return(self.homes_list[home_id]['modules'][main_module_id]['modules_bridged'])
+
+    def get_module_info(self, home_id, module_id):
+        '''get_module_info'''
+        logging.debug('get_module_info')
+        if home_id in  self.homes_list:
+            if module_id in self.homes_list[home_id]['modules']:
+                return(self.homes_list[home_id]['modules'][module_id])
+
 
     def _get_modules(self, home_id, mod_type_lst):
         '''get list of weather modules of type attached to house_id'''
@@ -243,7 +257,9 @@ class NetatmoCloud(object):
             if home_id in self.homes_list:
                for module in self.homes_list[home_id]['modules']:
                    if self.homes_list[home_id]['modules'][module]['type'] in mod_type_lst:
-                      mod_dict[module] = self.homes_list[home_id]['modules'][module]['name']
+                      mod_dict[module] = {}
+                      mod_dict[module]['name'] = self.homes_list[home_id]['modules'][module]['name']
+
                     
             else:
                 logging.error('No data found for {} {}'.format(home_id, mod_type_lst))
