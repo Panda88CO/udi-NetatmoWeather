@@ -1,6 +1,6 @@
 
 #!/usr/bin/env python3
-from  NetatmoOauthDev import NetatmoCloud 
+from  NetatmoOauth import NetatmoCloud 
 import urllib.parse
 
 #from oauth import OAuth
@@ -15,8 +15,9 @@ except ImportError:
 
 
 class NetatmoWeather (NetatmoCloud):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, polyglot):
+        super().__init__(polyglot)
+        self.poly = polyglot
         self._dev_list  = ['NAMain', 'NAModule1', 'NAModule2', 'NAModule3', 'NAModule4']
 
         self.instant_data = {}
@@ -27,7 +28,7 @@ class NetatmoWeather (NetatmoCloud):
         self.WIND_modules = ['NAModule2']
         self.RAIN_modules = ['NAModule3']
         self.INDOOR_modules = ['NAModule4']
-
+        self.scope = "read_station"
 
     # should not be necesary - filtered by token    
     #def get_weather_stations (self):
