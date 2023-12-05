@@ -22,13 +22,29 @@ tst_id = id_saratoga
 
 mod_list = []
 tmp = weather.get_modules(tst_id)
-for house in home_ids:
-    house_name = home_ids[house]['name']
-    main_modules =weather.get_main_modules(house)
-    for m_module in main_modules:
-        tmp_s = weather.get_sub_modules(house, m_module)
-        for s_module in tmp_s:
-            sub_m = weather.get_module_info(s_module)
+for home in home_ids:
+    home_name = home_ids[home]['name']
+    main_modules =weather.get_main_modules(home)
+    if main_modules:
+        for m_module in main_modules:
+            tst = {}
+            tst['home'] = home
+            tst['main_module'] = m_module
+            mod_list.append(tst)
+            tmp_s = weather.get_sub_modules(home, m_module)
+            if tmp_s:
+                for s_module in tmp_s:
+                    sub_m = weather.get_module_info(home, s_module)
+
+for nbr in range (0,len(mod_list)):
+    temp= mod_list[nbr]
+    module = weather.get_module_info(temp['home'], temp['main_module'])
+    if 'name' in module:
+        node_name = module['name']
+    else:
+        node_name = module['id']
+    node_address = module['id']
+    #node_name = self.getValidName(node_name)
 
 
 tmp2 = weather.get_home_status(tst_id)
@@ -66,12 +82,12 @@ if tmp2:
 
 tst_id = id_test
 home_ids = ctrl.get_homes()
-tmp = ctrl.get_module_info(tst_id)
-tmp2 = ctrl.get_home_status(tst_id)
+#tmp = ctrl.get_module_info(tst_id)
+#tmp2 = ctrl.get_home_status(tst_id)
 
-pwr_gateways = ctrl.get_power_gateways(tst_id)
-power_mods = ctrl.get_power_modules(tst_id)
-light_gateways = ctrl.get_lighting_gateways(tst_id)
-lighting_mods = ctrl.get_lighting_modules(tst_id)
+#pwr_gateways = ctrl.get_power_gateways(tst_id)
+#power_mods = ctrl.get_power_modules(tst_id)
+#light_gateways = ctrl.get_lighting_gateways(tst_id)
+#lighting_mods = ctrl.get_lighting_modules(tst_id)
 
 print('Done')

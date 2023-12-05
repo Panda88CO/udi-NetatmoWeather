@@ -43,6 +43,7 @@ class NetatmoCloud(OAuth):
 
         self.poly = polyglot
         self.customParams = Custom(polyglot, 'customparams')
+        
         logging.info('External service connectivity initialized...')
         #logging.debug('oauth : {}'.format(self.oauthConfig))
         time.sleep(1)

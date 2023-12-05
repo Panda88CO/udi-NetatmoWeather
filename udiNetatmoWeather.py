@@ -10,6 +10,9 @@ MIT License
 
 import time
 import traceback
+import re
+import sys
+
 try:
     import udi_interface
     logging = udi_interface.LOGGER
@@ -19,9 +22,11 @@ except ImportError:
     logging.basicConfig(level=logging.DEBUG)
 
 from NetatmoOauth import NetatmoCloud
-from  NetatmoWeather import NetatmoWeather
+from NetatmoWeather import NetatmoWeather
+from  udiNetatmoWeatherMain import udiNetatmoWeatherMain
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
+version = '0.0.2'
 
 polyglot = None
 myNetatmo = None
@@ -59,7 +64,15 @@ class NetatmoController(udi_interface.Node):
             time.sleep(0.1)
         self.n_queue.pop()
 
+    def getValidName(self, name):
+        name = bytes(name, 'utf-8').decode('utf-8','ignore')
+        return re.sub(r"[^A-Za-z0-9_ ]", "", name)
 
+    # remove all illegal characters from node address
+    def getValidAddress(self, name):
+        name = bytes(name, 'utf-8').decode('utf-8','ignore')
+        return re.sub(r"[^A-Za-z0-9_]", "", name.lower()[:14])
+    
 
     def convert_temp_unit(self, tempStr):
         if tempStr.capitalize()[:1] == 'F':
@@ -80,8 +93,8 @@ class NetatmoController(udi_interface.Node):
         logging.debug('retrieved data {}'.format(res))
         self.weather = NetatmoWeather()
 
-        self.house_ids = self.weather.get_homes()
-        if self.house_ids:
+        self.home_ids = self.weather.get_homes()
+        if self.home_ids:
             self.node.setDriver('ST', 1, True, True)
 
 
@@ -93,26 +106,53 @@ class NetatmoController(udi_interface.Node):
             logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
 
         self.addNodes()
+        
 
     def addNodes(self):
         ''''''
         logging.info('Adding selected weather stations')
-
+        selected = False
         self.enabled_list = []
-        for house in self.house_ids:
-            house_name = self.house_ids[house]['name']
-            main_modules = self.weather.get_main_modules(house)
+        self.homes_list = []
+        for home in self.home_ids:
+            home_name = self.home_ids[home]['name']
+            main_modules = self.weather.get_main_modules(home)
             for m_module in main_modules:
-                mod_name = main_modules[m_module]
-                node_name = house_name + '_'+ mod_name
+                mod_name = main_modules[m_module]['name']
+                node_name = home_name + '_'+ mod_name
+                tmp = {}
+                tmp['home'] = home
+                tmp['main_module'] = m_module
                 if node_name in self.Parameters:
                     if self.Parameters[node_name] == 1:
-                        self.enabled_list.append(m_module)
+                        self.enabled_list.append(tmp)
+                        if tmp['home'] not in self.homes_list:
+                            self.homes_list.append(tmp['home'])
+                            self.weather.update_weather_info_cloud(home)
+                            self.weather.update_weather_info_instant(home)
+                        selected = True
                 else:
                     self.Parameters[node_name] = 1 #enable by default
-                    self.enabled_list.append(m_module)
+                    self.enabled_list.append(tmp)
+                    if tmp['home'] not in self.homes_list:
+                        self.homes_list.append(tmp['home'])
+                        self.weather.update_weather_info_cloud(home)
+                        self.weather.update_weather_info_instant(home)
 
-        for nde in node_
+        if not selected and len(self.home_ids > 1):
+            self.poly.Notices['home_id'] = 'Check config to select which home/modules should be used (1 - used, 0 - not used) - then restart'
+        else:
+            for node_nbr in range(0,len(self.enabled_list)):
+                module_info = self.enabled_list[node_nbr]
+                if module_info['home'] not in self.homes_list:
+                    self.homes_list.append(module_info['home'])
+                module = self.weather.get_module_info(module_info['home'],module_info['main_module'])
+                node_address = self.getValieAddress(module[id])
+                node_name = self.getValidName(module['name'])
+                if not udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.weather, module_info):
+                    logging.error('Failed to create MAin Weather station: {}'.format(node_name))
+                time.sleep(1)            
+
 
 
     def configDoneHandler(self):
@@ -156,26 +196,36 @@ class NetatmoController(udi_interface.Node):
     def systemPoll (self, polltype):
         if self.nodeDefineDone:
             logging.info('System Poll executing: {}'.format(polltype))
+            try:
+                if 'longPoll' in polltype:
+                    #Keep token current
+                    #self.node.setDriver('GV0', self.temp_unit, True, True)
+                    
+                        self.myNetatmo.refresh_token()
+                        for home in self.homes_list:
+                            self.weather.update_weather_info_cloud(home)
+                            self.weather.update_weather_info_instant(home)
 
-            if 'longPoll' in polltype:
-                #Keep token current
-                #self.node.setDriver('GV0', self.temp_unit, True, True)
-                try:
+
+                        nodes = self.poly.getNodes()
+                        for nde in nodes:
+                            if nde != 'controller':   # but not the setup node
+                                logging.debug('updating node {} data'.format(nde))
+                                nodes[nde].updateISYdrivers()
+                                                
+                if 'shortPoll' in polltype:
+                    self.heartbeat()
                     self.myNetatmo.refresh_token()
-                    #self.blink.refresh_data()
-                    nodes = self.poly.getNodes()
+                    for home in self.homes_list:
+                        self.weather.update_weather_info_instant(home)
                     for nde in nodes:
-                        if nde != 'setup':   # but not the setup node
+                        if nde != 'controller':   # but not the setup node
                             logging.debug('updating node {} data'.format(nde))
-                            nodes[nde].updateISYdrivers()
-                         
-                except Exception as e:
+                            nodes[nde].updateISYdrivers()                   
+            except Exception as e:
                     logging.debug('Exeption occcured : {}'.format(e))
    
                 
-            if 'shortPoll' in polltype:
-                self.heartbeat()
-                self.myNetatmo.refresh_token()
         else:
             logging.info('System Poll - Waiting for all nodes to be added')
 
@@ -200,7 +250,7 @@ if __name__ == "__main__":
         polyglot = udi_interface.Interface([])
         #polyglot.start('0.2.31')
 
-        polyglot.start({ 'version': '0.0.2', 'requestId': True })
+        polyglot.start({ 'version': version, 'requestId': True })
 
         # Show the help in PG3 UI under the node's Configuration option
         polyglot.setCustomParamsDoc()

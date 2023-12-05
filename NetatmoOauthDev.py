@@ -50,6 +50,7 @@ class NetatmoCloud(object):
         self.client_ID = None
         self.client_SECRET = None
         self.token = None
+        self.netatmo_systems = {}
         self.dummy_read() #emulate oauth
         self.scope = None
         self.customData = None
@@ -66,6 +67,7 @@ class NetatmoCloud(object):
 
         #self.poly = polyglot
         #self.customParams = Custom(polyglot, 'customparams')
+        self.getAccessToken()
         logging.info('External service connectivity initialized...')
         #logging.debug('oauth : {}'.format(self.oauthConfig))
         time.sleep(1)
@@ -186,27 +188,31 @@ class NetatmoCloud(object):
     def get_home_status(self, home_id):
         status = {}
         logging.debug('get_home_status')
-        if home_id:
-            home_id_str = urllib.parse.quote_plus(home_id )
-            api_str = '/homestatus?home_id='+str(home_id_str)
+        try:
+            if home_id:
+                home_id_str = urllib.parse.quote_plus(home_id )
+                api_str = '/homestatus?home_id='+str(home_id_str)
 
 
-        tmp = self._callApi('GET', api_str)
-        tmp = tmp['body']
-        if 'errors' not in tmp:
-            tmp = tmp['home']
-            status[home_id] = home_id #tmp['body']['body']['home']
-            if 'modules' in tmp:
-                status['modules'] = {}
-                status['module_types'] = []
-                for mod in range(0,len(tmp['modules'])):
-                    status['modules'][tmp['modules'][mod]['id']]= tmp['modules'][mod]
-                    status['module_types'].append(tmp['modules'][mod]['type'])
-            logging.debug(status)
-        else:
-            status['error'] = tmp['error']
+            tmp = self._callApi('GET', api_str)
+            if tmp:
+                tmp = tmp['body']
+                if 'errors' not in tmp:
+                    tmp = tmp['home']
+                    status[home_id] = home_id #tmp['body']['body']['home']
+                    if 'modules' in tmp:
+                        status['modules'] = {}
+                        status['module_types'] = []
+                        for mod in range(0,len(tmp['modules'])):
+                            status['modules'][tmp['modules'][mod]['id']]= tmp['modules'][mod]
+                            status['module_types'].append(tmp['modules'][mod]['type'])
+                    logging.debug(status)
+                else:
+                    status['error'] = tmp['error']
 
-        return(status)
+                return(status)
+        except Exception as e:
+            logging.error('Error get hiome status : {}'.format(e))
 
     def get_modules(self, home_id):
         '''get_modules'''
@@ -256,9 +262,14 @@ class NetatmoCloud(object):
             mod_dict = {}
             if home_id in self.homes_list:
                for module in self.homes_list[home_id]['modules']:
-                   if self.homes_list[home_id]['modules'][module]['type'] in mod_type_lst:
-                      mod_dict[module] = {}
-                      mod_dict[module]['name'] = self.homes_list[home_id]['modules'][module]['name']
+                    if self.homes_list[home_id]['modules'][module]['type'] in mod_type_lst:
+                        mod_dict[module] = {}
+                        if 'name' in  self.homes_list[home_id]['modules'][module]:
+                            mod_dict[module]['name'] = self.homes_list[home_id]['modules'][module]['name']
+                        else:
+                            mod_dict[module]['name'] = self.homes_list[home_id]['modules'][module]['id']
+                    
+
 
                     
             else:

@@ -28,6 +28,7 @@ class NetatmoWeather (NetatmoCloud):
         self.RAIN_modules = ['NAModule3']
         self.INDOOR_modules = ['NAModule4']
 
+
     # should not be necesary - filtered by token    
     #def get_weather_stations (self):
     #    logging.debug('get_weather_stations')
@@ -38,7 +39,7 @@ class NetatmoWeather (NetatmoCloud):
         ''' Polls latest data stored in cloud - more data available'''
         logging.debug('get_weather_info_cloud')
         try:
-            tmp = self.get_module_info(home_id)
+            tmp = self.get_modules(home_id)
             self.cloud_data[home_id] = {}
             for dev_id in tmp:
                 if tmp[dev_id]['type'] in self.MAIN_modules:
