@@ -83,7 +83,7 @@ class NetatmoController(udi_interface.Node):
 
     def start(self):
         logging.debug('Executing start')
-        self.myNetatmo = NetatmoWeather()
+        self.myNetatmo = NetatmoWeather(self.poly)
         self.accessToken = self.myNetatmo.getAccessToken()
         while self.accessToken is None:
             time.sleep(2)
@@ -92,7 +92,7 @@ class NetatmoController(udi_interface.Node):
         logging.debug('AccessToken = {}'.format(self.accessToken))
         res = self.myNetatmo.get_homes()
         logging.debug('retrieved data {}'.format(res))
-        self.myNetatmo = NetatmoWeather()
+
 
         self.home_ids = self.myNetatmo.get_homes()
         if self.home_ids:
