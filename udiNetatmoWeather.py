@@ -52,6 +52,9 @@ class NetatmoController(udi_interface.Node):
         self.Parameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
 
+        self.poly.addNode(self, conn_status='ST')
+        self.wait_for_node_done()
+        self.node = self.poly.getNode(self.address)
         self.poly.updateProfile()
         self.poly.ready()
        
@@ -82,7 +85,7 @@ class NetatmoController(udi_interface.Node):
         
 
     def start(self):
-        logging.debug('Executing start')
+        logging.info('Executing start')
         #self.myNetatmo = NetatmoWeather(self.poly)
         self.accessToken = self.myNetatmo.getAccessToken()
         while self.accessToken is None:

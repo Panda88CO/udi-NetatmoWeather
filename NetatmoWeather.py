@@ -17,6 +17,7 @@ except ImportError:
 class NetatmoWeather (NetatmoCloud):
     def __init__(self, polyglot):
         super().__init__(polyglot)
+        logging.info('NetatmoWeather initializing')
         self.poly = polyglot
         self._dev_list  = ['NAMain', 'NAModule1', 'NAModule2', 'NAModule3', 'NAModule4']
 

@@ -34,6 +34,7 @@ class NetatmoCloud(OAuth):
 
     def __init__(self, polyglot):
         super().__init__(polyglot)
+        logging.info('OAuth initializing')
         self.poly = polyglot
         self.scope_str = None
         self.apiEndpoint = 'https://api.netatmo.com'

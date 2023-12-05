@@ -51,6 +51,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         polyglot.ready()
         self.poly.addNode(self)
         self.wait_for_node_done()
+        
         self.node = self.poly.getNode(address)
         logging.info('Start {} sync module Node'.format(self.name))  
         time.sleep(1)
