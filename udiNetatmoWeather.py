@@ -21,7 +21,7 @@ except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
 
-from NetatmoOauth import NetatmoCloud
+#from NetatmoOauth import NetatmoCloud
 from NetatmoWeather import NetatmoWeather
 from  udiNetatmoWeatherMain import udiNetatmoWeatherMain
 #from nodes.controller import Controller
@@ -54,7 +54,7 @@ class NetatmoController(udi_interface.Node):
 
         self.poly.updateProfile()
         self.poly.ready()
-        self.poly.addNode(self)
+       
 
     def node_queue(self, data):
         self.n_queue.append(data['address'])
@@ -83,7 +83,7 @@ class NetatmoController(udi_interface.Node):
 
     def start(self):
         logging.debug('Executing start')
-        self.myNetatmo = NetatmoWeather(self.poly)
+        #self.myNetatmo = NetatmoWeather(self.poly)
         self.accessToken = self.myNetatmo.getAccessToken()
         while self.accessToken is None:
             time.sleep(2)
@@ -240,7 +240,6 @@ class NetatmoController(udi_interface.Node):
         polyglot.stop()
 
 id = 'controller'
-
 drivers = [
         {'driver': 'ST', 'value':0, 'uom':2},
         ]
@@ -261,7 +260,7 @@ if __name__ == "__main__":
         polyglot.updateProfile()
 
         # Implements the API calls & Handles the oAuth authentication & token renewals
-        myNetatmo = NetatmoCloud(polyglot)
+        myNetatmo = NetatmoWeather(polyglot)
 
         # then you need to create the controller node
         NetatmoController(polyglot, 'controller', 'controller', 'Netatmo', myNetatmo)
