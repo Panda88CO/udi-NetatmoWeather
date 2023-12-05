@@ -145,9 +145,11 @@ class OAuth:
             logging.info('Refreshing oAuth tokens successful')
             logging.debug(f"Token refresh result [{ type(token) }]: { token }")
             self._saveToken(token)
-
+            return('Success')
+        
         except requests.exceptions.HTTPError as error:
             logging.error(f"Failed to refresh oAuth token: { error }")
+            return(None)
             # NOTE: If refresh tokens fails, we keep the existing tokens available.
 
     # Gets the access token, and refresh if necessary

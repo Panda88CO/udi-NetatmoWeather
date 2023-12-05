@@ -161,20 +161,21 @@ class NetatmoController(udi_interface.Node):
         self.poly.Notices.clear()
         self.myNetatmo.updateOauthConfig()
         accessToken = self.myNetatmo._oAuthTokensRefresh()
-
+        logging.debug('configDoneHandler - accessToken {}'.format(accessToken))
         if accessToken is None:
             logging.info('Access token is not yet available. Please authenticate.')
             polyglot.Notices['auth'] = 'Please initiate authentication'
             return
         
-        res = self.myNetatmo.get_home_info()
-        logging.debug('retrieved get_home_info data {}'.format(res))
 
-        res = self.myNetatmo.get_weather_info()
-        logging.debug('retrieved get_weather_info data {}'.format(res))
+        #res = self.myNetatmo.get_home_info()
+        #logging.debug('retrieved get_home_info data {}'.format(res))
 
-        res = self.myNetatmo.get_weather_info2()
-        logging.debug('retrieved get_weather_info2 data2 {}'.format(res))
+        #res = self.myNetatmo.get_weather_info()
+        #logging.debug('retrieved get_weather_info data {}'.format(res))
+
+        #res = self.myNetatmo.get_weather_info2()
+        #logging.debug('retrieved get_weather_info2 data2 {}'.format(res))
 
         #self.poly.discoverDevices()
 
@@ -183,7 +184,7 @@ class NetatmoController(udi_interface.Node):
         logging.debug('oauthHandler starting')
         self.myNetatmo.oauthHandler(token)
         accessToken = self.myNetatmo.getAccessToken()
-        logging.debug('AccessToekn obtained {}'.format(accessToken))
+        logging.debug('AccessToken obtained {}'.format(accessToken))
 
         # Then proceed with device discovery
         self.configDoneHandler()
@@ -191,7 +192,7 @@ class NetatmoController(udi_interface.Node):
 
     def addNodeDoneHandler(self, node):
         # We will automatically query the device after discovery
-        self.poly.addNodeDoneHandler(node)
+        #self.poly.addNodeDoneHandler(node)
         self.nodeDefineDone = True
 
     def systemPoll (self, polltype):
