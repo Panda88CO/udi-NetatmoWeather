@@ -83,6 +83,7 @@ class NetatmoController(udi_interface.Node):
 
     def start(self):
         logging.debug('Executing start')
+        self.myNetatmo = NetatmoWeather()
         self.accessToken = self.myNetatmo.getAccessToken()
         while self.accessToken is None:
             time.sleep(2)
@@ -91,9 +92,9 @@ class NetatmoController(udi_interface.Node):
         logging.debug('AccessToken = {}'.format(self.accessToken))
         res = self.myNetatmo.get_homes()
         logging.debug('retrieved data {}'.format(res))
-        self.weather = NetatmoWeather()
+        self.myNetatmo = NetatmoWeather()
 
-        self.home_ids = self.weather.get_homes()
+        self.home_ids = self.myNetatmo.get_homes()
         if self.home_ids:
             self.node.setDriver('ST', 1, True, True)
 
@@ -116,7 +117,7 @@ class NetatmoController(udi_interface.Node):
         self.homes_list = []
         for home in self.home_ids:
             home_name = self.home_ids[home]['name']
-            main_modules = self.weather.get_main_modules(home)
+            main_modules = self.myNetatmo.get_main_modules(home)
             for m_module in main_modules:
                 mod_name = main_modules[m_module]['name']
                 node_name = home_name + '_'+ mod_name
@@ -128,16 +129,16 @@ class NetatmoController(udi_interface.Node):
                         self.enabled_list.append(tmp)
                         if tmp['home'] not in self.homes_list:
                             self.homes_list.append(tmp['home'])
-                            self.weather.update_weather_info_cloud(home)
-                            self.weather.update_weather_info_instant(home)
+                            self.myNetatmo.update_weather_info_cloud(home)
+                            self.myNetatmo.update_weather_info_instant(home)
                         selected = True
                 else:
                     self.Parameters[node_name] = 1 #enable by default
                     self.enabled_list.append(tmp)
                     if tmp['home'] not in self.homes_list:
                         self.homes_list.append(tmp['home'])
-                        self.weather.update_weather_info_cloud(home)
-                        self.weather.update_weather_info_instant(home)
+                        self.myNetatmo.update_weather_info_cloud(home)
+                        self.myNetatmo.update_weather_info_instant(home)
 
         if not selected and len(self.home_ids > 1):
             self.poly.Notices['home_id'] = 'Check config to select which home/modules should be used (1 - used, 0 - not used) - then restart'
@@ -146,10 +147,10 @@ class NetatmoController(udi_interface.Node):
                 module_info = self.enabled_list[node_nbr]
                 if module_info['home'] not in self.homes_list:
                     self.homes_list.append(module_info['home'])
-                module = self.weather.get_module_info(module_info['home'],module_info['main_module'])
+                module = self.myNetatmo.get_module_info(module_info['home'],module_info['main_module'])
                 node_address = self.getValieAddress(module[id])
                 node_name = self.getValidName(module['name'])
-                if not udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.weather, module_info):
+                if not udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.myNetatmo, module_info):
                     logging.error('Failed to create MAin Weather station: {}'.format(node_name))
                 time.sleep(1)            
 
@@ -203,8 +204,8 @@ class NetatmoController(udi_interface.Node):
                     
                         self.myNetatmo.refresh_token()
                         for home in self.homes_list:
-                            self.weather.update_weather_info_cloud(home)
-                            self.weather.update_weather_info_instant(home)
+                            self.myNetatmo.update_weather_info_cloud(home)
+                            self.myNetatmo.update_weather_info_instant(home)
 
 
                         nodes = self.poly.getNodes()
@@ -217,7 +218,7 @@ class NetatmoController(udi_interface.Node):
                     self.heartbeat()
                     self.myNetatmo.refresh_token()
                     for home in self.homes_list:
-                        self.weather.update_weather_info_instant(home)
+                        self.myNetatmo.update_weather_info_instant(home)
                     for nde in nodes:
                         if nde != 'controller':   # but not the setup node
                             logging.debug('updating node {} data'.format(nde))
