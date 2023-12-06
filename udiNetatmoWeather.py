@@ -51,6 +51,7 @@ class NetatmoController(udi_interface.Node):
         self.primary = primary
         self.address = address
         self.myNetatmo = NetatmoWeather(self.poly)
+        self.hb  = 0
         logging.debug('testing 1')
         self.Parameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
@@ -103,6 +104,19 @@ class NetatmoController(udi_interface.Node):
             return(1)
         elif tempStr.capitalize()[:1] == 'C':
             return(0)
+   
+    def heartbeat(self):
+        logging.debug('heartbeat: ' + str(self.hb))
+        #if self.yoAccess.online:
+        #    self.node.setDriver('ST', 1)
+        #    if self.hb == 0:
+        #       self.reportCmd('DON',2)
+        #       self.hb = 1
+        #   else:
+        #       self.reportCmd('DOF',2)
+        #       self.hb = 0
+        #else:
+        #    self.node.setDriver('ST', 0)
         
 
     def start(self):
@@ -254,7 +268,7 @@ class NetatmoController(udi_interface.Node):
                 
         else:
             logging.info('System Poll - Waiting for all nodes to be added')
-
+ 
 
     def stopHandler(self):
         # Set nodes offline

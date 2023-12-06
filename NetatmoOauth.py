@@ -133,7 +133,7 @@ class NetatmoCloud(OAuth):
                 self.customData.token['refresh_token'] = self.customParams['refresh_token']
 
 
-        #self.updateOauthConfig()
+        self.updateOauthConfig()
         #self.myParamBoolean = ('myParam' in self.customParams and self.customParams['myParam'].lower() == 'true')
         #logging.info(f"My param boolean: { self.myParamBoolean }")
     
@@ -334,8 +334,9 @@ class NetatmoCloud(OAuth):
     def getUserInfo(self):
         return self._callApi(url='/user/info')
 
-'''
+
     def updateOauthConfig(self):
+        logging.debug('updateOauthConfig')
         self.addOauthParameter('client_id',self.client_ID )
         self.addOauthParameter('client_secret',self.client_SECRET )
         self.addOauthParameter('scope',self.scope_str )
@@ -345,6 +346,6 @@ class NetatmoCloud(OAuth):
         self.addOauthParameter('cloudlink', True )
         self.addOauthParameter('addRedirect', True )
         logging.debug('updateOauthConfig = {}'.format(self.oauthConfig))
-'''
+
 ### Main node server code
 
