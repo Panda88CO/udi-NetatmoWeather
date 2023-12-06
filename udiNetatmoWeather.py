@@ -32,10 +32,15 @@ version = '0.0.3'
 #myNetatmo = None
 #controller = None
 
+id = 'controller'
+drivers = [
+        {'driver': 'ST', 'value':0, 'uom':2},
+        ]
 
 class NetatmoController(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name):
         super(NetatmoController, self).__init__(polyglot, primary, address, name)
+        logging.debug('drivers : {}'.format(self.drivers))
         logging.setLevel(10)
         self.poly = polyglot
         self.accessToken = None
@@ -44,10 +49,11 @@ class NetatmoController(udi_interface.Node):
         self.primary = primary
         self.address = address
         self.myNetatmo = NetatmoWeather(self.poly)
+        logging.debug('testing 1')
         self.Parameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
         self.n_queue = []
-
+        logging.debug('drivers : {}'.format(self.drivers))
         self.poly.subscribe(self.poly.STOP, self.stopHandler)
         self.poly.subscribe(self.poly.START, self.start, address)
         self.poly.subscribe(self.poly.CUSTOMDATA, self.myNetatmo.customDataHandler)
@@ -58,13 +64,16 @@ class NetatmoController(udi_interface.Node):
         self.poly.subscribe(self.poly.ADDNODEDONE, self.addNodeDoneHandler)
         self.poly.subscribe(self.poly.POLL, self.systemPoll)
 
-
+        logging.debug('testing 2')
 
         self.poly.addNode(self)
+        logging.debug('drivers : {}'.format(self.drivers))
+        logging.debug('testing 3')
         self.wait_for_node_done()
-
+        logging.debug('testing 4')
         self.node = self.poly.getNode(self.address)
         logging.debug(' Node: {}'.format(self.node))
+        logging.debug('testing 5')
         self.poly.updateProfile()
         self.poly.ready()
        
@@ -252,10 +261,6 @@ class NetatmoController(udi_interface.Node):
                 node.setOffline()
         self.poly.stop()
 
-id = 'controller'
-drivers = [
-        {'driver': 'ST', 'value':0, 'uom':2},
-        ]
 
 if __name__ == "__main__":
     try:
