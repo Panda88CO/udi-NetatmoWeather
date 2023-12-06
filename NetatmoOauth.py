@@ -40,6 +40,7 @@ class NetatmoCloud(OAuth):
         self.apiEndpoint = 'https://api.netatmo.com'
         self.client_ID = None
         self.client_SECRET = None
+        self.handleCustomParams = False
 
 
         self.scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
@@ -61,6 +62,10 @@ class NetatmoCloud(OAuth):
 
     def oauthHandler(self, token):
         logging.debug('oauthHandler')
+        while not self.handleCustomParams:
+            logging.debug('Waiting for customParams to complete')
+            time.sleep(0.2)
+
         self.updateOauthConfig()
         super()._oauthHandler(token)
 
@@ -127,13 +132,12 @@ class NetatmoCloud(OAuth):
             self.customParams['scope'] = 'enter desired scopes space separated'
             self.scope_str = ""
 
-
         if 'refresh_token' in self.customParams:
             if self.customParams['refresh_token'] is not None and self.customParams['refresh_token'] != "":
                 self.customData.token['refresh_token'] = self.customParams['refresh_token']
+        self.handleCustomParams = True
 
-
-        self.updateOauthConfig()
+        #self.updateOauthConfig()
         #self.myParamBoolean = ('myParam' in self.customParams and self.customParams['myParam'].lower() == 'true')
         #logging.info(f"My param boolean: { self.myParamBoolean }")
     
