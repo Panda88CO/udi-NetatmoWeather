@@ -52,10 +52,10 @@ class NetatmoCloud(OAuth):
         logging.info('External service connectivity initialized...')
         #logging.debug('oauth : {}'.format(self.oauthConfig))
         time.sleep(1)
-        while not self.handleCustomParams:
-            logging.debug('Waiting for customParams to complete - getAccessToken')
-            time.sleep(0.2)
-        self.getAccessToken()
+        #while not self.handleCustomParams:
+        #    logging.debug('Waiting for customParams to complete - getAccessToken')
+        #    time.sleep(0.2)
+        # self.getAccessToken()
     
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
@@ -142,9 +142,9 @@ class NetatmoCloud(OAuth):
             self.customParams['scope'] = 'enter desired scopes space separated'
             self.scope_str = ""
 
-        if 'refresh_token' in self.customParams:
-            if self.customParams['refresh_token'] is not None and self.customParams['refresh_token'] != "":
-                self.customData.token['refresh_token'] = self.customParams['refresh_token']
+        #if 'refresh_token' in self.customParams:
+        #    if self.customParams['refresh_token'] is not None and self.customParams['refresh_token'] != "":
+        #        self.customData.token['refresh_token'] = self.customParams['refresh_token']
         self.handleCustomParams = True
 
         #self.updateOauthConfig()
