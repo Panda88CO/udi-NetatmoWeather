@@ -65,7 +65,7 @@ class NetatmoController(udi_interface.Node):
         self.wait_for_node_done()
 
         self.node = self.poly.getNode(self.address)
-        logging.debug(' NOde: {}'.format(self.node))
+        logging.debug(' Node: {}'.format(self.node))
         self.poly.updateProfile()
         self.poly.ready()
        
@@ -97,7 +97,7 @@ class NetatmoController(udi_interface.Node):
 
     def start(self):
         logging.info('Executing start')
-        #self.myNetatmo = NetatmoWeather(self.poly)
+        self.myNetatmo = NetatmoWeather(self.poly)
         self.accessToken = self.myNetatmo.getAccessToken()
         while self.accessToken is None:
             time.sleep(2)
@@ -274,10 +274,10 @@ if __name__ == "__main__":
         polyglot.updateProfile()
 
         # Implements the API calls & Handles the oAuth authentication & token renewals
-        myNetatmo = NetatmoWeather(polyglot)
+        #myNetatmo = NetatmoWeather(polyglot)
 
         # then you need to create the controller node
-        NetatmoController(polyglot, 'controller', 'controller', 'Netatmo', myNetatmo)
+        NetatmoController(polyglot, 'controller', 'controller', 'Netatmo')
 
         # subscribe to the events we want
         # polyglot.subscribe(polyglot.POLL, pollHandler)
