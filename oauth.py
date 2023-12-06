@@ -91,7 +91,7 @@ class OAuth:
 
     # Gives us the oAuth config from the store
     def _customNsHandler(self, key, data):
-        logging.info('CustomNsHandler {} - data {}'.format(key, json.dumps(data))))
+        logging.info('CustomNsHandler {} - data {}'.format(key, json.dumps(data)))
         #self.customNs.load(data)
         #logging.debug('_customNsHandler : {}'.format(self.oauthConfig))
         if key == 'oauth':
