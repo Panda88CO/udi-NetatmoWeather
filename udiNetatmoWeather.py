@@ -43,7 +43,7 @@ class NetatmoController(udi_interface.Node):
         self.name = name
         self.primary = primary
         self.address = address
-
+        self.myNetatmo = NetatmoWeather(self.poly)
         self.Parameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
         self.n_queue = []
@@ -53,7 +53,7 @@ class NetatmoController(udi_interface.Node):
         self.poly.subscribe(self.poly.CUSTOMDATA, self.myNetatmo.customDataHandler)
         self.poly.subscribe(self.poly.CUSTOMNS, self.myNetatmo.customNsHandler)
         self.poly.subscribe(self.poly.CUSTOMPARAMS, self.myNetatmo.customParamsHandler)
-        self.poly.subscribe(self.poly.OAUTH, self.oauthHandler)
+        self.poly.subscribe(self.poly.OAUTH, self.myNetatmo.oauthHandler)
         self.poly.subscribe(self.poly.CONFIGDONE, self.configDoneHandler)
         self.poly.subscribe(self.poly.ADDNODEDONE, self.addNodeDoneHandler)
         self.poly.subscribe(self.poly.POLL, self.systemPoll)
