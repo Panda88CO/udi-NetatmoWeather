@@ -51,7 +51,7 @@ class NetatmoCloud(OAuth):
         logging.info('External service connectivity initialized...')
         #logging.debug('oauth : {}'.format(self.oauthConfig))
         time.sleep(1)
-    '''
+    
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
         super()._customDataHandler(data)
@@ -136,9 +136,9 @@ class NetatmoCloud(OAuth):
         self.updateOauthConfig()
         #self.myParamBoolean = ('myParam' in self.customParams and self.customParams['myParam'].lower() == 'true')
         #logging.info(f"My param boolean: { self.myParamBoolean }")
-    '''
-
     
+
+
     def get_home_info(self):
         logging.debug('get_home_info')
         api_str = '/homesdata'
