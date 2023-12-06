@@ -58,7 +58,7 @@ class NetatmoController(udi_interface.Node):
         logging.debug('drivers : {}'.format(self.drivers))
         self.poly.subscribe(self.poly.STOP, self.stopHandler)
         self.poly.subscribe(self.poly.START, self.start, address)
-        self.poly.subscribe(self.poly.CUSTOMDATA, self.myNetatmo.customDataHandler)
+        self.poly.subscribe(self.poly.CUSTOMDATA, self.customDataHandler)
         self.poly.subscribe(self.poly.CUSTOMNS, self.myNetatmo.customNsHandler)
         self.poly.subscribe(self.poly.CUSTOMPARAMS, self.myNetatmo.customParamsHandler)
         self.poly.subscribe(self.poly.OAUTH, self.myNetatmo.oauthHandler)
