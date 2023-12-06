@@ -34,13 +34,12 @@ version = '0.0.2'
 
 
 class NetatmoController(udi_interface.Node):
-    def __init__(self, polyglot, primary, address, name, myNetatmo):
+    def __init__(self, polyglot, primary, address, name):
         super(NetatmoController, self).__init__(polyglot, primary, address, name)
         logging.setLevel(10)
         self.poly = polyglot
         self.accessToken = None
         self.nodeDefineDone = False
-        self.myNetatmo = myNetatmo
         self.name = name
         self.primary = primary
         self.address = address
@@ -61,7 +60,7 @@ class NetatmoController(udi_interface.Node):
 
 
 
-        self.poly.addNode(self, conn_status='ST')
+        self.poly.addNode(self)
         self.wait_for_node_done()
 
         self.node = self.poly.getNode(self.address)
@@ -91,7 +90,7 @@ class NetatmoController(udi_interface.Node):
     def convert_temp_unit(self, tempStr):
         if tempStr.capitalize()[:1] == 'F':
             return(1)
-        elif tempStr.capitalize()[:1] == 'K':
+        elif tempStr.capitalize()[:1] == 'C':
             return(0)
         
 
@@ -271,7 +270,7 @@ if __name__ == "__main__":
         polyglot.setCustomParamsDoc()
 
         # Update the profile files
-        polyglot.updateProfile()
+        #polyglot.updateProfile()
 
         # Implements the API calls & Handles the oAuth authentication & token renewals
         #myNetatmo = NetatmoWeather(polyglot)
