@@ -41,26 +41,31 @@ class NetatmoController(udi_interface.Node):
         self.accessToken = None
         self.nodeDefineDone = False
         self.myNetatmo = myNetatmo
+        self.name = name
+        self.primary = primary
+        self.address = address
 
         self.Parameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
         self.n_queue = []
-        
-        self.poly.subscribe(polyglot.STOP, self.stopHandler)
+
+        self.poly.subscribe(self.poly.STOP, self.stopHandler)
         self.poly.subscribe(self.poly.START, self.start, address)
-        self.poly.subscribe(polyglot.CUSTOMDATA, self.myNetatmo.customDataHandler)
-        self.poly.subscribe(polyglot.CUSTOMNS, self.myNetatmo.customNsHandler)
-        self.poly.subscribe(polyglot.CUSTOMPARAMS, self.myNetatmo.customParamsHandler)
-        self.poly.subscribe(polyglot.OAUTH, self.oauthHandler)
-        self.poly.subscribe(polyglot.CONFIGDONE, self.configDoneHandler)
-        self.poly.subscribe(polyglot.ADDNODEDONE, self.addNodeDoneHandler)
+        self.poly.subscribe(self.poly.CUSTOMDATA, self.myNetatmo.customDataHandler)
+        self.poly.subscribe(self.poly.CUSTOMNS, self.myNetatmo.customNsHandler)
+        self.poly.subscribe(self.poly.CUSTOMPARAMS, self.myNetatmo.customParamsHandler)
+        self.poly.subscribe(self.poly.OAUTH, self.oauthHandler)
+        self.poly.subscribe(self.poly.CONFIGDONE, self.configDoneHandler)
+        self.poly.subscribe(self.poly.ADDNODEDONE, self.addNodeDoneHandler)
         self.poly.subscribe(self.poly.POLL, self.systemPoll)
 
 
 
         self.poly.addNode(self, conn_status='ST')
         self.wait_for_node_done()
+
         self.node = self.poly.getNode(self.address)
+        logging.debug(' NOde: {}'.format(self.node))
         self.poly.updateProfile()
         self.poly.ready()
        
@@ -173,7 +178,7 @@ class NetatmoController(udi_interface.Node):
         logging.debug('configDoneHandler - accessToken {}'.format(accessToken))
         if accessToken is None:
             logging.info('Access token is not yet available. Please authenticate.')
-            polyglot.Notices['auth'] = 'Please initiate authentication'
+            self.poly.Notices['auth'] = 'Please initiate authentication'
             return
         
 
@@ -243,10 +248,10 @@ class NetatmoController(udi_interface.Node):
 
     def stopHandler(self):
         # Set nodes offline
-        for node in polyglot.nodes():
+        for node in self.poly.nodes():
             if hasattr(node, 'setOffline'):
                 node.setOffline()
-        polyglot.stop()
+        self.poly.stop()
 
 id = 'controller'
 drivers = [

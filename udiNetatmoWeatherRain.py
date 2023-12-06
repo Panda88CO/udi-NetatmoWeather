@@ -41,7 +41,7 @@ class udiN_WeatherRain(udi_interface.Node):
         self.node = self.poly.getNode(address)
         logging.info('Start {} Rain Node'.format(self.name))  
         time.sleep(1)
-        self.n_queue = []  
+
         self.nodeDefineDone = True
 
     
