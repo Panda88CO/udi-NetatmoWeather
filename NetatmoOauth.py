@@ -133,7 +133,7 @@ class NetatmoCloud(OAuth):
                 self.customData.token['refresh_token'] = self.customParams['refresh_token']
 
 
-        self.updateOauthConfig()
+        #self.updateOauthConfig()
         #self.myParamBoolean = ('myParam' in self.customParams and self.customParams['myParam'].lower() == 'true')
         #logging.info(f"My param boolean: { self.myParamBoolean }")
     
