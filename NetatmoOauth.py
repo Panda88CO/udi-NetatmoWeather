@@ -97,7 +97,7 @@ class NetatmoCloud(OAuth):
                 if net_scope in self.scopeList:
                     self.scope_str = self.scope_str + ' ' + net_scope
                 else:
-                    logging.error('Unknown scope provide {} - removed '.format(net_scope))
+                    logging.error('Unknown scope provided: {} - removed '.format(net_scope))
             self.scope = self.scope_str.split()
             
             attempts = 0
