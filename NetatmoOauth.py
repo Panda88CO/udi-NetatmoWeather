@@ -45,32 +45,42 @@ class NetatmoCloud(OAuth):
 
         self.scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
              'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
-        self.getAccessToken()
+        
         self.poly = polyglot
         self.customParams = Custom(polyglot, 'customparams')
         
         logging.info('External service connectivity initialized...')
         #logging.debug('oauth : {}'.format(self.oauthConfig))
         time.sleep(1)
+        while not self.handleCustomParams:
+            logging.debug('Waiting for customParams to complete - getAccessToken')
+            time.sleep(0.2)
+        self.getAccessToken()
     
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
+        while not self.handleCustomParams:
+            logging.debug('Waiting for customParams to complete - customDataHandler')
+            time.sleep(0.2)
         super()._customDataHandler(data)
 
     def customNsHandler(self, key, data):
+        while not self.handleCustomParams:
+            logging.debug('Waiting for customParams to complete - customNsHandler')
+            time.sleep(0.2)
         super()._customNsHandler(key, data)
 
     def oauthHandler(self, token):
         logging.debug('oauthHandler')
         while not self.handleCustomParams:
-            logging.debug('Waiting for customParams to complete')
+            logging.debug('Waiting for customParams to complete -oauthHandler')
             time.sleep(0.2)
 
         self.updateOauthConfig()
         super()._oauthHandler(token)
 
-    def refresh_token(self):
-        logging.debug('checking token for refresh')
+    #def refresh_token(self):
+    #    logging.debug('checking token for refresh')
         
 
     # Your service may need to access custom params as well...
@@ -142,6 +152,79 @@ class NetatmoCloud(OAuth):
         #logging.info(f"My param boolean: { self.myParamBoolean }")
     
 
+
+
+            
+
+    # Call your external service API
+    def _callApi(self, method='GET', url=None, body=None):
+        # When calling an API, get the access token (it will be refreshed if necessary)
+        accessToken = self.getAccessToken()
+
+        if accessToken is None:
+            logging.error('Access token is not available')
+            return None
+
+        if url is None:
+            logging.error('url is required')
+            return None
+
+        completeUrl = self.yourApiEndpoint + url
+
+        headers = {
+            'Authorization': f"Bearer { accessToken }"
+        }
+
+        if method in [ 'PATCH', 'POST'] and body is None:
+            logging.error(f"body is required when using { method } { completeUrl }")
+        logging.debug(' call info url={}, header= {}, body = {}'.format(completeUrl, headers, body))
+
+        try:
+            if method == 'GET':
+                response = requests.get(completeUrl, headers=headers)
+            elif method == 'DELETE':
+                response = requests.delete(completeUrl, headers=headers)
+            elif method == 'PATCH':
+                response = requests.patch(completeUrl, headers=headers, json=body)
+            elif method == 'POST':
+                response = requests.post(completeUrl, headers=headers, json=body)
+            elif method == 'PUT':
+                response = requests.put(completeUrl, headers=headers)
+
+            response.raise_for_status()
+            try:
+                return response.json()
+            except requests.exceptions.JSONDecodeError:
+                return response.text
+
+        except requests.exceptions.HTTPError as error:
+            logging.error(f"Call { method } { completeUrl } failed: { error }")
+            return None
+
+    # Then implement your service specific APIs
+    def getAllDevices(self):
+        return self._callApi(url='/devices')
+
+    def unsubscribe(self):
+        return self._callApi(method='DELETE', url='/subscription')
+
+    def getUserInfo(self):
+        return self._callApi(url='/user/info')
+
+
+    def updateOauthConfig(self):
+        logging.debug('updateOauthConfig')
+        self.addOauthParameter('client_id',self.client_ID )
+        self.addOauthParameter('client_secret',self.client_SECRET )
+        self.addOauthParameter('scope',self.scope_str )
+        #self.addOauthParameter('state','dette er en test' )
+        #self.addOauthParameter('redirect_uri','https://my.isy/io/api/cloudlink/redirect' )
+        self.addOauthParameter('name','Netatmo Test' )
+        self.addOauthParameter('cloudlink', True )
+        self.addOauthParameter('addRedirect', True )
+        logging.debug('updateOauthConfig = {}'.format(self.oauthConfig))
+
+### Main node server code
 
     def get_home_info(self):
         logging.debug('get_home_info')
@@ -281,75 +364,3 @@ class NetatmoCloud(OAuth):
         except Exception as e:
             logging.error('Exception : {}'.format(e))
             return(None)
-            
-
-    # Call your external service API
-    def _callApi(self, method='GET', url=None, body=None):
-        # When calling an API, get the access token (it will be refreshed if necessary)
-        accessToken = self.getAccessToken()
-
-        if accessToken is None:
-            logging.error('Access token is not available')
-            return None
-
-        if url is None:
-            logging.error('url is required')
-            return None
-
-        completeUrl = self.yourApiEndpoint + url
-
-        headers = {
-            'Authorization': f"Bearer { accessToken }"
-        }
-
-        if method in [ 'PATCH', 'POST'] and body is None:
-            logging.error(f"body is required when using { method } { completeUrl }")
-        logging.debug(' call info url={}, header= {}, body = {}'.format(completeUrl, headers, body))
-
-        try:
-            if method == 'GET':
-                response = requests.get(completeUrl, headers=headers)
-            elif method == 'DELETE':
-                response = requests.delete(completeUrl, headers=headers)
-            elif method == 'PATCH':
-                response = requests.patch(completeUrl, headers=headers, json=body)
-            elif method == 'POST':
-                response = requests.post(completeUrl, headers=headers, json=body)
-            elif method == 'PUT':
-                response = requests.put(completeUrl, headers=headers)
-
-            response.raise_for_status()
-            try:
-                return response.json()
-            except requests.exceptions.JSONDecodeError:
-                return response.text
-
-        except requests.exceptions.HTTPError as error:
-            logging.error(f"Call { method } { completeUrl } failed: { error }")
-            return None
-
-    # Then implement your service specific APIs
-    def getAllDevices(self):
-        return self._callApi(url='/devices')
-
-    def unsubscribe(self):
-        return self._callApi(method='DELETE', url='/subscription')
-
-    def getUserInfo(self):
-        return self._callApi(url='/user/info')
-
-
-    def updateOauthConfig(self):
-        logging.debug('updateOauthConfig')
-        self.addOauthParameter('client_id',self.client_ID )
-        self.addOauthParameter('client_secret',self.client_SECRET )
-        self.addOauthParameter('scope',self.scope_str )
-        #self.addOauthParameter('state','dette er en test' )
-        #self.addOauthParameter('redirect_uri','https://my.isy/io/api/cloudlink/redirect' )
-        self.addOauthParameter('name','Netatmo Test' )
-        self.addOauthParameter('cloudlink', True )
-        self.addOauthParameter('addRedirect', True )
-        logging.debug('updateOauthConfig = {}'.format(self.oauthConfig))
-
-### Main node server code
-
