@@ -44,14 +44,14 @@ class NetatmoCloud(OAuth):
 
         self.scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
              'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
-
+        self.getAccessToken()
         self.poly = polyglot
         self.customParams = Custom(polyglot, 'customparams')
         
         logging.info('External service connectivity initialized...')
         #logging.debug('oauth : {}'.format(self.oauthConfig))
         time.sleep(1)
- 
+    '''
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
         super()._customDataHandler(data)
@@ -136,7 +136,9 @@ class NetatmoCloud(OAuth):
         self.updateOauthConfig()
         #self.myParamBoolean = ('myParam' in self.customParams and self.customParams['myParam'].lower() == 'true')
         #logging.info(f"My param boolean: { self.myParamBoolean }")
+    '''
 
+    
     def get_home_info(self):
         logging.debug('get_home_info')
         api_str = '/homesdata'
@@ -332,7 +334,7 @@ class NetatmoCloud(OAuth):
     def getUserInfo(self):
         return self._callApi(url='/user/info')
 
-
+'''
     def updateOauthConfig(self):
         self.addOauthParameter('client_id',self.client_ID )
         self.addOauthParameter('client_secret',self.client_SECRET )
@@ -343,6 +345,6 @@ class NetatmoCloud(OAuth):
         self.addOauthParameter('cloudlink', True )
         self.addOauthParameter('addRedirect', True )
         logging.debug('updateOauthConfig = {}'.format(self.oauthConfig))
-
+'''
 ### Main node server code
 
