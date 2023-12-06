@@ -43,6 +43,8 @@ class NetatmoController(udi_interface.Node):
         logging.debug('drivers : {}'.format(self.drivers))
         logging.setLevel(10)
         self.poly = polyglot
+        self.id = 'controller'
+        self.drivers =  [ {'driver': 'ST', 'value':0, 'uom':2}, ]
         self.accessToken = None
         self.nodeDefineDone = False
         self.name = name
@@ -69,7 +71,7 @@ class NetatmoController(udi_interface.Node):
         self.poly.addNode(self)
         logging.debug('drivers : {}'.format(self.drivers))
         logging.debug('testing 3')
-        self.wait_for_node_done()
+        #self.wait_for_node_done()
         logging.debug('testing 4')
         self.node = self.poly.getNode(self.address)
         logging.debug(' Node: {}'.format(self.node))
