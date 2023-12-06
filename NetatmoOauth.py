@@ -115,29 +115,28 @@ class NetatmoCloud(OAuth):
                     logging.error('Unknown scope provided: {} - removed '.format(net_scope))
             self.scope = self.scope_str.split()
             
-            attempts = 0
-            while not self.customData and attempts <3:
-                attempts = attempts + 1
-                time.sleep(1)
+            #attempts = 0
+            #while not self.customData and attempts <3:
+            #    attempts = attempts + 1
+            #    time.sleep(1)
 
-            if self.customData:
-                if 'scope' in self.customData:
-                    if self.scope_str != self.customData['scope']:
-                       #scope changed - we need to generate a new token/refresh token
-                       logging.debug('scope has changed - need to get new token')
-                       self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
-                       self.customData['scope'] = self.scope_str
-                else: 
-                    if self.oauthConfig['client_id'] is None or self.oauthConfig['client_secret'] is None:
-                        self.updateOauthConfig()    
-                    
-                    self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
-                    self.customData['scope'] = self.scope_str
+            #if self.customData:
+            #    if 'scope' in self.customData:
+            #        if self.scope_str != self.customData['scope']:
+            #           #scope changed - we need to generate a new token/refresh token
+            #           logging.debug('scope has changed - need to get new token')
+            #           self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
+            #           self.customData['scope'] = self.scope_str
+            #    else: 
+            #        if self.oauthConfig['client_id'] is None or self.oauthConfig['client_secret'] is None:
+            #            self.updateOauthConfig()           
+            #        self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
+            #        self.customData['scope'] = self.scope_str
 
 
             #self.addOauthParameter('scope',self.scope_str )
             #self.oauthConfig['scope'] = self.scope_str
-            logging.debug('Following scopes are selected : {}'.format(self.scope_str))
+            #logging.debug('Following scopes are selected : {}'.format(self.scope_str))
         else:
             self.customParams['scope'] = 'enter desired scopes space separated'
             self.scope_str = ""
@@ -214,6 +213,7 @@ class NetatmoCloud(OAuth):
 
     def updateOauthConfig(self):
         logging.debug('updateOauthConfig')
+        logging.debug(' {} {} {}'.format(self.client_ID,self.client_SECRET, self.scope_str  ))
         self.addOauthParameter('client_id',self.client_ID )
         self.addOauthParameter('client_secret',self.client_SECRET )
         self.addOauthParameter('scope',self.scope_str )
