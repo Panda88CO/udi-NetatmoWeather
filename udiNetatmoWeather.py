@@ -28,9 +28,11 @@ from  udiNetatmoWeatherMain import udiNetatmoWeatherMain
 #from udi_interface import logging, Custom, Interface
 version = '0.0.2'
 
-polyglot = None
-myNetatmo = None
-controller = None
+#polyglot = None
+#myNetatmo = None
+#controller = None
+
+
 class NetatmoController(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, myNetatmo):
         super(NetatmoController, self).__init__(polyglot, primary, address, name)
@@ -39,6 +41,11 @@ class NetatmoController(udi_interface.Node):
         self.accessToken = None
         self.nodeDefineDone = False
         self.myNetatmo = myNetatmo
+
+        self.Parameters = Custom(self.poly, 'customparams')
+        self.Notices = Custom(self.poly, 'notices')
+        self.n_queue = []
+        
         self.poly.subscribe(polyglot.STOP, self.stopHandler)
         self.poly.subscribe(self.poly.START, self.start, address)
         self.poly.subscribe(polyglot.CUSTOMDATA, self.myNetatmo.customDataHandler)
@@ -49,8 +56,7 @@ class NetatmoController(udi_interface.Node):
         self.poly.subscribe(polyglot.ADDNODEDONE, self.addNodeDoneHandler)
         self.poly.subscribe(self.poly.POLL, self.systemPoll)
 
-        self.Parameters = Custom(self.poly, 'customparams')
-        self.Notices = Custom(self.poly, 'notices')
+
 
         self.poly.addNode(self, conn_status='ST')
         self.wait_for_node_done()

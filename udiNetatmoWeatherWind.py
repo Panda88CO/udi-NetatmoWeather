@@ -32,6 +32,8 @@ class udiN_WeatherWind(udi_interface.Node):
 
         self.poly.subscribe(self.poly.START, self.start, self.address)
         self.poly.subscribe(self.poly.STOP, self.stop)
+        self.n_queue = []
+
         
         polyglot.ready()
         self.poly.addNode(self)

@@ -31,6 +31,9 @@ class udiN_WeatherIndoor(udi_interface.Node):
         self.weather= NetatmoWeather
         self.module = module
         self.home = home
+        self.n_queue = []
+
+        
         self.poly.subscribe(self.poly.START, self.start, self.address)
         self.poly.subscribe(self.poly.STOP, self.stop)
 

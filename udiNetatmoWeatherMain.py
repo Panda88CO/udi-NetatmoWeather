@@ -35,6 +35,8 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.WIND_modules = ['NAModule2']
         self.RAIN_modules = ['NAModule3']
         self.INDOOR_modules = ['NAModule4']
+        self.n_queue = []
+
         
         self.primary = address
         self.poly = polyglot

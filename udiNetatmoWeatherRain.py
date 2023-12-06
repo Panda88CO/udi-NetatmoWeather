@@ -30,10 +30,10 @@ class udiN_WeatherRain(udi_interface.Node):
         self.weather = NetatmoWeather
         self.module = module
         self.home = home
-
+        
         self.poly.subscribe(self.poly.START, self.start, self.address)
         self.poly.subscribe(self.poly.STOP, self.stop)
-
+        self.n_queue = []
 
         polyglot.ready()
         self.poly.addNode(self)
