@@ -96,7 +96,7 @@ class NetatmoController(udi_interface.Node):
 
     def start(self):
         logging.info('Executing start')
-        self.myNetatmo = NetatmoWeather(self.poly)
+        #self.myNetatmo = NetatmoWeather(self.poly)
         self.accessToken = self.myNetatmo.getAccessToken()
         while self.accessToken is None:
             time.sleep(2)
