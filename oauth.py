@@ -162,6 +162,7 @@ class OAuth:
     # Should be called only after config is done
     def getAccessToken(self):
         logging.info('Getting access token')
+        logging.debug(self.customData)
         token = self.customData['token']
 
         if token is not None:
@@ -177,6 +178,7 @@ class OAuth:
 
             return self.customData.token.get('access_token')
         else:
+            self._oAuthTokensRefresh()
             return None
 
     ## Method to add/overwrite external oauth parameters

@@ -250,12 +250,7 @@ class NetatmoCloud(OAuth):
     #def set_temp_unit(self, value):
     #    self.temp_unit = value
 
-    def get_home_info(self):
-        logging.debug('get_home_info')
-        api_str = '/homesdata'
-        res = self._callApi('GET', api_str )
-        logging.debug(res)
-
+    
     def get_weather_info(self):
         logging.debug('get_weather_info')
         api_str = '/getstationsdata'

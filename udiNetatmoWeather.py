@@ -312,7 +312,7 @@ class NetatmoController(udi_interface.Node):
                     #Keep token current
                     #self.node.setDriver('GV0', self.temp_unit, True, True)
                     
-                        self.myNetatmo.refresh_token()
+                        #self.myNetatmo.refresh_token()
                         for home in self.homes_list:
                             self.myNetatmo.update_weather_info_cloud(home)
                             self.myNetatmo.update_weather_info_instant(home)
@@ -326,7 +326,7 @@ class NetatmoController(udi_interface.Node):
                                                 
                 if 'shortPoll' in polltype:
                     self.heartbeat()
-                    self.myNetatmo.refresh_token()
+                    #self.myNetatmo.refresh_token()
                     for home in self.homes_list:
                         self.myNetatmo.update_weather_info_instant(home)
                     for nde in nodes:
