@@ -50,6 +50,9 @@ class NetatmoController(udi_interface.Node):
         self.name = name
         self.primary = primary
         self.address = address
+        self.Parameters = Custom(self.poly, 'customparams')
+        self.Notices = Custom(self.poly, 'notices')
+
         self.myNetatmo = NetatmoWeather(self.poly)
         self.hb  = 0
         logging.debug('testing 1')
@@ -59,7 +62,7 @@ class NetatmoController(udi_interface.Node):
         logging.debug('drivers : {}'.format(self.drivers))
         self.poly.subscribe(self.poly.STOP, self.stopHandler)
         self.poly.subscribe(self.poly.START, self.start, address)
-        self.poly.subscribe(self.poly.CUSTOMPARAMS, self.myNetatmo.customParamsHandler)
+        self.poly.subscribe(self.poly.CUSTOMPARAMS, self.customParamsHandler)
         self.poly.subscribe(self.poly.CUSTOMDATA, self.myNetatmo.customDataHandler)
         self.poly.subscribe(self.poly.CUSTOMNS, self.myNetatmo.customNsHandler)
         self.poly.subscribe(self.poly.OAUTH, self.myNetatmo.oauthHandler)
@@ -121,7 +124,7 @@ class NetatmoController(udi_interface.Node):
 
     def start(self):
         logging.info('Executing start')
-        #self.myNetatmo = NetatmoWeather(self.poly)
+        self.myNetatmo = NetatmoWeather(self.poly)
         self.accessToken = self.myNetatmo.getAccessToken()
         while self.accessToken is None:
             time.sleep(2)
@@ -133,7 +136,7 @@ class NetatmoController(udi_interface.Node):
         if self.home_ids:
             self.node.setDriver('ST', 1, True, True)
 
-        self.temp_unit = self.convert_temp_unit(self.myNetatmo.get_temp_unit())
+        self.temp_unit = self.convert_temp_unit(self.myNetatmo.temp_unit)
         logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
 
 
@@ -155,15 +158,16 @@ class NetatmoController(udi_interface.Node):
                 tmp = {}
                 tmp['home'] = home
                 tmp['main_module'] = m_module
-                if self.myNetatmo.check_parameters(node_name, 1):
-                    self.enabled_list.append(tmp)
-                    if tmp['home'] not in self.homes_list:
-                        self.homes_list.append(tmp['home'])
-                        self.myNetatmo.update_weather_info_cloud(home)
-                        self.myNetatmo.update_weather_info_instant(home)
-                    selected = True
+                if node_name in self.Parameters:
+                    if self.Parameters[node_name] == 1:
+                        self.enabled_list.append(tmp)
+                        if tmp['home'] not in self.homes_list:
+                            self.homes_list.append(tmp['home'])
+                            self.myNetatmo.update_weather_info_cloud(home)
+                            self.myNetatmo.update_weather_info_instant(home)
+                        selected = True
                 else:
-                    self.myNetatmo.add_to_parameters(node_name, 1) #enable by default
+                    self.Parameters[node_name] = 1 #enable by default
                     self.enabled_list.append(tmp)
                     if tmp['home'] not in self.homes_list:
                         self.homes_list.append(tmp['home'])
@@ -184,7 +188,81 @@ class NetatmoController(udi_interface.Node):
                     logging.error('Failed to create MAin Weather station: {}'.format(node_name))
                 time.sleep(1)            
 
+    def customParamsHandler(self, userParams):
+        self.Parameters.load(userParams)
+        logging.debug('customParamsHandler called')
+        # Example for a boolean field
 
+        if 'clientID' in userParams:
+            self.client_ID = self.Parameters['clientID'] 
+            self.myNetatmo.client_ID = self.client_ID 
+            #self.addOauthParameter('client_id',self.client_ID )
+            #self.oauthConfig['client_id'] =  self.client_ID
+        else:
+            self.Parameters['clientID'] = 'enter client_id'
+            self.client_ID = None
+            
+        if 'clientSecret' in self.Parameters:
+            self.client_SECRET = self.Parameters['clientSecret'] 
+            self.myNetatmo.client_SECRET = self.client_SECRET 
+            #self.addOauthParameter('client_secret',self.client_SECRET )
+            #self.oauthConfig['client_secret'] =  self.client_SECRET
+        else:
+            self.Parameters['clientSecret'] = 'enter client_secret'
+            self.client_SECRET = None
+            
+        #if 'scope' in self.Parameters:
+        #    temp = self.Parameters['scope'] 
+        #    temp1 = temp.split()
+        #    self.scope_str = ''
+        #    for net_scope in temp1:
+        #        if net_scope in self.scopeList:
+        #            self.scope_str = self.scope_str + ' ' + net_scope
+        #        else:
+        #            logging.error('Unknown scope provided: {} - removed '.format(net_scope))
+        #    self.scope = self.scope_str.split()
+        #else:
+        #    self.Parameters['scope'] = 'enter desired scopes space separated'
+        #    self.scope_str = ""
+
+        if "TEMP_UNIT" in self.Parameters:
+            self.temp_unit = self.Parameters['TEMP_UNIT'][0].upper()
+        else:
+            self.temp_unit = 0
+            self.Parameters['TEMP_UNIT'] = 'C'
+        self.myNetatmo.temp_unit = self.temp_unit
+            #attempts = 0
+            #while not self.customData and attempts <3:
+            #    attempts = attempts + 1
+            #    time.sleep(1)
+
+            #if self.customData:
+            #    if 'scope' in self.customData:
+            #        if self.scope_str != self.customData['scope']:
+            #           #scope changed - we need to generate a new token/refresh token
+            #           logging.debug('scope has changed - need to get new token')
+            #           self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
+            #           self.customData['scope'] = self.scope_str
+            #    else: 
+            #        if self.oauthConfig['client_id'] is None or self.oauthConfig['client_secret'] is None:
+            #            self.updateOauthConfig()           
+            #        self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
+            #        self.customData['scope'] = self.scope_str
+
+
+            #self.addOauthParameter('scope',self.scope_str )
+            #self.oauthConfig['scope'] = self.scope_str
+            #logging.debug('Following scopes are selected : {}'.format(self.scope_str))
+
+
+        #if 'refresh_token' in self.Parameters:
+        #    if self.Parameters['refresh_token'] is not None and self.Parameters['refresh_token'] != "":
+        #        self.customData.token['refresh_token'] = self.Parameters['refresh_token']
+        self.myNetatmo.handleCustomParamsDone = True
+
+        #self.updateOauthConfig()
+        #self.myParamBoolean = ('myParam' in self.Parametersand self.Parameters['myParam'].lower() == 'true')
+        #logging.info(f"My param boolean: { self.myParamBoolean }")
 
     def configDoneHandler(self):
         # We use this to discover devices, or ask to authenticate if user has not already done so

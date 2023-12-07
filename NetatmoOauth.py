@@ -47,8 +47,8 @@ class NetatmoCloud(OAuth):
              'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
         
         self.poly = polyglot
-        self.customParams = Custom(polyglot, 'customparams')
-        self.Notices = Custom(self.poly, 'notices')
+        #self.Parameters= Custom(polyglot, 'customparams')
+        #self.Notices = Custom(self.poly, 'notices')
 
         logging.info('External service connectivity initialized...')
         #logging.debug('oauth : {}'.format(self.oauthConfig))
@@ -87,29 +87,30 @@ class NetatmoCloud(OAuth):
         
 
     # Your service may need to access custom params as well...
+    '''
     def customParamsHandler(self, userParams):
-        self.customParams.load(userParams)
+        self.Parameters.load(userParams)
         logging.debug('customParamsHandler called')
         # Example for a boolean field
 
         if 'clientID' in userParams and self.client_ID is None:
-            self.client_ID = self.customParams['clientID'] 
+            self.client_ID = self.Parameters['clientID'] 
             #self.addOauthParameter('client_id',self.client_ID )
             #self.oauthConfig['client_id'] =  self.client_ID
         else:
-            self.customParams['clientID'] = 'enter client_id'
+            self.Parameters['clientID'] = 'enter client_id'
             self.client_ID = None
             
-        if 'clientSecret' in self.customParams:
-            self.client_SECRET = self.customParams['clientSecret'] 
+        if 'clientSecret' in self.Parameters:
+            self.client_SECRET = self.Parameters['clientSecret'] 
             #self.addOauthParameter('client_secret',self.client_SECRET )
             #self.oauthConfig['client_secret'] =  self.client_SECRET
         else:
-            self.customParams['clientSecret'] = 'enter client_secret'
+            self.Parameters['clientSecret'] = 'enter client_secret'
             self.client_SECRET = None
             
-        #if 'scope' in self.customParams:
-        #    temp = self.customParams['scope'] 
+        #if 'scope' in self.Parameters:
+        #    temp = self.Parameters['scope'] 
         #    temp1 = temp.split()
         #    self.scope_str = ''
         #    for net_scope in temp1:
@@ -119,14 +120,14 @@ class NetatmoCloud(OAuth):
         #            logging.error('Unknown scope provided: {} - removed '.format(net_scope))
         #    self.scope = self.scope_str.split()
         #else:
-        #    self.customParams['scope'] = 'enter desired scopes space separated'
+        #    self.Parameters['scope'] = 'enter desired scopes space separated'
         #    self.scope_str = ""
 
-        if "TEMP_UNIT" in self.customParams:
-            self.temp_unit = self.customParams['TEMP_UNIT'][0].upper()
+        if "TEMP_UNIT" in self.Parameters:
+            self.temp_unit = self.Parameters['TEMP_UNIT'][0].upper()
         else:
             self.temp_unit = 0
-            self.customParams['TEMP_UNIT'] = 'C'
+            self.Parameters['TEMP_UNIT'] = 'C'
 
             #attempts = 0
             #while not self.customData and attempts <3:
@@ -152,26 +153,28 @@ class NetatmoCloud(OAuth):
             #logging.debug('Following scopes are selected : {}'.format(self.scope_str))
 
 
-        #if 'refresh_token' in self.customParams:
-        #    if self.customParams['refresh_token'] is not None and self.customParams['refresh_token'] != "":
-        #        self.customData.token['refresh_token'] = self.customParams['refresh_token']
+        #if 'refresh_token' in self.Parameters:
+        #    if self.Parameters['refresh_token'] is not None and self.Parameters['refresh_token'] != "":
+        #        self.customData.token['refresh_token'] = self.Parameters['refresh_token']
         self.handleCustomParamsDone = True
 
         #self.updateOauthConfig()
-        #self.myParamBoolean = ('myParam' in self.customParams and self.customParams['myParam'].lower() == 'true')
+        #self.myParamBoolean = ('myParam' in self.Parametersand self.Parameters['myParam'].lower() == 'true')
         #logging.info(f"My param boolean: { self.myParamBoolean }")
     
-
+    '''
+    """
     def add_to_parameters(self,  key, value):
         '''add_to_parameters'''
-        self.customParams[key] = value
+        self.Parameters[key] = value
 
     def check_parameters(self, key, value):
         '''check_parameters'''
-        if key in self.customParams:
-            return(self.customParams[key]  == value)
+        if key in self.Parameters:
+            return(self.Parameters[key]  == value)
         else:
             return(False)
+    """
 
     # Call your external service API
     def _callApi(self, method='GET', url=None, body=None):
@@ -244,8 +247,8 @@ class NetatmoCloud(OAuth):
 
 ### Main node server code
 
-    def get_temp_unit(self):
-        return(self.temp_unit)
+    #def set_temp_unit(self, value):
+    #    self.temp_unit = value
 
     def get_home_info(self):
         logging.debug('get_home_info')
