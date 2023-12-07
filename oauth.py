@@ -179,7 +179,7 @@ class OAuth:
             return self.customData.token.get('access_token')
         else:
             self._oAuthTokensRefresh()
-            return None
+            return self.customData.token.get('access_token') 
 
     ## Method to add/overwrite external oauth parameters
     def addOauthParameter(self, key, data):

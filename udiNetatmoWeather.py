@@ -47,12 +47,13 @@ class NetatmoController(udi_interface.Node):
         self.drivers =  [ {'driver': 'ST', 'value':0, 'uom':2}, ]
         self.accessToken = None
         self.nodeDefineDone = False
+        self.configDone = False
         self.name = name
         self.primary = primary
         self.address = address
         self.Parameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
-
+        self.config_completed = 
         self.myNetatmo = NetatmoWeather(self.poly)
         self.hb  = 0
         logging.debug('testing 1')
@@ -126,12 +127,12 @@ class NetatmoController(udi_interface.Node):
         logging.info('Executing start')
         self.myNetatmo = NetatmoWeather(self.poly)
         #self.accessToken = self.myNetatmo.getAccessToken()
-        #while self.accessToken is None:
-        #    time.sleep(2)
-        #    logging.debug('Waiting to retrieve access token')
+        while not self.configDone:
+            time.sleep(2)
+            logging.debug('Waiting for config to complete')
             
         #logging.debug('AccessToken = {}'.format(self.accessToken))
-       
+
         self.home_ids = self.myNetatmo.get_homes()
         if self.home_ids:
             self.node.setDriver('ST', 1, True, True)
@@ -275,7 +276,7 @@ class NetatmoController(udi_interface.Node):
             logging.info('Access token is not yet available. Please authenticate.')
             self.poly.Notices['auth'] = 'Please initiate authentication'
             return
-        
+        self.configDone = True
 
         #res = self.myNetatmo.get_home_info()
         #logging.debug('retrieved get_home_info data {}'.format(res))
