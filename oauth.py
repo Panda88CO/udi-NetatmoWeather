@@ -157,6 +157,9 @@ class OAuth:
     # Should be called only after config is done
     def getAccessToken(self):
         logging.info('Getting access token')
+        while not self.handleCustomParamsDone:
+            logging.debug('Waiting for customParams to complete - getAccessToken')
+            time.sleep(0.2)
         token = self.customData['token']
 
         if token is not None:

@@ -59,9 +59,9 @@ class NetatmoController(udi_interface.Node):
         logging.debug('drivers : {}'.format(self.drivers))
         self.poly.subscribe(self.poly.STOP, self.stopHandler)
         self.poly.subscribe(self.poly.START, self.start, address)
+        self.poly.subscribe(self.poly.CUSTOMPARAMS, self.myNetatmo.customParamsHandler)
         self.poly.subscribe(self.poly.CUSTOMDATA, self.myNetatmo.customDataHandler)
         self.poly.subscribe(self.poly.CUSTOMNS, self.myNetatmo.customNsHandler)
-        self.poly.subscribe(self.poly.CUSTOMPARAMS, self.myNetatmo.customParamsHandler)
         self.poly.subscribe(self.poly.OAUTH, self.myNetatmo.oauthHandler)
         self.poly.subscribe(self.poly.CONFIGDONE, self.configDoneHandler)
         self.poly.subscribe(self.poly.ADDNODEDONE, self.addNodeDoneHandler)
@@ -197,8 +197,9 @@ class NetatmoController(udi_interface.Node):
     def configDoneHandler(self):
         # We use this to discover devices, or ask to authenticate if user has not already done so
         self.poly.Notices.clear()
-        self.myNetatmo.updateOauthConfig()
-        accessToken = self.myNetatmo._oAuthTokensRefresh()
+        #self.myNetatmo.updateOauthConfig()
+        accessToken = self.myNetatmo.getAccessToken()
+        #accessToken = self.myNetatmo._oAuthTokensRefresh()
         logging.debug('configDoneHandler - accessToken {}'.format(accessToken))
         if accessToken is None:
             logging.info('Access token is not yet available. Please authenticate.')

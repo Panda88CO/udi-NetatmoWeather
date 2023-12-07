@@ -40,7 +40,7 @@ class NetatmoCloud(OAuth):
         self.apiEndpoint = 'https://api.netatmo.com'
         self.client_ID = None
         self.client_SECRET = None
-        self.handleCustomParams = False
+        self.handleCustomParamsDone = False
 
 
         self.scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
@@ -52,27 +52,27 @@ class NetatmoCloud(OAuth):
         logging.info('External service connectivity initialized...')
         #logging.debug('oauth : {}'.format(self.oauthConfig))
         time.sleep(1)
-        #while not self.handleCustomParams:
+        #while not self.handleCustomParamsDone:
         #    logging.debug('Waiting for customParams to complete - getAccessToken')
         #    time.sleep(0.2)
         # self.getAccessToken()
     
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
-        while not self.handleCustomParams:
+        while not self.handleCustomParamsDone:
             logging.debug('Waiting for customParams to complete - customDataHandler')
             time.sleep(0.2)
         super()._customDataHandler(data)
 
     def customNsHandler(self, key, data):
-        while not self.handleCustomParams:
+        while not self.handleCustomParamsDone:
             logging.debug('Waiting for customParams to complete - customNsHandler')
             time.sleep(0.2)
         super()._customNsHandler(key, data)
 
     def oauthHandler(self, token):
         logging.debug('oauthHandler')
-        while not self.handleCustomParams:
+        while not self.handleCustomParamsDone:
             logging.debug('Waiting for customParams to complete -oauthHandler')
             time.sleep(0.2)
 
@@ -144,7 +144,7 @@ class NetatmoCloud(OAuth):
         #if 'refresh_token' in self.customParams:
         #    if self.customParams['refresh_token'] is not None and self.customParams['refresh_token'] != "":
         #        self.customData.token['refresh_token'] = self.customParams['refresh_token']
-        self.handleCustomParams = True
+        self.handleCustomParamsDone = True
 
         #self.updateOauthConfig()
         #self.myParamBoolean = ('myParam' in self.customParams and self.customParams['myParam'].lower() == 'true')
