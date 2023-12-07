@@ -85,10 +85,11 @@ class NetatmoCloud(OAuth):
         
 
     # Your service may need to access custom params as well...
-    def customParamsHandler(self, data):
-        self.customParams.load(data)
+    def customParamsHandler(self, userParams):
+        self.customParams.load(userParams)
         logging.debug('customParamsHandler called')
         # Example for a boolean field
+
         if 'clientID' in self.customParams:
             self.client_ID = self.customParams['clientID'] 
             #self.addOauthParameter('client_id',self.client_ID )
@@ -115,7 +116,16 @@ class NetatmoCloud(OAuth):
                 else:
                     logging.error('Unknown scope provided: {} - removed '.format(net_scope))
             self.scope = self.scope_str.split()
-            
+        else:
+            self.customParams['scope'] = 'enter desired scopes space separated'
+            self.scope_str = ""
+
+        if "TEMP_UNIT" in self.customParams:
+            self.temp_unit = self.customParams['TEMP_UNIT'][1].touppper()
+        else:
+            self.temp_unit = 0
+            self.customParams['TEMP_UNIT'] = 'C'
+
             #attempts = 0
             #while not self.customData and attempts <3:
             #    attempts = attempts + 1
@@ -138,9 +148,7 @@ class NetatmoCloud(OAuth):
             #self.addOauthParameter('scope',self.scope_str )
             #self.oauthConfig['scope'] = self.scope_str
             #logging.debug('Following scopes are selected : {}'.format(self.scope_str))
-        else:
-            self.customParams['scope'] = 'enter desired scopes space separated'
-            self.scope_str = ""
+
 
         #if 'refresh_token' in self.customParams:
         #    if self.customParams['refresh_token'] is not None and self.customParams['refresh_token'] != "":
@@ -220,12 +228,15 @@ class NetatmoCloud(OAuth):
         self.addOauthParameter('scope','read_station' )
         #self.addOauthParameter('state','dette er en test' )
         #self.addOauthParameter('redirect_uri','https://my.isy/io/api/cloudlink/redirect' )
-        self.addOauthParameter('name','Netatmo Weather )
+        self.addOauthParameter('name','Netatmo Weather' )
         self.addOauthParameter('cloudlink', True )
         self.addOauthParameter('addRedirect', True )
         logging.debug('updateOauthConfig = {}'.format(self.oauthConfig))
 
 ### Main node server code
+
+    def get_temp_unit(self):
+        return(self.temp_unit)
 
     def get_home_info(self):
         logging.debug('get_home_info')

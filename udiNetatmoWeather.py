@@ -136,13 +136,14 @@ class NetatmoController(udi_interface.Node):
         if self.home_ids:
             self.node.setDriver('ST', 1, True, True)
 
-
-        if 'TEMP_UNIT' in self.Parameters:
-            self.temp_unit = self.convert_temp_unit(self.Parameters['TEMP_UNIT'])
-        else:
-            self.temp_unit = 0  
-            self.Parameters['TEMP_UNIT'] = 'C'
-            logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
+        self.temp_unit = self.convert_temp_unit(self.myNetatmo.get_temp_unit())
+        logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
+        #if 'TEMP_UNIT' in self.Parameters:
+        #    self.temp_unit = self.convert_temp_unit(self.Parameters['TEMP_UNIT'])
+        #else:
+        #    self.temp_unit = 0  
+        #    self.Parameters['TEMP_UNIT'] = 'C'
+        #    logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
 
         self.addNodes()
         

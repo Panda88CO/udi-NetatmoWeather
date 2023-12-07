@@ -88,6 +88,7 @@ class OAuth:
     def _customDataHandler(self, data):
         logging.debug(f"Received customData: { json.dumps(data) }")
         self.customData.load(data)
+        
 
 
     # Gives us the oAuth config from the store
