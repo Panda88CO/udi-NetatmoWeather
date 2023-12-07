@@ -155,14 +155,13 @@ class NetatmoController(udi_interface.Node):
                 tmp = {}
                 tmp['home'] = home
                 tmp['main_module'] = m_module
-                if node_name in self.Parameters:
-                    if self.Parameters[node_name] == 1:
-                        self.enabled_list.append(tmp)
-                        if tmp['home'] not in self.homes_list:
-                            self.homes_list.append(tmp['home'])
-                            self.myNetatmo.update_weather_info_cloud(home)
-                            self.myNetatmo.update_weather_info_instant(home)
-                        selected = True
+                if self.myNetatmo.check_parameters(node_name, 1):
+                    self.enabled_list.append(tmp)
+                    if tmp['home'] not in self.homes_list:
+                        self.homes_list.append(tmp['home'])
+                        self.myNetatmo.update_weather_info_cloud(home)
+                        self.myNetatmo.update_weather_info_instant(home)
+                    selected = True
                 else:
                     self.myNetatmo.add_to_parameters(node_name, 1) #enable by default
                     self.enabled_list.append(tmp)

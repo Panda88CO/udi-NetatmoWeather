@@ -166,7 +166,12 @@ class NetatmoCloud(OAuth):
         '''add_to_parameters'''
         self.customParams[key] = value
 
-            
+    def check_parameters(self, key, value):
+        '''check_parameters'''
+        if key in self.customParams:
+            return(self.customParams[key]  == value)
+        else:
+            return(False)
 
     # Call your external service API
     def _callApi(self, method='GET', url=None, body=None):
