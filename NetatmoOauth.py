@@ -121,7 +121,7 @@ class NetatmoCloud(OAuth):
             self.scope_str = ""
 
         if "TEMP_UNIT" in self.customParams:
-            self.temp_unit = self.customParams['TEMP_UNIT'][1].touppper()
+            self.temp_unit = self.customParams['TEMP_UNIT'][0].touppper()
         else:
             self.temp_unit = 0
             self.customParams['TEMP_UNIT'] = 'C'
