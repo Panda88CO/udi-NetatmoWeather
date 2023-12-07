@@ -48,9 +48,11 @@ class NetatmoCloud(OAuth):
         
         self.poly = polyglot
         self.customParams = Custom(polyglot, 'customparams')
-        
+        self.Notices = Custom(self.poly, 'notices')
+
         logging.info('External service connectivity initialized...')
         #logging.debug('oauth : {}'.format(self.oauthConfig))
+
         time.sleep(1)
         #while not self.handleCustomParamsDone:
         #    logging.debug('Waiting for customParams to complete - getAccessToken')
@@ -90,7 +92,7 @@ class NetatmoCloud(OAuth):
         logging.debug('customParamsHandler called')
         # Example for a boolean field
 
-        if 'clientID' in self.customParams:
+        if 'clientID' in userParams and self.client_ID is None:
             self.client_ID = self.customParams['clientID'] 
             #self.addOauthParameter('client_id',self.client_ID )
             #self.oauthConfig['client_id'] =  self.client_ID
@@ -106,19 +108,19 @@ class NetatmoCloud(OAuth):
             self.customParams['clientSecret'] = 'enter client_secret'
             self.client_SECRET = None
             
-        if 'scope' in self.customParams:
-            temp = self.customParams['scope'] 
-            temp1 = temp.split()
-            self.scope_str = ''
-            for net_scope in temp1:
-                if net_scope in self.scopeList:
-                    self.scope_str = self.scope_str + ' ' + net_scope
-                else:
-                    logging.error('Unknown scope provided: {} - removed '.format(net_scope))
-            self.scope = self.scope_str.split()
-        else:
-            self.customParams['scope'] = 'enter desired scopes space separated'
-            self.scope_str = ""
+        #if 'scope' in self.customParams:
+        #    temp = self.customParams['scope'] 
+        #    temp1 = temp.split()
+        #    self.scope_str = ''
+        #    for net_scope in temp1:
+        #        if net_scope in self.scopeList:
+        #            self.scope_str = self.scope_str + ' ' + net_scope
+        #        else:
+        #            logging.error('Unknown scope provided: {} - removed '.format(net_scope))
+        #    self.scope = self.scope_str.split()
+        #else:
+        #    self.customParams['scope'] = 'enter desired scopes space separated'
+        #    self.scope_str = ""
 
         if "TEMP_UNIT" in self.customParams:
             self.temp_unit = self.customParams['TEMP_UNIT'][0].upper()
@@ -160,7 +162,9 @@ class NetatmoCloud(OAuth):
         #logging.info(f"My param boolean: { self.myParamBoolean }")
     
 
-
+    def add_to_parameters(self,  key, value):
+        '''add_to_parameters'''
+        self.customParams[key] = value
 
             
 

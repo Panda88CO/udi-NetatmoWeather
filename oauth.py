@@ -102,7 +102,7 @@ class OAuth:
             self.oauthConfig = data
             for key in self.updated_oauth_data:
                 self.oauthConfig[key] = self.updated_oauth_data[key]
-            logging.debug('updated oauthCongif : {}'.format(self.oauthConfig))
+            logging.debug('updated oauthConfig : {}'.format(self.oauthConfig))
 
             if self.oauthConfig.get('auth_endpoint') is None:
                 logging.error('oAuth configuration is missing auth_endpoint')
