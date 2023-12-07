@@ -58,6 +58,7 @@ Copyright (C) 2023 Universal Devices
 MIT License
 """
 import json
+import time
 import requests
 from datetime import timedelta, datetime
 
@@ -81,7 +82,7 @@ class OAuth:
         self.oauthConfig = {}
         self.init = True
         self.poly = polyglot
-
+        self.updated_oauth_data = {}
 
     # customData contains current oAuth tokens: self.customData['tokens']
     def _customDataHandler(self, data):
@@ -91,13 +92,16 @@ class OAuth:
 
     # Gives us the oAuth config from the store
     def _customNsHandler(self, key, data):
-        logging.info('CustomNsHandler {} - data {}'.format(key, json.dumps(data)))
+        logging.info('CustomNsHandler {} - data {}'.format(key, data))
         #self.customNs.load(data)
         #logging.debug('_customNsHandler : {}'.format(self.oauthConfig))
         if key == 'oauth':
             logging.info('CustomNsHandler oAuth: {}'.format(json.dumps(data)))
 
             self.oauthConfig = data
+            for key in self.updated_oauth_data:
+                self.oauthConfig[key] = self.updated_oauth_data[key]
+            logging.debug('updated oauthCongif : {}'.format(self.oauthConfig))
 
             if self.oauthConfig.get('auth_endpoint') is None:
                 logging.error('oAuth configuration is missing auth_endpoint')
@@ -179,5 +183,5 @@ class OAuth:
 
     ## Method to add/overwrite external oauth parameters
     def addOauthParameter(self, key, data):
-        self.oauthConfig[key] = data
+        self.updated_oauth_data[key] =  data
         logging.debug('[{}] {} added to oauthConfig: {}'.format(key, data, self.oauthConfig))
