@@ -142,7 +142,7 @@ class OAuth:
             }
         else:
             logging.info('Access token is not yet available. Please authenticate.')
-            logging.debug('self.oauthConfig : {}'.format(self.oauthConfig))           
+            #logging.debug('self.oauthConfig : {}'.format(self.oauthConfig))           
             self.poly.Notices['auth'] = 'Please initiate authentication'
 
             return(None)
