@@ -40,7 +40,7 @@ drivers = [
 class NetatmoController(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name):
         super(NetatmoController, self).__init__(polyglot, primary, address, name)
-        #logging.debug('drivers : {}'.format(self.drivers))
+        logging.debug('NetatmoController Initializing')
         logging.setLevel(10)
         self.poly = polyglot
         self.id = 'controller'
@@ -53,7 +53,7 @@ class NetatmoController(udi_interface.Node):
         self.address = address
         self.Parameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
-        self.config_completed = 
+        self.config_completed = False
         self.myNetatmo = NetatmoWeather(self.poly)
         self.hb  = 0
         logging.debug('testing 1')

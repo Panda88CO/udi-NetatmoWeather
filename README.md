@@ -1,13 +1,11 @@
 
 # Netatmo Weather Station NodeServer
 
-This is the Netatmo Weather Station NodeServer for the [Universal Devices ISY994i](https://www.universal-devices.com/residential/ISY) [Polyglot interface](http://www.universal-devices.com/developers/polyglot/docs/) with  [Polyglot V2](https://github.com/Einstein42/udi-polyglotv2)
-(c) 2021 Daniel Caldentey
+Netatmo Weather Station NodeServer for PG3, PG3x
 MIT license.
 
-This node server is intended to interact with the Netatmo Weather Station. It can track the status of all modules connected to a single Weather Station.[Netatmo](https://www.netatmo.com/en-us/weather) You will need account access to your Netatmo via the Netatmo Developer API, and create an App on their developer site to get a Client ID and a Client Secret 
+This node server integrated the Netatmo Weather Station. You will need account access to your Netatmo via the Netatmo Developer API, and create an App on their developer site to get a Client ID and a Client Secret. As part of the integration one will need to Autheticate when starting the node server the first time from the PG3(x) web interface (will switch to diffent website to allow authentication)
 
-Currently, only one Weather Station is supported.
 
 ## Installation
 
@@ -23,15 +21,9 @@ Currently, only one Weather Station is supported.
 The settings for this node are:
 
 #### Short Poll
-   * Query Weather Station status. The default is 10 minutes as the server only updates every 10 minutes.
+   * Query Weather Station instantaneous data. The default is 5 minutes as the server only updates every 10 minutes.
 #### Long Poll
-   * Not used
-
-#### Username
-   * Your Netatmo account username
-
-#### Password
-   * Your Netatmo account password
+   * Query Weather Station all data. Netatmo data is updated every 15 min or so.  The default is 30 minutes.
 
 #### Client ID
    * Your Netatmo App Client ID
