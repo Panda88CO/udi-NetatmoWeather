@@ -82,7 +82,7 @@ class OAuth:
         self.oauthConfig = {}
         self.init = True
         self.poly = polyglot
-        self.updated_oauth_data = {}
+        #self.updated_oauth_data = {}
 
     # customData contains current oAuth tokens: self.customData['tokens']
     def _customDataHandler(self, data):
@@ -100,8 +100,8 @@ class OAuth:
             logging.info('CustomNsHandler oAuth: {}'.format(json.dumps(data)))
 
             self.oauthConfig = data
-            for key in self.updated_oauth_data:
-                self.oauthConfig[key] = self.updated_oauth_data[key]
+            #for key in self.updated_oauth_data:
+            #    self.oauthConfig[key] = self.updated_oauth_data[key]
             logging.debug('updated oauthConfig : {}'.format(self.oauthConfig))
 
             if self.oauthConfig.get('auth_endpoint') is None:
@@ -119,7 +119,7 @@ class OAuth:
     # User proceeded through oAuth authentication.
     # The authorization_code has already been exchanged for access_token and refresh_token by PG3
     def _oauthHandler(self, token):
-        logging.info('Authentication completed')
+        logging.info('Authentication completed - {}'.format(self.oauthConfig))
         logging.debug('Received oAuth tokens: {}'.format(json.dumps(token)))
         self._saveToken(token)
 
@@ -183,5 +183,5 @@ class OAuth:
 
     ## Method to add/overwrite external oauth parameters
     def addOauthParameter(self, key, data):
-        self.updated_oauth_data[key] =  data
+        self.oauthConfig[key] =  data
         logging.debug('[{}] {} added to oauthConfig: {}'.format(key, data, self.oauthConfig))

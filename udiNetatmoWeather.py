@@ -268,7 +268,7 @@ class NetatmoController(udi_interface.Node):
     def configDoneHandler(self):
         # We use this to discover devices, or ask to authenticate if user has not already done so
         self.poly.Notices.clear()
-        #self.myNetatmo.updateOauthConfig()
+        self.myNetatmo.updateOauthConfig()
         accessToken = self.myNetatmo.getAccessToken()
         #accessToken = self.myNetatmo._oAuthTokensRefresh()
         logging.debug('configDoneHandler - accessToken {}'.format(accessToken))
@@ -288,17 +288,17 @@ class NetatmoController(udi_interface.Node):
         #logging.debug('retrieved get_weather_info2 data2 {}'.format(res))
 
         #self.poly.discoverDevices()
-
+    '''
     def oauthHandler(self, token):
         # When user just authorized, we need to store the tokens
         logging.debug('oauthHandler starting')
         self.myNetatmo.oauthHandler(token)
-        accessToken = self.myNetatmo.getAccessToken()
-        logging.debug('AccessToken obtained {}'.format(accessToken))
+        #accessToken = self.myNetatmo.getAccessToken()
+        #logging.debug('AccessToken obtained {}'.format(accessToken))
 
         # Then proceed with device discovery
         self.configDoneHandler()
-
+    '''
 
     def addNodeDoneHandler(self, node):
         # We will automatically query the device after discovery
