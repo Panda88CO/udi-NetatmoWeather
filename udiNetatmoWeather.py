@@ -186,7 +186,7 @@ class NetatmoController(udi_interface.Node):
                 node_address = self.getValidAddress(module[id])
                 node_name = self.getValidName(module['name'])
                 if not udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.myNetatmo, module_info):
-                    logging.error('Failed to create MAin Weather station: {}'.format(node_name))
+                    logging.error('Failed to create Main Weather station: {}'.format(node_name))
                 time.sleep(1)            
 
     def customParamsHandler(self, userParams):

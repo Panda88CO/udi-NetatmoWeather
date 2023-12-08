@@ -94,7 +94,7 @@ class OAuth:
     # Gives us the oAuth config from the store
     def _customNsHandler(self, key, data):
         logging.info('CustomNsHandler {} - data {}'.format(key, data))
-        #self.customNs.load(data)
+        #self.custom.load(data)
         #logging.debug('_customNsHandler : {}'.format(self.oauthConfig))
         if key == 'oauth':
             logging.info('CustomNsHandler oAuth: {}'.format(json.dumps(data)))
@@ -142,7 +142,10 @@ class OAuth:
             }
         else:
             logging.info('Access token is not yet available. Please authenticate.')
+            tempParams = Custom(self.poly, 'customparams')
+            logging.debug('tempParams = {}'.format(tempParams))
             self.poly.Notices['auth'] = 'Please initiate authentication'
+
             return(None)
         try:
             response = requests.post(self.oauthConfig['token_endpoint'], data=data)
