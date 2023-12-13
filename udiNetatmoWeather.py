@@ -292,8 +292,9 @@ class NetatmoController(udi_interface.Node):
             logging.info('Access token is not yet available. Please authenticate.')
             self.poly.Notices['auth'] = 'Please initiate authentication'
             return
-        self.configDone = True
         '''
+        self.configDone = True
+        
         #res = self.myNetatmo.get_home_info()
         #logging.debug('retrieved get_home_info data {}'.format(res))
 
