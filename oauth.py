@@ -152,6 +152,28 @@ class OAuth:
             return(None)
             # NOTE: If refresh tokens fails, we keep the existing tokens available.
     '''
+    
+    # temp function until oauth is getting fixed 
+    def _insert_refreshToken(self, refresh_token, clientId, clientSecret):
+        data = {
+                'grant_type': 'refresh_token',
+                'refresh_token': refresh_token,
+                'client_id': clientId,
+                'client_secret':  clientSecret
+                }
+        try:
+            response = requests.post('https://api.netatmo.com/oauth2/token' , data=data)
+            response.raise_for_status()
+            token = response.json()
+            logging.info('Refreshing tokens successful')
+            logging.debug(f"Token refresh result [{ type(token) }]: { token }")
+            self._saveToken(token)
+            return('Success')
+          
+        except requests.exceptions.HTTPError as error:
+            logging.error(f"Failed to refresh  token: { error }")
+            return(None)
+            # NOTE: If refresh tokens fails, we keep the existing tokens available.
 
     def _oAuthTokensRefresh(self):
         logging.info('Refreshing oAuth tokens')

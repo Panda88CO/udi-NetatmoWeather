@@ -178,6 +178,7 @@ class NetatmoCloud(OAuth):
         else:
             return(False)
     """
+    '''
     def _insert_refreshToken(self, refresh_token, clientId, clientSecret):
         data = {
                 'grant_type': 'refresh_token',
@@ -198,7 +199,8 @@ class NetatmoCloud(OAuth):
             logging.error(f"Failed to refresh  token: { error }")
             return(None)
             # NOTE: If refresh tokens fails, we keep the existing tokens available.
-
+    '''
+    
     # Call your external service API
     def _callApi(self, method='GET', url=None, body=None):
         # When calling an API, get the access token (it will be refreshed if necessary)
