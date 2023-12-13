@@ -41,7 +41,8 @@ class NetatmoCloud(OAuth):
         self.client_ID = None
         self.client_SECRET = None
         self.handleCustomParamsDone = False
-
+        self.customerDataHandlerDone = False
+        self.customNsHandlerDone - False
 
         self.scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
              'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
