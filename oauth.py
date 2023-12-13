@@ -208,10 +208,9 @@ class OAuth:
     # Gets the access token, and refresh if necessary
     # Should be called only after config is done
     def getAccessToken(self):
-        logging.info('Getting access token')
-        if self.customData == {}:
-            
+        logging.info('Getting access token')           
         logging.debug(self.customData)
+        
         token = self.customData['token']
 
         if token is not None:
