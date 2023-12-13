@@ -128,7 +128,7 @@ class NetatmoController(udi_interface.Node):
         logging.info('Executing start')
         self.myNetatmo = NetatmoWeather(self.poly)
         #self.accessToken = self.myNetatmo.getAccessToken()
-        while not self.configDone and self.myNetatmo.handleCustomParamsDone:
+        while not self.configDone and not self.myNetatmo.handleCustomParamsDone and not self.myNetatmo.customNsHandlerDone  and not self.myNetatmo.customerDataHandlerDone:
             time.sleep(2)
             logging.debug('Waiting for config to complete')
             

@@ -152,7 +152,7 @@ class OAuth:
             return(None)
             # NOTE: If refresh tokens fails, we keep the existing tokens available.
     '''
-    
+
     # temp function until oauth is getting fixed 
     def _insert_refreshToken(self, refresh_token, clientId, clientSecret):
         data = {
@@ -209,6 +209,8 @@ class OAuth:
     # Should be called only after config is done
     def getAccessToken(self):
         logging.info('Getting access token')
+        if self.customData == {}:
+            
         logging.debug(self.customData)
         token = self.customData['token']
 
