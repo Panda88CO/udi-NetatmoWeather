@@ -32,10 +32,10 @@ version = '0.0.3'
 #myNetatmo = None
 #controller = None
 
-id = 'controller'
-drivers = [
-        {'driver': 'ST', 'value':0, 'uom':2},
-        ]
+#id = 'controller'
+#drivers = [
+#        {'driver': 'ST', 'value':0, 'uom':2},
+#        ]
 
 class NetatmoController(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name):
@@ -45,6 +45,7 @@ class NetatmoController(udi_interface.Node):
         self.poly = polyglot
         self.id = 'controller'
         self.drivers =  [ {'driver': 'ST', 'value':0, 'uom':2}, ]
+        self.accessTokenEn = True
         self.accessToken = None
         self.nodeDefineDone = False
         self.configDone = False
@@ -66,7 +67,7 @@ class NetatmoController(udi_interface.Node):
         self.poly.subscribe(self.poly.CUSTOMPARAMS, self.customParamsHandler)
         self.poly.subscribe(self.poly.CUSTOMDATA, self.myNetatmo.customDataHandler)
         self.poly.subscribe(self.poly.CUSTOMNS, self.myNetatmo.customNsHandler)
-        self.poly.subscribe(self.poly.OAUTH, self.myNetatmo.oauthHandler)
+        #self.poly.subscribe(self.poly.OAUTH, self.myNetatmo.oauthHandler)
         self.poly.subscribe(self.poly.CONFIGDONE, self.configDoneHandler)
         self.poly.subscribe(self.poly.ADDNODEDONE, self.addNodeDoneHandler)
         self.poly.subscribe(self.poly.POLL, self.systemPoll)
@@ -211,7 +212,17 @@ class NetatmoController(udi_interface.Node):
         else:
             self.Parameters['clientSecret'] = 'enter client_secret'
             self.client_SECRET = None
-            
+
+        if 'refreshToken' in self.Parameters:
+            self.refreshToken = self.Parameters['refreshToken'] 
+
+            #self.addOauthParameter('client_secret',self.client_SECRET )
+            #self.oauthConfig['client_secret'] =  self.client_SECRET
+        else:
+            self.Parameters['refreshToken'] = 'enter refreshToken'
+            self.refreshToken = None
+
+        
         #if 'scope' in self.Parameters:
         #    temp = self.Parameters['scope'] 
         #    temp1 = temp.split()
@@ -259,6 +270,10 @@ class NetatmoController(udi_interface.Node):
         #if 'refresh_token' in self.Parameters:
         #    if self.Parameters['refresh_token'] is not None and self.Parameters['refresh_token'] != "":
         #        self.customData.token['refresh_token'] = self.Parameters['refresh_token']
+        if self.refreshToken and self.client_ID and self.client_SECRET:
+            self.myNetatmo._insert_refreshToken(self.refreshToken, self.client_ID, self.client_SECRET), 
+
+
         self.myNetatmo.handleCustomParamsDone = True
 
         #self.updateOauthConfig()

@@ -7,3 +7,5 @@ client_ID.txt
 client_SEC.txt
 *.pyc
 tfiles.py
+TestStuff/oauthDev.py
+TestStuff/oauthTest.py
