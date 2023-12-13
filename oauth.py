@@ -152,7 +152,7 @@ class OAuth:
             return(None)
             # NOTE: If refresh tokens fails, we keep the existing tokens available.
     '''
-    
+
     def _oAuthTokensRefresh(self):
         logging.info('Refreshing oAuth tokens')
         logging.debug(f"Token before: { self.customData.token }")
@@ -204,7 +204,7 @@ class OAuth:
             return self.customData.token.get('access_token')
         else:
             self._oAuthTokensRefresh()
-            return self.customData.token.get('access_token') 
+            return self.customData.token.get('access_token')
 
     ## Method to add/overwrite external oauth parameters
     def addOauthParameter(self, key, data):

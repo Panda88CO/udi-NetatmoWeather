@@ -283,6 +283,7 @@ class NetatmoController(udi_interface.Node):
     def configDoneHandler(self):
         # We use this to discover devices, or ask to authenticate if user has not already done so
         self.poly.Notices.clear()
+        '''
         self.myNetatmo.updateOauthConfig()
         accessToken = self.myNetatmo.getAccessToken()
         #accessToken = self.myNetatmo._oAuthTokensRefresh()
@@ -292,7 +293,7 @@ class NetatmoController(udi_interface.Node):
             self.poly.Notices['auth'] = 'Please initiate authentication'
             return
         self.configDone = True
-
+        '''
         #res = self.myNetatmo.get_home_info()
         #logging.debug('retrieved get_home_info data {}'.format(res))
 
