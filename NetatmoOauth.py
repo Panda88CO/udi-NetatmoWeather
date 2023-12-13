@@ -185,7 +185,7 @@ class NetatmoCloud(OAuth):
                 'client_secret':  clientSecret
                 }
         try:
-            response = requests.post(self.oauthConfig['token_endpoint'], data=data)
+            response = requests.post('https://api.netatmo.com/oauth2/token' , data=data)
             response.raise_for_status()
             token = response.json()
             logging.info('Refreshing tokens successful')
