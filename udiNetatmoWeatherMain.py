@@ -159,6 +159,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
             for s_module in sub_modules:
                 logging.debug( 's_module: {}'.format(s_module))
                 module = self.weather.get_module_info(self.home_id, s_module)
+                logging.debug( 'module: {}'.format(module))
                 if 'name' in module:
                     name = self.getValidName(module['name'])
                 else:
