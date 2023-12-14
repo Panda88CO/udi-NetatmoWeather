@@ -90,7 +90,7 @@
       <st id="GV5" editor="w_angle" />
       <st id="GV6" editor="t_timestamp" />
       <st id="GV7" editor="percent" />
-      <st id="GV8" editor="wifi_rf_status" />
+      <st id="GV8" editor="rf_status" />
     </sts>
     <cmds>
       <sends />
