@@ -188,11 +188,12 @@ class NetatmoController(udi_interface.Node):
             logging.debug('enabled list - outside {}'.format(self.enabled_list))
             for node_nbr in range(0,len(self.enabled_list)):
                 module_info = self.enabled_list[node_nbr]
-                logging.debug('module_info {module_info}')
+                logging.debug('module_info {}'.format(module_info))
                 if module_info['home'] not in self.homes_list:
                     self.homes_list.append(module_info['home'])
                 module = self.myNetatmo.get_module_info(module_info['home'],module_info['main_module'])
-                node_address = self.getValidAddress(module[id])
+                logging.debug('module info {}'.format(module))
+                node_address = self.getValidAddress(module['id'])
                 node_name = self.getValidName(module['name'])
                 if not udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.myNetatmo, module_info):
                     logging.error('Failed to create Main Weather station: {}'.format(node_name))
