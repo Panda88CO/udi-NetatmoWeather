@@ -242,7 +242,7 @@ class NetatmoController(udi_interface.Node):
         if "TEMP_UNIT" in self.Parameters:
             self.temp_unit = self.Parameters['TEMP_UNIT'][0].upper()
         else:
-            self.temp_unit = 0
+            self.temp_unit = 'C'
             self.Parameters['TEMP_UNIT'] = 'C'
         self.myNetatmo.temp_unit = self.temp_unit
             #attempts = 0
