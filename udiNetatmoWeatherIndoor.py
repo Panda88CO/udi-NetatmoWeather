@@ -35,7 +35,7 @@ class udiN_WeatherIndoor(udi_interface.Node):
 
         
         self.poly.subscribe(self.poly.START, self.start, self.address)
-        self.poly.subscribe(self.poly.STOP, self.stop)
+        #self.poly.subscribe(self.poly.STOP, self.stop)
 
         self.poly.ready()
         self.poly.addNode(self)

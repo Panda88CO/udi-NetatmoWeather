@@ -47,7 +47,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.Parameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
         self.poly.subscribe(self.poly.START, self.start, self.address)
-        self.poly.subscribe(self.poly.STOP, self.stop)
+        #self.poly.subscribe(self.poly.STOP, self.stop)
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
 
         polyglot.ready()
@@ -88,11 +88,16 @@ class udiNetatmoWeatherMain(udi_interface.Node):
             return(0)
         
 
+
+
     def start(self):
         logging.debug('Executing NetatmoWeatherMain start')
         
         self.addNodes()
 
+    def stop (self):
+        pass
+    
     def addNodes(self):
         '''addNodes'''
         logging.debug('Adding subnodes to {}'.format(self.main_module_id))

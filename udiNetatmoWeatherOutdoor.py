@@ -34,7 +34,7 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         self.n_queue = []
         
         self.poly.subscribe(self.poly.START, self.start, self.address)
-        self.poly.subscribe(self.poly.STOP, self.stop)
+        #self.poly.subscribe(self.poly.STOP, self.stop)
 
         self.poly.ready()
         self.poly.addNode(self)

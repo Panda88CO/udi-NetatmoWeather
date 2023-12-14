@@ -31,7 +31,7 @@ class udiN_WeatherWind(udi_interface.Node):
         self.home = home
 
         self.poly.subscribe(self.poly.START, self.start, self.address)
-        self.poly.subscribe(self.poly.STOP, self.stop)
+        #self.poly.subscribe(self.poly.STOP, self.stop)
         self.n_queue = []
 
         
