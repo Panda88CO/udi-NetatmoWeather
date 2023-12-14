@@ -169,13 +169,13 @@ class udiNetatmoWeatherMain(udi_interface.Node):
 
                 logging.debug(' types: {} {}'.format(s_module['type'], self.INDOOR_modules))
 
-                if s_module['type'] in self.INDOOR_modules:
+                if module['type'] in self.INDOOR_modules:
                     udiN_WeatherIndoor(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
-                elif s_module['type'] in self.OUTDOOR_modules:
+                elif module['type'] in self.OUTDOOR_modules:
                     udiN_WeatherOutdoor(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
-                elif s_module['type'] in self.WIND_modules:
+                elif module['type'] in self.WIND_modules:
                     udiN_WeatherWind(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
-                elif s_module['type'] in self.RAIN_modules:
+                elif module['type'] in self.RAIN_modules:
                     udiN_WeatherRain(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
                 else:
                     logging.error('Unknown module type encountered: {}'.format(s_module['type']))

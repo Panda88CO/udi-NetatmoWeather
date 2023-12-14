@@ -3,8 +3,8 @@ ND-controller-NAME = Netatmo System
 ND-controller-ICON = Weather
 ST-ctl-ST-NAME = NodeServer Online
 
-ND-mainnetatmo-NAME = Main Weather Station
-ND-mainnetatmo-ICON = Weather
+ND-mainunit-NAME = Main Weather Station
+ND-mainunit-ICON = Weather
 ST-MAIN-ST-NAME = Connected
 ST-MAIN-GV0-NAME = Temperature
 ST-MAIN-GV1-NAME = CO2
@@ -19,8 +19,8 @@ ST-MAIN-GV9-NAME = Pressure Trend
 ST-MAIN-GV10-NAME = Timestamp
 ST-MAIN-GV11-NAME = Wi-Fi Status
 
-ND-innetatmo-NAME = Indoor Module
-ND-innetatmo-ICON = Weather
+ND-indoor-NAME = Indoor Module
+ND-indoor-ICON = Weather
 ST-INDM-ST-NAME = Connected
 ST-INDM-GV0-NAME = Temperature
 ST-INDM-GV1-NAME = CO2
@@ -32,8 +32,8 @@ ST-INDM-GV6-NAME = Timestamp
 ST-INDM-GV7-NAME = Battery
 ST-INDM-GV8-NAME = RF Status
 
-ND-outnetatmo-NAME = Indoor Module
-ND-outnetatmo-ICON = Weather
+ND-outdoor-NAME = Outdoor Module
+ND-outdoor-ICON = Weather
 ST-OUTM-ST-NAME = Connected
 ST-OUTM-GV0-NAME = Temperature
 ST-OUTM-GV1-NAME = Humidity
@@ -44,8 +44,8 @@ ST-OUTM-GV5-NAME = Timestamp
 ST-OUTM-GV6-NAME = Battery
 ST-OUTM-GV7-NAME = RF Status
 
-ND-windnetatmo-NAME = Wind Module
-ND-windnetatmo-ICON = Weather
+ND-wind-NAME = Wind Module
+ND-wind-ICON = Weather
 ST-WINM-ST-NAME = Connected
 ST-WINM-GV0-NAME = Wind Strength
 ST-WINM-GV1-NAME = Wind Angle
@@ -57,8 +57,8 @@ ST-WINM-GV6-NAME = Timestamp
 ST-WINM-GV7-NAME = Battery
 ST-WINM-GV8-NAME = RF Status
 
-ND-rainnetatmo-NAME = Rain Module
-ND-rainnetatmo-ICON = Weather
+ND-rain-NAME = Rain Module
+ND-rain-ICON = Weather
 ST-RAIM-ST-NAME = Connected
 ST-RAIM-GV0-NAME = Rain
 ST-RAIM-GV1-NAME = Sum Rain 1h
