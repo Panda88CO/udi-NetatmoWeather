@@ -43,7 +43,7 @@ class udiN_WeatherWind(udi_interface.Node):
         self.weather = NetatmoWeather
         self.module = module
         self.home = home
-        self.id = 'wind_netatmo'
+        self.id = 'windnetatmo'
         self.drivers = [ 
             {'driver' : 'GV0', 'value': 0,  'uom':48},
             {'driver' : 'GV1', 'value': 0,  'uom':76},
@@ -88,7 +88,10 @@ class udiN_WeatherWind(udi_interface.Node):
     # remove all illegal characters from node address
     def getValidAddress(self, name):
         name = bytes(name, 'utf-8').decode('utf-8','ignore')
-        return re.sub(r"[^A-Za-z0-9_]", "", name.lower()[:14])
+        tmp = re.sub(r"[^A-Za-z0-9_]", "", name.lower())
+        logging.debug('getValidAddress {}'.format(tmp))
+        return tmp[:14]
+    
     
 
  

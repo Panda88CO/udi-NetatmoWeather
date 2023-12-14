@@ -47,7 +47,7 @@ class udiN_WeatherIndoor(udi_interface.Node):
         self.module = module
         self.home = home
         self.n_queue = []
-        self.id = 'in_netatmo'
+        self.id = 'innetatmo'
         self.drivers = [
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
             {'driver' : 'CO2LVL', 'value': 0,  'uom':54}, 
@@ -91,7 +91,10 @@ class udiN_WeatherIndoor(udi_interface.Node):
     # remove all illegal characters from node address
     def getValidAddress(self, name):
         name = bytes(name, 'utf-8').decode('utf-8','ignore')
-        return re.sub(r"[^A-Za-z0-9_]", "", name.lower()[:14])
+        tmp = re.sub(r"[^A-Za-z0-9_]", "", name.lower())
+        logging.debug('getValidAddress {}'.format(tmp))
+        return tmp[:14]
+    
     
 
 

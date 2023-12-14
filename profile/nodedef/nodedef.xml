@@ -11,7 +11,7 @@
     </cmds>
   </nodeDef>
 
-  <nodeDef id="main_netatmo" nls="MAIN">
+  <nodeDef id="mainnetatmo" nls="MAIN">
     <sts>
       <st id="ST" editor="bool" />
       <st id="GV0" editor="temperature" />
@@ -34,7 +34,7 @@
     </cmds>
   </nodeDef>
 
-  <nodeDef id="in_netatmo" nls="INDM">
+  <nodeDef id="innetatmo" nls="INDM">
     <sts>
       <st id="ST" editor="bool" />
       <st id="GV0" editor="temperature" />
@@ -54,7 +54,7 @@
     </cmds>
   </nodeDef>
 
-  <nodeDef id="out_netatmo" nls="OUTM">
+  <nodeDef id="outnetatmo" nls="OUTM">
     <sts>
       <st id="ST" editor="bool" />
       <st id="GV0" editor="temperature" />
@@ -73,7 +73,7 @@
     </cmds>
   </nodeDef>
 
-  <nodeDef id="wind_netatmo" nls="WINM">
+  <nodeDef id="windnetatmo" nls="WINM">
     <sts>
       <st id="ST" editor="bool" />
       <st id="GV0" editor="w_strength" />

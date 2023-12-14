@@ -71,7 +71,8 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.RAIN_modules = ['NAModule3']
         self.INDOOR_modules = ['NAModule4']
         self.n_queue = []
-        self.id = 'main_netatmo'
+
+        self.id = 'mainnetatmo'
         self.drivers = [
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
             {'driver' : 'CO2LVL', 'value': 0,  'uom':54}, 
@@ -126,7 +127,10 @@ class udiNetatmoWeatherMain(udi_interface.Node):
     # remove all illegal characters from node address
     def getValidAddress(self, name):
         name = bytes(name, 'utf-8').decode('utf-8','ignore')
-        return re.sub(r"[^A-Za-z0-9_]", "", name.lower()[:14])
+        tmp = re.sub(r"[^A-Za-z0-9_]", "", name.lower())
+        logging.debug('getValidAddress {}'.format(tmp))
+        return tmp[:14]
+    
     
 
 
@@ -160,13 +164,13 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                     name = self.getValidName(module['id'])
                 address = self.getValidAddress(module['id'])
 
-                if s_module['type'] == self.INDOOR_modules:
+                if s_module['type'] in self.INDOOR_modules:
                     udiN_WeatherIndoor(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
-                elif s_module['type'] == self.OUTDOOR_modules:
+                elif s_module['type'] in self.OUTDOOR_modules:
                     udiN_WeatherOutdoor(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
-                elif s_module['type'] == self.WIND_modules:
+                elif s_module['type'] in self.WIND_modules:
                     udiN_WeatherWind(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
-                elif s_module['type'] == self.RAIN_modules:
+                elif s_module['type'] in self.RAIN_modules:
                     udiN_WeatherRain(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
                 else:
                     logging.error('Unknown module type encountered: {}'.format(s_module['type']))
