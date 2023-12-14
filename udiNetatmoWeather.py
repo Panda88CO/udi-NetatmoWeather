@@ -101,7 +101,9 @@ class NetatmoController(udi_interface.Node):
     # remove all illegal characters from node address
     def getValidAddress(self, name):
         name = bytes(name, 'utf-8').decode('utf-8','ignore')
-        return re.sub(r"[^A-Za-z0-9_]", "", name.lower()[:14])
+        tmp = re.sub(r"[^A-Za-z0-9_]", "", name.lower())
+        logging.debug('getValidAddress {}'.format(tmp))
+        return tmp[:14]
     
 
     def convert_temp_unit(self, tempStr):
