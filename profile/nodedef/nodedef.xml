@@ -11,7 +11,7 @@
     </cmds>
   </nodeDef>
 
-  <nodeDef id="main_netatmo" nls="MAIM">
+  <nodeDef id="main_netatmo" nls="MAIN">
     <sts>
       <st id="ST" editor="bool" />
       <st id="GV0" editor="temperature" />
@@ -45,7 +45,7 @@
       <st id="GV5" editor="trend" />
       <st id="GV6" editor="t_timestamp" />
       <st id="GV7" editor="percent" />
-      <st id="GV8" editor="wifi_rf_status" />
+      <st id="GV8" editor="rf_status" />
     </sts>
     <cmds>
       <sends />
@@ -64,7 +64,7 @@
       <st id="GV4" editor="trend" />
       <st id="GV5" editor="t_timestamp" />
       <st id="GV6" editor="percent" />
-      <st id="GV7" editor="wifi_rf_status" />
+      <st id="GV7" editor="rf_status" />
     </sts>
     <cmds>
       <sends />

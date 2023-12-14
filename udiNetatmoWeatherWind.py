@@ -20,6 +20,16 @@ except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
 
+id = 'wind_netatmo'
+drivers = [ {'driver' : 'GV0', 'value': 0,  'uom':48},
+            {'driver' : 'GV1', 'value': 0,  'uom':76},
+            {'driver' : 'GV2', 'value': 0,  'uom':48},
+            {'driver' : 'GV3', 'value': 0,  'uom':76},
+            {'driver' : 'GV4', 'value': 0,  'uom':48},
+            {'driver' : 'GV5', 'value': 0,  'uom':76},
+            {'driver' : 'GV6', 'value': 0,  'uom':151},
+            {'driver' : 'GV7', 'value': 0,  'uom':51},
+            {'driver' : 'ST', 'value': 0,  'uom':2},   ]
 
 class udiN_WeatherWind(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, NetatmoWeather, home,  module):

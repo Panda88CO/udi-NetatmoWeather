@@ -26,6 +26,41 @@ from udiNetatmoWeatherRain import udiN_WeatherRain
 from udiNetatmoWeatherWind import udiN_WeatherWind
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
+id = 'main_netatmo'
+
+'''
+      <st id="ST" editor="bool" />
+      <st id="CLITEMP" editor="temperature" />
+      <st id="GV1" editor="co2" />
+      <st id="GV2" editor="humidity" />
+      <st id="GV3" editor="noise" />
+      <st id="GV4" editor="pressure" />
+      <st id="GV5" editor="pressure" />
+      <st id="GV6" editor="temperature" />
+      <st id="GV7" editor="temperature" />
+      <st id="GV8" editor="trend" />
+      <st id="GV9" editor="trend" />
+      <st id="GV10" editor="t_timestamp" />
+      <st id="GV11" editor="wifi_rf_status" />
+    </sts>
+
+'''
+drivers = [
+            {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
+            {'driver' : 'CO2LVL', 'value': 0,  'uom':54}, 
+            {'driver' : 'CLIHUM', 'value': 0,  'uom':22}, 
+            {'driver' : 'GV3', 'value': 0,  'uom':12}, 
+            {'driver' : 'BARPRES', 'value': 0,  'uom':23}, 
+            {'driver' : 'GV5', 'value': 0,  'uom':23}, 
+            {'driver' : 'GV6', 'value': 0,  'uom':4}, 
+            {'driver' : 'GV7', 'value': 0,  'uom':4}, 
+            {'driver' : 'GV8', 'value': 0,  'uom':25}, 
+            {'driver' : 'GV9', 'value': 0,  'uom':25}, 
+            {'driver' : 'GV10', 'value': 0,  'uom':151},
+            {'driver' : 'GV11', 'value': 0,  'uom':131},            
+            {'driver' : 'ST', 'value': 0,  'uom':2}, 
+            ]
+
 
 class udiNetatmoWeatherMain(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, NetatmoWeather, module_info):

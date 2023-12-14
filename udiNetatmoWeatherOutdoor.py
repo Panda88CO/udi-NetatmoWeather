@@ -22,7 +22,20 @@ except ImportError:
 
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
+id = 'out_netatmo'
 
+drivers = [
+            {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
+            {'driver' : 'CO2LVL', 'value': 0,  'uom':54}, 
+            {'driver' : 'CLIHUM', 'value': 0,  'uom':22}, 
+            {'driver' : 'GV3', 'value': 0,  'uom':4}, 
+            {'driver' : 'GV4', 'value': 0,  'uom':4}, 
+            {'driver' : 'GV5', 'value': 0,  'uom':25}, 
+            {'driver' : 'GV6', 'value': 0,  'uom':151}, 
+            {'driver' : 'GV7', 'value': 0,  'uom':51}, 
+            {'driver' : 'GV8', 'value': 0,  'uom':131},          
+            {'driver' : 'ST', 'value': 0,  'uom':2}, 
+            ]
 class udiN_WeatherOutdoor(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, NetatmoWeather, home, module):
         super().__init__(polyglot, primary, address, name)

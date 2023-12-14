@@ -21,7 +21,17 @@ except ImportError:
     logging.basicConfig(level=logging.DEBUG)
 
 
-
+id = 'rain_netatmo'
+drivers = [
+            {'driver' : 'GV0', 'value': 0,  'uom':82}, 
+            {'driver' : 'GV1', 'value': 0,  'uom':82}, 
+            {'driver' : 'GV2', 'value': 0,  'uom':82}, 
+            {'driver' : 'GV3', 'value': 0,  'uom':12}, 
+            {'driver' : 'GV4', 'value': 0,  'uom':151}, 
+            {'driver' : 'GV5', 'value': 0,  'uom':51}, 
+          
+            {'driver' : 'ST', 'value': 0,  'uom':2}, 
+            ]
 
 class udiN_WeatherRain(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, NetatmoWeather, home, module):
