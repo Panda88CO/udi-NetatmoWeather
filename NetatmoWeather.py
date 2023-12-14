@@ -42,6 +42,7 @@ class NetatmoWeather (NetatmoCloud):
         logging.debug('get_weather_info_cloud')
         try:
             tmp = self.get_modules(home_id)
+            logging.debug('tmp = {}'.format(tmp))
             self.cloud_data[home_id] = {}
             for dev_id in tmp:
                 if tmp[dev_id]['type'] in self.MAIN_modules:
@@ -52,7 +53,7 @@ class NetatmoWeather (NetatmoCloud):
                     
                     temp_data = self._callApi('GET', api_str )
 
-
+                    logging.debug('dev Id {}, data: {} '.format(dev_id, temp_data))
 
                     #test = self._callApi('GET', '/getstationsdata' )
                     #logging.debug(temp_data)
@@ -80,7 +81,7 @@ class NetatmoWeather (NetatmoCloud):
                             mod = temp_data['modules'][module]
                             self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = mod['dashboard_data']
                             self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['data_type'] = mod['data_type']
-            self.merge_data()         
+                self.merge_data()         
             return(self.cloud_data)
         except Exception as e:
             logging.error('update_weather_info_cloud failed : {}'.format(e))
