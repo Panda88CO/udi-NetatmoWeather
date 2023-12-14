@@ -185,7 +185,7 @@ class NetatmoController(udi_interface.Node):
         if not selected and len(self.home_ids > 1):
             self.poly.Notices['home_id'] = 'Check config to select which home/modules should be used (1 - used, 0 - not used) - then restart'
         else:
-            logging.debug('enabled list - outside {}'format(self.enabled_list))
+            logging.debug('enabled list - outside {}'.format(self.enabled_list))
             for node_nbr in range(0,len(self.enabled_list)):
                 module_info = self.enabled_list[node_nbr]
                 logging.debug('module_info {module_info}')
