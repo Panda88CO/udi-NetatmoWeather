@@ -43,7 +43,8 @@ from udiNetatmoWeatherWind import udiN_WeatherWind
       <st id="GV10" editor="t_timestamp" />
       <st id="GV11" editor="wifi_rf_status" />
     </sts>
-
+'''
+id = 'mainunit'
 
 drivers = [
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
@@ -60,7 +61,7 @@ drivers = [
             {'driver' : 'GV11', 'value': 0,  'uom':131},            
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
-'''
+
 
 class udiNetatmoWeatherMain(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, NetatmoWeather, module_info):
@@ -72,7 +73,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.INDOOR_modules = ['NAModule4']
         self.n_queue = []
 
-        self.id = 'mainnetatmo'
+        self.id = 'mainunit'
         self.drivers = [
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
             {'driver' : 'CO2LVL', 'value': 0,  'uom':54}, 
@@ -179,7 +180,12 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 else:
                     logging.error('Unknown module type encountered: {}'.format(s_module['type']))
                 
-
-
+    def update(self, command = None):
+        pass
+        
+    commands = {        
+                'UPDATE': update,
+                'QUERY' : update, 
+                }
 
         

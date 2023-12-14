@@ -20,8 +20,8 @@ except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
 
-'''
-id = 'rain_netatmo'
+
+id = 'rain'
 drivers = [
             {'driver' : 'GV0', 'value': 0,  'uom':82}, 
             {'driver' : 'GV1', 'value': 0,  'uom':82}, 
@@ -32,7 +32,8 @@ drivers = [
           
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
-'''
+
+
 class udiN_WeatherRain(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, NetatmoWeather, home, module):
         super().__init__(polyglot, primary, address, name)
@@ -40,7 +41,7 @@ class udiN_WeatherRain(udi_interface.Node):
         self.weather = NetatmoWeather
         self.module = module
         self.home = home
-        self.id = 'rainnetatmo'
+        self.id = 'rain'
         self.drivers = [
             {'driver' : 'GV0', 'value': 0,  'uom':82}, 
             {'driver' : 'GV1', 'value': 0,  'uom':82}, 
@@ -97,7 +98,14 @@ class udiN_WeatherRain(udi_interface.Node):
 
     def start(self):
         logging.debug('Executing NetatmoWeatherRain start')
-        
+
+    def update(self, command = None):
+        pass
+            
+    commands = {        
+                'UPDATE': update,
+                'QUERY' : update, 
+                }
 
 
        

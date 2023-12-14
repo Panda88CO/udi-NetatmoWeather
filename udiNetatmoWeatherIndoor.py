@@ -23,8 +23,8 @@ except ImportError:
 
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
-'''
-id = 'in_netatmo'
+
+id = 'indoor'
 
 drivers = [
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
@@ -38,7 +38,7 @@ drivers = [
             {'driver' : 'GV8', 'value': 0,  'uom':131},          
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
-'''
+
 class udiN_WeatherIndoor(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, NetatmoWeather, home, module):
         super().__init__(polyglot, primary, address, name)
@@ -47,7 +47,7 @@ class udiN_WeatherIndoor(udi_interface.Node):
         self.module = module
         self.home = home
         self.n_queue = []
-        self.id = 'innetatmo'
+        self.id = 'indoor'
         self.drivers = [
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
             {'driver' : 'CO2LVL', 'value': 0,  'uom':54}, 
@@ -190,3 +190,10 @@ class udiN_WeatherIndoor(udi_interface.Node):
                 node.setOffline()
         self.poly.stop()
 
+    def update(self, command = None):
+        pass
+
+    commands = {        
+                'UPDATE': update,
+                'QUERY' : update, 
+                }

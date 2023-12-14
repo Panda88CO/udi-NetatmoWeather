@@ -7,11 +7,13 @@
     <cmds>
       <sends />
       <accepts>
+        <cmd id="UPDATE" /> 
+        <cmd id="QUERY" />     
       </accepts>
     </cmds>
   </nodeDef>
 
-  <nodeDef id="mainnetatmo" nls="MAIN">
+  <nodeDef id="mainunit" nls="MAIN">
     <sts>
       <st id="ST" editor="bool" />
       <st id="GV0" editor="temperature" />
@@ -30,11 +32,13 @@
     <cmds>
       <sends />
       <accepts>
+        <cmd id="UPDATE" /> 
+        <cmd id="QUERY" />     
       </accepts>
     </cmds>
   </nodeDef>
 
-  <nodeDef id="innetatmo" nls="INDM">
+  <nodeDef id="indoor" nls="INDM">
     <sts>
       <st id="ST" editor="bool" />
       <st id="GV0" editor="temperature" />
@@ -50,11 +54,13 @@
     <cmds>
       <sends />
       <accepts>
+        <cmd id="UPDATE" /> 
+        <cmd id="QUERY" />     
       </accepts>
     </cmds>
   </nodeDef>
 
-  <nodeDef id="outnetatmo" nls="OUTM">
+  <nodeDef id="outdoor" nls="OUTM">
     <sts>
       <st id="ST" editor="bool" />
       <st id="GV0" editor="temperature" />
@@ -73,7 +79,7 @@
     </cmds>
   </nodeDef>
 
-  <nodeDef id="windnetatmo" nls="WINM">
+  <nodeDef id="wind" nls="WINM">
     <sts>
       <st id="ST" editor="bool" />
       <st id="GV0" editor="w_strength" />
@@ -89,11 +95,13 @@
     <cmds>
       <sends />
       <accepts>
+        <cmd id="UPDATE" /> 
+        <cmd id="QUERY" />           
       </accepts>
     </cmds>
   </nodeDef>
 
-  <nodeDef id="rain_netatmo" nls="RAIM">
+  <nodeDef id="rain" nls="RAIM">
     <sts>
       <st id="ST" editor="bool" />
       <st id="GV0" editor="rain" />
@@ -106,6 +114,8 @@
     <cmds>
       <sends />
       <accepts>
+        <cmd id="UPDATE" /> 
+        <cmd id="QUERY" />           
       </accepts>
     </cmds>
   </nodeDef>
