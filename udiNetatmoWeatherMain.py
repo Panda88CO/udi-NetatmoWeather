@@ -153,6 +153,9 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         
         self.addNodes()
 
+        
+        self.updateISYdrivers()
+
     def stop (self):
         pass
     
