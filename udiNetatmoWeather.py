@@ -202,6 +202,8 @@ class NetatmoController(udi_interface.Node):
                     logging.error('Failed to create Main Weather station: {}'.format(node_name))
                 time.sleep(1)            
 
+        self.nodeDefineDone = True
+
     def customParamsHandler(self, userParams):
         self.Parameters.load(userParams)
         logging.debug('customParamsHandler called')
@@ -330,13 +332,15 @@ class NetatmoController(udi_interface.Node):
     '''
 
     def addNodeDoneHandler(self, node):
+        pass
         # We will automatically query the device after discovery
         #self.poly.addNodeDoneHandler(node)
-        self.nodeDefineDone = True
+        #self.nodeDefineDone = True
 
     def systemPoll (self, polltype):
         if self.nodeDefineDone:
             logging.info('System Poll executing: {}'.format(polltype))
+            nodes = self.poly.nodes()
             try:
                 if 'longPoll' in polltype:
                     #Keep token current
