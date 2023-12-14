@@ -22,7 +22,7 @@ except ImportError:
 
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
-
+'''
 id = 'outdoor'
 
 drivers = [
@@ -37,7 +37,7 @@ drivers = [
             {'driver' : 'GV8', 'value': 0,  'uom':131},          
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
-
+'''
             
 class udiN_WeatherOutdoor(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, NetatmoWeather, home, module):
@@ -67,7 +67,7 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         self.poly.subscribe(self.poly.START, self.start, address)
         #self.poly.subscribe(self.poly.STOP, self.stop)
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
-        
+
         self.poly.ready()
         self.poly.addNode(self)
         self.wait_for_node_done()
@@ -98,9 +98,6 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         logging.debug('getValidAddress {}'.format(tmp))
         return tmp[:14]
     
-    
-
-
     def convert_temp_unit(self, tempStr):
         if tempStr.capitalize()[:1] == 'F':
             return(1)
@@ -112,7 +109,15 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         logging.debug('Executing NetatmoWeatherOutdoor start')
         
     def update(self, command = None):
-        pass
+        self.weather.update_weather_info_cloud(self.home)
+        self.weather.update_weather_info_instant(self.home)
+        self.updateISYdrivers()
+
+    def updateISYdrivers(self):
+        logging.debug('updateISYdrivers')
+        data = self.weather.get_outdoor_module_data(self.home, self.module)
+        logging.debug('Outdoor module data: {}'.format(data))
+
 
     commands = {        
                 'UPDATE': update,

@@ -23,7 +23,7 @@ except ImportError:
 
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
-
+'''
 id = 'indoor'
 
 drivers = [
@@ -38,6 +38,7 @@ drivers = [
             {'driver' : 'GV8', 'value': 0,  'uom':131},          
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
+'''
 
 class udiN_WeatherIndoor(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, NetatmoWeather, home, module):
@@ -194,8 +195,17 @@ class udiN_WeatherIndoor(udi_interface.Node):
                 node.setOffline()
         self.poly.stop()
 
+    def updateISYdrivers(self):
+        logging.debug('updateISYdrivers')
+        data = self.weather.get_indoor_module_data(self.home, self.module)
+        logging.debug('Indoor module data: {}'.format(data))
+
+
     def update(self, command = None):
-        pass
+        self.weather.update_weather_info_cloud(self.home)
+        self.weather.update_weather_info_instant(self.home)
+        self.updateISYdrivers()
+
 
     commands = {        
                 'UPDATE': update,
