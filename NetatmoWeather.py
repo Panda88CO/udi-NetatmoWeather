@@ -274,3 +274,49 @@ class NetatmoWeather (NetatmoCloud):
         logging.debug('get_wind_module_data')
         #data_list = ['wind_strength', 'wind_angle', 'wind+gust', 'wind_gust_angle', 'last_seen', 'battery_state', 'ts']
         return(self._get_weather_data(home_id, dev_id, 'WIND'))
+
+
+    def get_temperature_C(self, data):
+        if 'temperature' in data:
+            return(data['temperature'])       
+
+    def get_max_temperature_C (self, data):
+        if 'max_temp' in data:
+            return(data['max_temp'])
+
+    def get_min_temerature_C(self, data):
+        if 'min_temp' in data:
+            return(data['min_temp'])
+
+    def get_co2(self, data):
+        if 'co2' in data:
+            return(data['co2'])
+
+
+    def get_humidity(self, data):
+        if 'humidity' in data:
+            return(data['humidity'])
+     
+    def get_temp_trend(self, data):
+        if 'temp_trend' in data:
+                
+            trend = data['temp_trend']
+            if trend == 'stable':
+                return(trend, 0)
+            elif trend == 'up':
+                return(trend, 1)
+            elif trend =='down':
+                return(trend, -1)
+            else:
+                logging.error('unsupported temperature trend: {}'.format(trend))
+                return(trend, None)       
+        
+    def get_battery_info(self, data):
+
+
+    def get_rf_info(self, data):
+
+
+    def get_online(self, data):
+        
+

@@ -61,11 +61,11 @@ class udiN_WeatherWind(udi_interface.Node):
             {'driver' : 'ST', 'value': 0,  'uom':2},
             ]
   
-
+        self.n_queue = []
         self.poly.subscribe(self.poly.START, self.start, address)
         #self.poly.subscribe(self.poly.STOP, self.stop)
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
-        self.n_queue = []
+       
 
         
         polyglot.ready()
@@ -74,7 +74,6 @@ class udiN_WeatherWind(udi_interface.Node):
         self.node = self.poly.getNode(address)
         logging.info('Start {}Wind Node'.format(self.name))  
         time.sleep(1)
-        self.n_queue = []  
         self.nodeDefineDone = True
 
     

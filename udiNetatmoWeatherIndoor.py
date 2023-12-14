@@ -119,6 +119,8 @@ class udiN_WeatherIndoor(udi_interface.Node):
         logging.debug('updateISYdrivers')
         data = self.weather.get_indoor_module_data(self.home, self.module)
         logging.debug('Indoor module data: {}'.format(data))
+        if 'temperature' in data:
+            
 
 
     def update(self, command = None):

@@ -50,7 +50,6 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         self.primary = primary
         self.address = address
         self.name = name
-        self.n_queue = []
         self.id = 'outdoor'
         self.drivers = [
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
@@ -64,6 +63,9 @@ class udiN_WeatherOutdoor(udi_interface.Node):
             {'driver' : 'GV8', 'value': 0,  'uom':131},          
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
+        
+        self.n_queue = []
+
         self.poly.subscribe(self.poly.START, self.start, address)
         #self.poly.subscribe(self.poly.STOP, self.stop)
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
@@ -74,7 +76,6 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         self.node = self.poly.getNode(address)
         logging.info('Start {} Outdoor Node'.format(self.name))  
         time.sleep(1)
-        self.n_queue = []  
         self.nodeDefineDone = True
 
     
@@ -108,7 +109,7 @@ class udiN_WeatherOutdoor(udi_interface.Node):
     def start(self):
         logging.debug('Executing NetatmoWeatherOutdoor start')
         self.updateISYdrivers()
-                
+
     def update(self, command = None):
         self.weather.update_weather_info_cloud(self.home)
         self.weather.update_weather_info_instant(self.home)
