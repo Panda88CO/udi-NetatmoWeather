@@ -154,9 +154,11 @@ class NetatmoController(udi_interface.Node):
         self.enabled_list = []
         self.homes_list = []
         for home in self.home_ids:
+            logging.debug('Adding from {}'.format(home))
             home_name = self.home_ids[home]['name']
             main_modules = self.myNetatmo.get_main_modules(home)
             for m_module in main_modules:
+                logging.debug('adding MAIN modules {}'.format(m_module))
                 mod_name = main_modules[m_module]['name']
                 node_name = home_name + '_'+ mod_name
                 tmp = {}
@@ -165,6 +167,7 @@ class NetatmoController(udi_interface.Node):
                 if node_name in self.Parameters:
                     if self.Parameters[node_name] == 1:
                         self.enabled_list.append(tmp)
+                        logging.debug('enabled list {}'.format(self.enabled_list))
                         if tmp['home'] not in self.homes_list:
                             self.homes_list.append(tmp['home'])
                             self.myNetatmo.update_weather_info_cloud(home)
@@ -173,6 +176,7 @@ class NetatmoController(udi_interface.Node):
                 else:
                     self.Parameters[node_name] = 1 #enable by default
                     self.enabled_list.append(tmp)
+                    logging.debug('enabled list - else {}'.format(self.enabled_list))
                     if tmp['home'] not in self.homes_list:
                         self.homes_list.append(tmp['home'])
                         self.myNetatmo.update_weather_info_cloud(home)
