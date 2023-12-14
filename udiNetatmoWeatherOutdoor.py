@@ -47,6 +47,9 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         self.module = module
         self.home = home 
         self.poly = polyglot
+        self.primary = primary
+        self.address = address
+        self.name = name
         self.n_queue = []
         self.id = 'outdoor'
         self.drivers = [
@@ -63,7 +66,8 @@ class udiN_WeatherOutdoor(udi_interface.Node):
             ]
         self.poly.subscribe(self.poly.START, self.start, address)
         #self.poly.subscribe(self.poly.STOP, self.stop)
-
+        self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
+        
         self.poly.ready()
         self.poly.addNode(self)
         self.wait_for_node_done()

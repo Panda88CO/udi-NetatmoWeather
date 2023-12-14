@@ -89,7 +89,10 @@ class udiNetatmoWeatherMain(udi_interface.Node):
             {'driver' : 'GV11', 'value': 0,  'uom':131},            
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
-        self.primary = address
+        self.primary = primary
+        self.address = address
+        self.name = name
+
         self.poly = polyglot
         self.weather = NetatmoWeather
         self.home_id = module_info['home']
@@ -156,6 +159,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         '''addNodes'''
         logging.debug('Adding subnodes to {}'.format(self.main_module_id))
         sub_modules = self.weather.get_sub_modules(self.home_id, self.main_module_id)
+        logging.debug('System sub modules: {}'.format(sub_modules))
         if sub_modules:
             for s_module in sub_modules:
                 logging.debug( 's_module: {}'.format(s_module))

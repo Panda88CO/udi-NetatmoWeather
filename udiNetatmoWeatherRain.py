@@ -41,6 +41,9 @@ class udiN_WeatherRain(udi_interface.Node):
         self.weather = NetatmoWeather
         self.module = module
         self.home = home
+        self.primary = primary
+        self.address = address
+        self.name = name
         self.id = 'rain'
         self.drivers = [
             {'driver' : 'GV0', 'value': 0,  'uom':82}, 
@@ -55,6 +58,7 @@ class udiN_WeatherRain(udi_interface.Node):
         
         self.poly.subscribe(self.poly.START, self.start, address)
         #self.poly.subscribe(self.poly.STOP, self.stop)
+        self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
         self.n_queue = []
 
         polyglot.ready()
@@ -101,7 +105,7 @@ class udiN_WeatherRain(udi_interface.Node):
 
     def update(self, command = None):
         pass
-            
+
     commands = {        
                 'UPDATE': update,
                 'QUERY' : update, 

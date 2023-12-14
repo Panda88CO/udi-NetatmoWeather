@@ -43,6 +43,9 @@ class udiN_WeatherWind(udi_interface.Node):
         self.weather = NetatmoWeather
         self.module = module
         self.home = home
+        self.primary = primary
+        self.address = address
+        self.name = name        
         self.id = 'wind'
         self.drivers = [ 
             {'driver' : 'GV0', 'value': 0,  'uom':48},
@@ -59,6 +62,7 @@ class udiN_WeatherWind(udi_interface.Node):
 
         self.poly.subscribe(self.poly.START, self.start, address)
         #self.poly.subscribe(self.poly.STOP, self.stop)
+        self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
         self.n_queue = []
 
         
@@ -106,7 +110,7 @@ class udiN_WeatherWind(udi_interface.Node):
         logging.debug('Executing NetatmoWeatherWind start')
         
         #self.addNodes()
-        
+
     def update(self, command = None):
         pass
        
