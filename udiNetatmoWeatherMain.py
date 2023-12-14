@@ -163,7 +163,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 else:
                     name = self.getValidName(module['id'])
                 address = self.getValidAddress(module['id'])
-
+                logging.debug(' types: {} {}'.format(s_module['type'], self.INDOOR_modules))
                 if s_module['type'] in self.INDOOR_modules:
                     udiN_WeatherIndoor(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
                 elif s_module['type'] in self.OUTDOOR_modules:

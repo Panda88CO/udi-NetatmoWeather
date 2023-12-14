@@ -53,7 +53,7 @@ class udiN_WeatherWind(udi_interface.Node):
             {'driver' : 'GV5', 'value': 0,  'uom':76},
             {'driver' : 'GV6', 'value': 0,  'uom':151},
             {'driver' : 'GV7', 'value': 0,  'uom':51},
-            {'driver' : 'ST', 'value': 0,  'uom':2},   
+            {'driver' : 'ST', 'value': 0,  'uom':2},
             ]
   
 
