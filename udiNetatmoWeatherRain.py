@@ -20,7 +20,7 @@ except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
 
-
+'''
 id = 'rain_netatmo'
 drivers = [
             {'driver' : 'GV0', 'value': 0,  'uom':82}, 
@@ -32,7 +32,7 @@ drivers = [
           
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
-
+'''
 class udiN_WeatherRain(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, NetatmoWeather, home, module):
         super().__init__(polyglot, primary, address, name)
@@ -40,6 +40,17 @@ class udiN_WeatherRain(udi_interface.Node):
         self.weather = NetatmoWeather
         self.module = module
         self.home = home
+        self.id = 'rain_netatmo'
+        self.drivers = [
+            {'driver' : 'GV0', 'value': 0,  'uom':82}, 
+            {'driver' : 'GV1', 'value': 0,  'uom':82}, 
+            {'driver' : 'GV2', 'value': 0,  'uom':82}, 
+            {'driver' : 'GV3', 'value': 0,  'uom':12}, 
+            {'driver' : 'GV4', 'value': 0,  'uom':151}, 
+            {'driver' : 'GV5', 'value': 0,  'uom':51}, 
+          
+            {'driver' : 'ST', 'value': 0,  'uom':2}, 
+            ]
         
         self.poly.subscribe(self.poly.START, self.start, address)
         #self.poly.subscribe(self.poly.STOP, self.stop)
