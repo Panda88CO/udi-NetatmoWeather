@@ -33,7 +33,7 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         self.poly = polyglot
         self.n_queue = []
         
-        self.poly.subscribe(self.poly.START, self.start, self.address)
+        self.poly.subscribe(self.poly.START, self.start, address)
         #self.poly.subscribe(self.poly.STOP, self.stop)
 
         self.poly.ready()
