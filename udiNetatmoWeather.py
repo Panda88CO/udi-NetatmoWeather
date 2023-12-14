@@ -131,18 +131,20 @@ class NetatmoController(udi_interface.Node):
         while not self.configDone and not self.myNetatmo.handleCustomParamsDone and not self.myNetatmo.customNsHandlerDone  and not self.myNetatmo.customerDataHandlerDone:
             time.sleep(2)
             logging.debug('Waiting for config to complete')
-            
-        #logging.debug('AccessToken = {}'.format(self.accessToken))
+        #time.sleep(1)
+        if self.refreshToken and self.client_ID and self.client_SECRET:
+            self.myNetatmo._insert_refreshToken(self.refreshToken, self.client_ID, self.client_SECRET)
+            #logging.debug('AccessToken = {}'.format(self.accessToken))
+            time.sleep(1)
+            self.home_ids = self.myNetatmo.get_homes()
+            if self.home_ids:
+                self.node.setDriver('ST', 1, True, True)
 
-        self.home_ids = self.myNetatmo.get_homes()
-        if self.home_ids:
-            self.node.setDriver('ST', 1, True, True)
-
-        self.temp_unit = self.convert_temp_unit(self.myNetatmo.temp_unit)
-        logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
+            self.temp_unit = self.convert_temp_unit(self.myNetatmo.temp_unit)
+            logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
 
 
-        self.addNodes()
+            self.addNodes()
         
 
     def addNodes(self):
@@ -271,9 +273,7 @@ class NetatmoController(udi_interface.Node):
         #    if self.Parameters['refresh_token'] is not None and self.Parameters['refresh_token'] != "":
         #        self.customData.token['refresh_token'] = self.Parameters['refresh_token']
         #self.myNetatmo.handleCustomParamsDone = True
-        time.sleep(1)
-        if self.refreshToken and self.client_ID and self.client_SECRET:
-            self.myNetatmo._insert_refreshToken(self.refreshToken, self.client_ID, self.client_SECRET), 
+
 
 
         self.myNetatmo.handleCustomParamsDone = True

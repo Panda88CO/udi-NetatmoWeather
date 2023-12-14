@@ -129,32 +129,13 @@ class OAuth:
 
         # This updates our copy of customData, but also sends it to PG3 for storage
         self.customData['token'] = token
+        logging.debug('_saveToken: {}'.format(self.customData))
 
-    '''
-    def _insert_refresh_token(self, refresh_token, clientId, clientSecret)
-        data = {
-                'grant_type': 'refresh_token',
-                'refresh_token': refresh_token,
-                'client_id': clientId,
-                'client_secret':  clientSecret
-                }
-        try:
-            response = requests.post(self.oauthConfig['token_endpoint'], data=data)
-            response.raise_for_status()
-            token = response.json()
-            logging.info('Refreshing tokens successful')
-            logging.debug(f"Token refresh result [{ type(token) }]: { token }")
-            self._saveToken(token)
-            return('Success')
-        
-        except requests.exceptions.HTTPError as error:
-            logging.error(f"Failed to refresh  token: { error }")
-            return(None)
-            # NOTE: If refresh tokens fails, we keep the existing tokens available.
-    '''
+
 
     # temp function until oauth is getting fixed 
     def _insert_refreshToken(self, refresh_token, clientId, clientSecret):
+        logging.debug('_insert_refreshToken')
         data = {
                 'grant_type': 'refresh_token',
                 'refresh_token': refresh_token,
@@ -210,7 +191,7 @@ class OAuth:
     def getAccessToken(self):
         logging.info('Getting access token')           
         logging.debug(self.customData)
-        
+
         token = self.customData['token']
 
         if token is not None:
