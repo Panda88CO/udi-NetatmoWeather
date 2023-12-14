@@ -46,7 +46,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
 
         self.Parameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
-        self.poly.subscribe(self.poly.START, self.start, self.address)
+        self.poly.subscribe(self.poly.START, self.start, address)
         #self.poly.subscribe(self.poly.STOP, self.stop)
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
 
@@ -55,10 +55,10 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.wait_for_node_done()
         
         self.node = self.poly.getNode(address)
-        logging.info('Start {} sync module Node'.format(self.name))  
+        logging.info('Start {} main module Node'.format(self.name))  
         time.sleep(1)
-        self.n_queue = []  
-        self.nodeDefineDone = True
+        self.n_queue = []
+        self.nodeDefineDone = False
 
     
     
