@@ -215,7 +215,7 @@ class NetatmoWeather (NetatmoCloud):
     def get_main_modules(self, home_id):
         '''get_main_modules '''
         tmp = self._get_modules(home_id, self.MAIN_modules)
-
+        logging.debug('get_main_modules {}'.format(tmp))
         return(self._get_modules(home_id, self.MAIN_modules))
     
 
