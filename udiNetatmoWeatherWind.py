@@ -110,6 +110,7 @@ class udiN_WeatherWind(udi_interface.Node):
 
     def start(self):
         logging.debug('Executing NetatmoWeatherWind start')
+        self.updateISYdrivers()
         
         #self.addNodes()
 

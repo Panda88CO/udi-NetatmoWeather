@@ -112,88 +112,8 @@ class udiN_WeatherIndoor(udi_interface.Node):
 
     def start(self):
         logging.debug('Executing NetatmoWeatherIndoor start')
-        
+        self.updateISYdrivers()        
 
-
-       
-                
-
-
-
-        
-
-
-    def configDoneHandler(self):
-        # We use this to discover devices, or ask to authenticate if user has not already done so
-        self.poly.Notices.clear()
-        #self.myNetatmo.updateOauthConfig()
-        #accessToken = self.myNetatmo._oAuthTokensRefresh()
-
-        #if accessToken is None:
-        #    logging.info('Access token is not yet available. Please authenticate.')
-        #    polyglot.Notices['auth'] = 'Please initiate authentication'
-        #    return
-        
-        res = self.myNetatmo.get_home_info()
-        logging.debug('retrieved get_home_info data {}'.format(res))
-
-        res = self.myNetatmo.get_weather_info()
-        logging.debug('retrieved get_weather_info data {}'.format(res))
-
-        res = self.myNetatmo.get_weather_info2()
-        logging.debug('retrieved get_weather_info2 data2 {}'.format(res))
-
-        #self.poly.discoverDevices()
-
-    def oauthHandler(self, token):
-        # When user just authorized, we need to store the tokens
-        logging.debug('oauthHandler starting')
-        self.myNetatmo.oauthHandler(token)
-        accessToken = self.myNetatmo.getAccessToken()
-        logging.debug('AccessToekn obtained {}'.format(accessToken))
-
-        # Then proceed with device discovery
-        self.configDoneHandler()
-
-
-    def addNodeDoneHandler(self, node):
-        # We will automatically query the device after discovery
-        self.poly.addNodeDoneHandler(node)
-        self.nodeDefineDone = True
-
-    def systemPoll (self, polltype):
-        if self.nodeDefineDone:
-            logging.info('System Poll executing: {}'.format(polltype))
-
-            if 'longPoll' in polltype:
-                #Keep token current
-                #self.node.setDriver('GV0', self.temp_unit, True, True)
-                try:
-                    self.myNetatmo.refresh_token()
-                    #self.blink.refresh_data()
-                    nodes = self.poly.getNodes()
-                    for nde in nodes:
-                        if nde != 'setup':   # but not the setup node
-                            logging.debug('updating node {} data'.format(nde))
-                            nodes[nde].updateISYdrivers()
-                         
-                except Exception as e:
-                    logging.debug('Exeption occcured : {}'.format(e))
-   
-                
-            if 'shortPoll' in polltype:
-                self.heartbeat()
-                self.myNetatmo.refresh_token()
-        else:
-            logging.info('System Poll - Waiting for all nodes to be added')
-
-
-    def stopHandler(self):
-        # Set nodes offline
-        for node in self.poly.nodes():
-            if hasattr(node, 'setOffline'):
-                node.setOffline()
-        self.poly.stop()
 
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')

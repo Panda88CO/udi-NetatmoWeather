@@ -107,7 +107,8 @@ class udiN_WeatherOutdoor(udi_interface.Node):
 
     def start(self):
         logging.debug('Executing NetatmoWeatherOutdoor start')
-        
+        self.updateISYdrivers()
+                
     def update(self, command = None):
         self.weather.update_weather_info_cloud(self.home)
         self.weather.update_weather_info_instant(self.home)
