@@ -158,7 +158,7 @@ class NetatmoController(udi_interface.Node):
             home_name = self.home_ids[home]['name']
             main_modules = self.myNetatmo.get_main_modules(home)
             for m_module in main_modules:
-                logging.debug('adding MAIN modules {}'.format(m_module))
+                logging.debug('adding MAIN modules {} - {}'.format(m_module, main_modules))
                 mod_name = main_modules[m_module]['name']
                 node_name = home_name + '_'+ mod_name
                 tmp = {}
