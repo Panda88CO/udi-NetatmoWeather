@@ -45,8 +45,9 @@ class udiN_WeatherIndoor(udi_interface.Node):
         super().__init__(polyglot, primary, address, name)
         self.poly = polyglot
         self.weather= NetatmoWeather
-        self.module = module
-        self.home = home
+        self.module = {'module_id':module, 'type':'INDOOR', 'home_id':home }
+        #self.type = 'INDOOR'
+        #self.home = home
         self.primary = primary
         self.address = address
         self.name = name        
@@ -106,7 +107,7 @@ class udiN_WeatherIndoor(udi_interface.Node):
     def convert_temp_unit(self, tempStr):
         if tempStr.capitalize()[:1] == 'F':
             return(1)
-        elif tempStr.capitalize()[:1] == 'K':
+        elif tempStr.capitalize()[:1] == 'C':
             return(0)
         
 
@@ -117,15 +118,15 @@ class udiN_WeatherIndoor(udi_interface.Node):
 
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
-        data = self.weather.get_indoor_module_data(self.home, self.module)
+        data = self.weather.get_module_data(self.module)
         logging.debug('Indoor module data: {}'.format(data))
-        if 'temperature' in data:
-            
+        
+
 
 
     def update(self, command = None):
-        self.weather.update_weather_info_cloud(self.home)
-        self.weather.update_weather_info_instant(self.home)
+        self.weather.update_weather_info_cloud(self.module['home_id'])
+        self.weather.update_weather_info_instant(self.module['home_id'])
         self.updateISYdrivers()
 
 

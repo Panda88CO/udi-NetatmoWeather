@@ -247,19 +247,20 @@ class NetatmoWeather (NetatmoCloud):
                     return(self.weather_data[home_id][mod_type][dev_id])
         else:
             logging.error('No data fouond for {0} {1}'.format(home_id, dev_id))
-
+    '''
     def get_main_module_data(self, home_id, dev_id):
-        '''Get data from main module'''
+        #Get data from main module
         logging.debug('get_main_module_data')
         #data_list = ['Temperature', 'CO2', 'Humidity', 'Noise', 'Pressure', 'AbsolutePressure', 'min_temp', 'max_temp', 'date_max_temp', 'date_min_temp', 'temp_trend', 'reachable']
         return(self._get_weather_data(home_id, dev_id, 'MAIN'))
-        
+    '''    
 
-    def get_indoor_module_data(self, home_id, dev_id=None):
+    def get_module_data(self, module):
         logging.debug('get_indoor_module_data')
         #data_list = ['temperature', 'co2', 'humidity', 'last_seen', 'battery_state', 'ts']
-        return(self._get_weather_data(home_id, dev_id, 'INDOOR'))
-
+        return(self._get_weather_data(module['home_id'], module['module_id'], module['type']))
+               
+    '''
     def get_outdoor_module_data(self, home_id, dev_id=None):
         logging.debug('get_outdoor_module_data')
         #data_list = ['temperature', 'co2', 'humidity', 'last_seen', 'battery_state', 'ts']
@@ -274,33 +275,51 @@ class NetatmoWeather (NetatmoCloud):
         logging.debug('get_wind_module_data')
         #data_list = ['wind_strength', 'wind_angle', 'wind+gust', 'wind_gust_angle', 'last_seen', 'battery_state', 'ts']
         return(self._get_weather_data(home_id, dev_id, 'WIND'))
+    '''
+
+    def get_temperature_C(self, module):
+        try:
+            logging.debug('get_temperature_C {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['temperature'],module['home_id'], module['type'], module['dev_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['temperature'])       
+        except Exception as e:
+            logging.error('get_temperature_C exception; {}'.format(e))
+            return(None)
+    def get_max_temperature_C (self, module):
+        try:
+            logging.debug('get_max_temperature_C {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['temp_max'],module['home_id'], module['type'], module['dev_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['temp_max'])       
+        except Exception as e:
+            logging.error('get_max_temperature_C exception; {}'.format(e))
+            return(None)
+
+    def get_min_temerature_C(self, module):
+        try:
+            logging.debug('get_min_temerature_C {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['temp_min'],module['home_id'], module['type'], module['dev_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['temp_min'])       
+        except Exception as e:
+            logging.error('get_min_temerature_C exception; {}'.format(e))
+            return(None)
+
+    def get_co2(self, module):
+        try:
+            logging.debug('get_co2 {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['co2'],module['home_id'], module['type'], module['dev_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['co2'])       
+        except Exception as e:
+            logging.error('get_co2 exception; {}'.format(e))
+            return(None)
 
 
-    def get_temperature_C(self, data):
-        if 'temperature' in data:
-            return(data['temperature'])       
-
-    def get_max_temperature_C (self, data):
-        if 'max_temp' in data:
-            return(data['max_temp'])
-
-    def get_min_temerature_C(self, data):
-        if 'min_temp' in data:
-            return(data['min_temp'])
-
-    def get_co2(self, data):
-        if 'co2' in data:
-            return(data['co2'])
-
-
-    def get_humidity(self, data):
-        if 'humidity' in data:
-            return(data['humidity'])
+    def get_humidity(self, module):
+        try:
+            logging.debug('get_humidity {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['temp_trend'],module['home_id'], module['type'], module['dev_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['humidity'])       
+        except Exception as e:
+            logging.error('get_humidity exception; {}'.format(e))
+            return(None)
      
-    def get_temp_trend(self, data):
-        if 'temp_trend' in data:
-                
-            trend = data['temp_trend']
+    def get_temp_trend(self, module):
+        try:
+            trend = self.weather_data[module['home_id']][module['type']][module['dev_id']]['temp_trend'])
             if trend == 'stable':
                 return(trend, 0)
             elif trend == 'up':
@@ -310,13 +329,49 @@ class NetatmoWeather (NetatmoCloud):
             else:
                 logging.error('unsupported temperature trend: {}'.format(trend))
                 return(trend, None)       
+        except Exception as e:
+            logging.error('get_temp_trend exception; {}'.format(e))
+            return( None, None)
         
-    def get_battery_info(self, data):
+    def get_battery_info(self, module):
+        try:
+            bat1 = self.weather_data[module['home_id']][module['type']][module['dev_id']]['battery_state']
+            if bat1 == 'max':
+                state = 0
+            elif bat1 == 'full':
+                state = 1
+            elif bat1 == 'high':
+                state = 2
+            elif bat1 == 'medium':
+                state = 3
+            elif bat1 == 'low':
+                state = 4
+            elif bat1 == 'very low':
+                state = 5
+            else:
+                state = 99
 
-
-    def get_rf_info(self, data):
-
-
-    def get_online(self, data):
+            bat2 = self.weather_data[module['home_id']][module['type']][module['dev_id']]['battery_level']
+            return (state, bat1, bat2)
+        except Exception as e:
+            logging.error('get_battery_info exception; {}'.format(e))
+            return( None, None)
         
+    def get_rf_info(self, module):
+        try:
+            if 'rf_state' in self.weather_data[module['home_id']][module['type']][module['dev_id']]
+                rf1 = self.weather_data[module['home_id']][module['type']][module['dev_id']]['rf_state']
+            if 'wifi_state'
+            rf2 = -self.weather_data[module['home_id']][module['type']][module['dev_id']]['rf_strength']
+        except Exception as e:
+            logging.error('get_rf_info exception; {}'.format(e))
+            return(None)
+
+    def get_online(self, module):
+        try:
+            logging.debug('get_online {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['online'],module['home_id'], module['type'], module['dev_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['online'])       
+        except:
+            return(None)
+
 
