@@ -74,7 +74,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.INDOOR_modules = ['NAModule4']
         self.n_queue = []
         self.module = {'module_id':module_info['main_module'], 'type':'MAIN', 'home_id':module_info['home'] }
-        
+        logging.debug('self.module = {}'.format(self.module))
         self.id = 'mainunit'
         self.drivers = [
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
@@ -160,6 +160,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
     
     def addNodes(self):
         '''addNodes'''
+        logging.debug('self.module {}'.format(self.module))
         logging.debug('Adding subnodes to {}'.format(self.module['module_id']))
         sub_modules = self.weather.get_sub_modules(self.module['home_id'], self.module['module_id'])
         logging.debug('System sub modules: {}'.format(sub_modules))
