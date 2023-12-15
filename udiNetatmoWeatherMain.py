@@ -94,7 +94,6 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.primary = primary
         self.address = address
         self.name = name
-        self.module = module_info
         self.poly = polyglot
         self.weather = NetatmoWeather
         #self.home_id = module_info['home']
