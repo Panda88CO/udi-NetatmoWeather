@@ -73,7 +73,8 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.RAIN_modules = ['NAModule3']
         self.INDOOR_modules = ['NAModule4']
         self.n_queue = []
-
+        self.module = {'module_id':module_info['main_module'], 'type':'MAIN', 'home_id':module_info['home'] }
+        
         self.id = 'mainunit'
         self.drivers = [
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
@@ -96,8 +97,8 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.module = module_info
         self.poly = polyglot
         self.weather = NetatmoWeather
-        self.home_id = module_info['home']
-        self.main_module_id = module_info['main_module']
+        #self.home_id = module_info['home']
+        #self.main_module_id = module_info['main_module']
 
         self.Parameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
@@ -159,13 +160,13 @@ class udiNetatmoWeatherMain(udi_interface.Node):
     
     def addNodes(self):
         '''addNodes'''
-        logging.debug('Adding subnodes to {}'.format(self.main_module_id))
-        sub_modules = self.weather.get_sub_modules(self.home_id, self.main_module_id)
+        logging.debug('Adding subnodes to {}'.format(self.module['module_id']))
+        sub_modules = self.weather.get_sub_modules(self.module['home_id'], self.module['module_id'])
         logging.debug('System sub modules: {}'.format(sub_modules))
         if sub_modules:
             for s_module in sub_modules:
                 logging.debug( 's_module: {}'.format(s_module))
-                module = self.weather.get_module_info(self.home_id, s_module)
+                module = self.weather.get_module_info(self.module['home_id'], s_module)
                 logging.debug( 'module: {}'.format(module))
                 if 'name' in module:
                     name = self.getValidName(module['name'])
@@ -176,26 +177,26 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 logging.debug(' types: {} {}'.format(module['type'], self.INDOOR_modules))
 
                 if module['type'] in self.INDOOR_modules:
-                    udiN_WeatherIndoor(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
+                    udiN_WeatherIndoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
                 elif module['type'] in self.OUTDOOR_modules:
-                    udiN_WeatherOutdoor(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
+                    udiN_WeatherOutdoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
                 elif module['type'] in self.WIND_modules:
-                    udiN_WeatherWind(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
+                    udiN_WeatherWind(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
                 elif module['type'] in self.RAIN_modules:
-                    udiN_WeatherRain(self.poly, self.primary, address, name, self.weather, self.home_id, s_module)
+                    udiN_WeatherRain(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
                 else:
                     logging.error('Unknown module type encountered: {}'.format(s_module['type']))
                 
     def update(self, command = None):
-        self.weather.update_weather_info_cloud(self.home)
-        self.weather.update_weather_info_instant(self.home)
+        self.weather.update_weather_info_cloud(self.module['home_id'])
+        self.weather.update_weather_info_instant(self.module['home_id'])
         self.updateISYdrivers()
 
 
 
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
-        data = self.weather.get_main_module_data(self.home, self.main_module_id)
+        data = self.weather.get_module_data(self.module)
         logging.debug('Main module data: {}'.format(data))
 
     commands = {        

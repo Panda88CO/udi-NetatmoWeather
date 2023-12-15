@@ -45,7 +45,7 @@ class udiN_WeatherOutdoor(udi_interface.Node):
 
         self.weather = NetatmoWeather
         self.module = module
-        self.home = home 
+        self.module = {'module_id':module, 'type':'OUTDOOR', 'home_id':home }
         self.poly = polyglot
         self.primary = primary
         self.address = address
@@ -111,13 +111,13 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         self.updateISYdrivers()
 
     def update(self, command = None):
-        self.weather.update_weather_info_cloud(self.home)
-        self.weather.update_weather_info_instant(self.home)
+        self.weather.update_weather_info_cloud(self.module['home_id'])
+        self.weather.update_weather_info_instant(self.module['home_id'])
         self.updateISYdrivers()
 
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
-        data = self.weather.get_outdoor_module_data(self.home, self.module)
+        data = self.weather.get_module_data(self.module)
         logging.debug('Outdoor module data: {}'.format(data))
 
 

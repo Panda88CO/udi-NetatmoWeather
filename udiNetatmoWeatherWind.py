@@ -43,7 +43,7 @@ class udiN_WeatherWind(udi_interface.Node):
         self.poly = polyglot
         self.weather = NetatmoWeather
         self.module = module
-        self.home = home
+        self.module = {'module_id':module, 'type':'WIND', 'home_id':home }
         self.primary = primary
         self.address = address
         self.name = name        
@@ -114,14 +114,14 @@ class udiN_WeatherWind(udi_interface.Node):
         #self.addNodes()
 
     def update(self, command = None):
-        self.weather.update_weather_info_cloud(self.home)
-        self.weather.update_weather_info_instant(self.home)
+        self.weather.update_weather_info_cloud(self.module['home_id'])
+        self.weather.update_weather_info_instant(self.module['home_id'])
         self.updateISYdrivers()
 
 
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
-        data = self.weather.get_wind_module_data(self.home, self.module)
+        data = self.weather.get_module_data(self.module)
         logging.debug('Wind module data: {}'.format(data))
        
     commands = {        

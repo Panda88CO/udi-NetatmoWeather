@@ -319,7 +319,7 @@ class NetatmoWeather (NetatmoCloud):
      
     def get_temp_trend(self, module):
         try:
-            trend = self.weather_data[module['home_id']][module['type']][module['dev_id']]['temp_trend'])
+            trend = self.weather_data[module['home_id']][module['type']][module['dev_id']]['temp_trend']
             if trend == 'stable':
                 return(trend, 0)
             elif trend == 'up':
@@ -354,15 +354,19 @@ class NetatmoWeather (NetatmoCloud):
             bat2 = self.weather_data[module['home_id']][module['type']][module['dev_id']]['battery_level']
             return (state, bat1, bat2)
         except Exception as e:
-            logging.error('get_battery_info exception; {}'.format(e))
+            logging.error('get_battery_info exception: {}'.format(e))
             return( None, None)
         
     def get_rf_info(self, module):
         try:
-            if 'rf_state' in self.weather_data[module['home_id']][module['type']][module['dev_id']]
+            if 'rf_state' in self.weather_data[module['home_id']][module['type']][module['dev_id']]:
                 rf1 = self.weather_data[module['home_id']][module['type']][module['dev_id']]['rf_state']
-            if 'wifi_state'
-            rf2 = -self.weather_data[module['home_id']][module['type']][module['dev_id']]['rf_strength']
+            if 'wifi_state' in self.weather_data[module['home_id']][module['type']][module['dev_id']]:
+                rf1 = self.weather_data[module['home_id']][module['type']][module['dev_id']]['wifi_state']
+            if 'rf_strength' in self.weather_data[module['home_id']][module['type']][module['dev_id']]:
+                rf2 = -self.weather_data[module['home_id']][module['type']][module['dev_id']]['rf_strength']
+            if 'wifi_strength' in self.weather_data[module['home_id']][module['type']][module['dev_id']]:
+                rf2 = -self.weather_data[module['home_id']][module['type']][module['dev_id']]['wifi_strength']           
         except Exception as e:
             logging.error('get_rf_info exception; {}'.format(e))
             return(None)
@@ -371,7 +375,8 @@ class NetatmoWeather (NetatmoCloud):
         try:
             logging.debug('get_online {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['online'],module['home_id'], module['type'], module['dev_id'] ))
             return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['online'])       
-        except:
+        except Exception as e:
+            logging.debug('get_battery_info exception: {}'.format(e))
             return(None)
 
 
