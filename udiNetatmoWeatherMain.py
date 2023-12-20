@@ -223,7 +223,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         return(state)
     
 
-    def trend2ISY (self, trend)
+    def trend2ISY (self, trend):
         if trend == 'stable':
             return(0)
         elif trend == 'up':

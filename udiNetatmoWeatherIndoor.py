@@ -116,12 +116,86 @@ class udiN_WeatherIndoor(udi_interface.Node):
         self.updateISYdrivers()        
 
 
+    def rfstate2ISY(self, rf_state):
+        if rf_state.lower() == 'high':
+            rf = 0
+        elif rf_state.lower() == 'medium':
+            rf = 1
+        elif rf_state.lower() == 'low':
+            rf = 2
+        else:
+            rf= 99
+            logging.error('Unsupported RF state {}'.format(rf_state))
+        return(rf)
+    
+
+    def battery2ISY(self, batlvl):
+        if batlvl == 'max':
+            state = 0
+        elif batlvl == 'full':
+            state = 1
+        elif batlvl == 'high':
+            state = 2
+        elif batlvl == 'medium':
+            state = 3
+        elif batlvl == 'low':
+            state = 4
+            state = 5
+        else:
+            state = 99
+        return(state)
+    
+
+    def trend2ISY (self, trend):
+        if trend == 'stable':
+            return(0)
+        elif trend == 'up':
+            return(1)
+        elif trend =='down':
+            return(2)
+        else:
+            logging.error('unsupported temperature trend: {}'.format(trend))
+            return(99)    
+        
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
         data = self.weather.get_module_data(self.module)
-        logging.debug('Indoor module data: {}'.format(data))
-        
+        logging.debug('Main module data: {}'.format(data))
+        if self.node is not None:
+            if self.weather.get_online(self.module):
+                self.node.setDriver('ST', 1)
+                if self.convert_temp_unit(self.weather.temp_unit) == 1:
+                    self.node.setDriver('CLITEMP', self.weather.get_temperature_C(self.module), True, False, 4 )
+                    self.node.setDriver('GV3', self.weather.get_min_temperature_C(self.module), True, False, 4 )
+                    self.node.setDriver('GV4', self.weather.get_max_temperature_C(self.module), True, False, 4 )
+                else:
+                    self.node.setDriver('CLITEMP', (self.weather.get_temperature_C(self.module)*9/5+32), True, False, 17 )
+                    self.node.setDriver('GV3', (self.weather.get_min_temperature_C(self.module)*9/5+32), True, False, 17 )
+                    self.node.setDriver('GV4', (self.weather.get_max_temperature_C(self.module)*9/5+32), True, False, 17 )                     
+                self.node.setDriver('CO2LVL', self.weather.get_co2(self.module), True, False, 54)
+                self.node.setDriver('CLIHUM', self.weather.get_humidity(self.module), True, False, 51)
+ 
+                temp_trend = self.weather.get_temp_trend(self.module)
+                self.node.setDriver('GV5', self.trend2ISY(temp_trend))
 
+                #hum_trend= self.weather.get_hum_trend(self.module)
+                #self.node.setDriver('GV9', trend_val)
+                self.node.setDriver('GV6', self.weather.get_time_stamp(self.module) , True, False, 151)
+
+                bat_state, bat_lvl  = self.weather.get_battery_info(self.module)    
+                self.node.setDriver('GV7', self.battery2ISY(bat_state), True, False, 25 )           
+                rf1, rf2 = self.weather.get_rf_info(self.module) 
+                self.node.setDriver('GV8', self.rfstate2ISY(rf1) )
+            else:
+                 self.node.setDriver('CLITEMP', 99, True, False, 25 )
+                 self.node.setDriver('GV3', 99, True, False, 25 )
+                 self.node.setDriver('GV4', 99, True, False, 25 )
+                 self.node.setDriver('CO2LVL', 99, True, False, 25 )
+                 self.node.setDriver('CLIHUM', 99, True, False, 25 )
+                 self.node.setDriver('GV5', 99, True, False, 25 )
+                 self.node.setDriver('GV6', 99, True, False, 25 )
+                 self.node.setDriver('GV7', 99, True, False, 25 )
+                 self.node.setDriver('GV8', 99, True, False, 25 )
 
 
     def update(self, command = None):
