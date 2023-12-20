@@ -357,7 +357,7 @@ class NetatmoWeather (NetatmoCloud):
             elif trend == 'up':
                 return(trend, 1)
             elif trend =='down':
-                return(trend, -1)
+                return(trend, 2)
             else:
                 logging.error('unsupported temperature trend: {}'.format(trend))
                 return(trend, None)       
@@ -376,7 +376,7 @@ class NetatmoWeather (NetatmoCloud):
                 return(trend, 2)
             else:
                 logging.error('unsupported temperature trend: {}'.format(trend))
-                return(trend, None)       
+                return(trend, 99)       
         except Exception as e:
             logging.error('get_hum_trend exception; {}'.format(e))
             return( None, None)
