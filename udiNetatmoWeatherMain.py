@@ -202,14 +202,14 @@ class udiNetatmoWeatherMain(udi_interface.Node):
             if self.weather.get_online(self.module):
                 self.node.setDriver('ST', 1)
                 if self.convert_temp_unit(self.weather.temp_unit) == 1:
-                    self.node.setDriver('CLITEMP', self.weather.get_temperature(self.module), True, False, 4 )
+                    self.node.setDriver('CLITEMP', self.weather.get_temperature_C(self.module), True, False, 4 )
                 self.node.setDriver('CO2LVL', self.weather.get_co2(self.module))
                 self.node.setDriver('CLIHUM', self.weather.get_humidity(self.module))
                 self.node.setDriver('GV3', self.weather.get_noise(self.module))
                 self.node.setDriver('BARPRES', self.weather.get_pressure(self.module))
                 self.node.setDriver('GV5', self.weather.get_abs_pressure(self.module))
-                self.node.setDriver('GV6', self.weather.get_min_temperature(self.module))
-                self.node.setDriver('GV7', self.weather.get_max_temperature(self.module))
+                self.node.setDriver('GV6', self.weather.get_min_temperature_C(self.module))
+                self.node.setDriver('GV7', self.weather.get_max_temperature_C(self.module))
                 self.node.setDriver('GV8', self.weather.get_temp_trend(self.module))
                 self.node.setDriver('GV9', self.weather.get_hum_trend(self.module))
                 self.node.serDriver('GV10', self.weather.get_time_stamp(self.module) )
