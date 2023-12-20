@@ -421,6 +421,7 @@ class NetatmoWeather (NetatmoCloud):
 
     def get_online(self, module):
         try:
+            logging.debug('module {}'.format(module))
             logging.debug('get_online {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['online'],module['home_id'], module['type'], module['dev_id'] ))
             return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['online'])       
         except Exception as e:
