@@ -214,7 +214,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 self.node.setDriver('GV9', self.weather.get_hum_trend(self.module))
                 self.node.serDriver('GV10', self.weather.get_time_stamp(self.module) )
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
-                self.node.serDriver('GV11', rf1  )
+                self.node.serDriver('GV11', rf2  )
 
     commands = {        
                 'UPDATE': update,

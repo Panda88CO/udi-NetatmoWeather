@@ -408,7 +408,16 @@ class NetatmoWeather (NetatmoCloud):
     def get_rf_info(self, module):
         try:
             if 'rf_state' in self.weather_data[module['home_id']][module['type']][module['module_id']]:
-                rf1 = self.weather_data[module['home_id']][module['type']][module['module_id']]['rf_state']
+                rftmp = self.weather_data[module['home_id']][module['type']][module['module_id']]['rf_state']
+                if rftmp.lower() == 'high':
+                    rf1 = 0
+                elif rftmp.lower() == 'medium':
+                    rf1 = 1
+                elif rftmp.lower() == 'low':
+                    rf1 = 2                    
+                else:
+                    rf2= 99
+                    logging.error('Unsupported RF state {}'.format(rftmp))
             if 'wifi_state' in self.weather_data[module['home_id']][module['type']][module['module_id']]:
                 rf1 = self.weather_data[module['home_id']][module['type']][module['module_id']]['wifi_state']
             if 'rf_strength' in self.weather_data[module['home_id']][module['type']][module['module_id']]:

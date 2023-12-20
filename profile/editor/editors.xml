@@ -59,6 +59,11 @@
     <editor id="battery">
         <range uom="25" subset="0-6,99" nls="battery" />
     </editor>
-
+    <editor id="rf_status">
+        <range uom="25" subset="0-2,99" nls="rf_status" />
+    </editor>
+    <editor id="rf_strength">
+        <range uom="131"  min="-174" max="30" prec="0" />
+    </editor>
 
 </editors>
