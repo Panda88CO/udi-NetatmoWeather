@@ -407,6 +407,8 @@ class NetatmoWeather (NetatmoCloud):
         
     def get_rf_info(self, module):
         try:
+            rf1 = None
+            rf2 = None
             if 'rf_state' in self.weather_data[module['home_id']][module['type']][module['module_id']]:
                 rftmp = self.weather_data[module['home_id']][module['type']][module['module_id']]['rf_state']
                 if rftmp.lower() == 'high':
@@ -424,9 +426,10 @@ class NetatmoWeather (NetatmoCloud):
                 rf2 = -self.weather_data[module['home_id']][module['type']][module['module_id']]['rf_strength']
             if 'wifi_strength' in self.weather_data[module['home_id']][module['type']][module['module_id']]:
                 rf2 = -self.weather_data[module['home_id']][module['type']][module['module_id']]['wifi_strength']           
+            return(rf1, rf2)
         except Exception as e:
             logging.error('get_rf_info exception; {}'.format(e))
-            return(None)
+            return(None, None)
 
     def get_online(self, module):
         try:
