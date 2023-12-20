@@ -294,10 +294,10 @@ class NetatmoWeather (NetatmoCloud):
 
     def get_min_temeperature_C(self, module):
         try:
-            logging.debug('get_min_temerature_C {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['temp_min'],module['home_id'], module['type'], module['module_id'] ))
+            logging.debug('get_min_temeperature_C {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['temp_min'],module['home_id'], module['type'], module['module_id'] ))
             return(self.weather_data[module['home_id']][module['type']][module['module_id']]['temp_min'])       
         except Exception as e:
-            logging.error('get_min_temerature_C exception; {}'.format(e))
+            logging.error('get_min_temeperature_C exception; {}'.format(e))
             return(None)
 
     def get_co2(self, module):
