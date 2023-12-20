@@ -73,3 +73,11 @@ EN_TREND-2 = Down
 
 error-0 = No reading
 error-99 = Unknown
+
+battery-0 = Maximum
+battery-1 = Full
+battery-2 = High
+battery-3 = Medium
+battery-4 = Low
+battery-5 = Very Low
+battery-99 = Unknown
