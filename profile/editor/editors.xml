@@ -15,18 +15,22 @@
 
     <editor id="co2">
         <range uom="54" min="0" max="1000" prec="0" />
+        <range uom="25" subset="0,99" nls="error" />
     </editor>
 
     <editor id="humidity">
         <range uom="51" min="0" max="100" prec="0" />
+        <range uom="25" subset="0,99" nls="error" />
     </editor>
 
     <editor id="noise">
         <range uom="12" min="0" max="1000" prec="1" />
+        <range uom="25" subset="0,99" nls="error" />
     </editor>
 
     <editor id="pressure">
         <range uom="117" min="0" max="10000" prec="2" />
+        <range uom="25" subset="0,99" nls="error" />
     </editor>
 
     <editor id="trend">
@@ -35,35 +39,40 @@
 
     <editor id="t_timestamp">
         <range uom="151" min="0" max="20000000000" prec="0" />
+        <range uom="25" subset="0,99" nls="error" />
     </editor>
 
-    <editor id="wifi_rf_status">
-        <range uom="131" min="0" max="100000" prec="0" />
-    </editor>
 
     <editor id="percent">
         <range uom="51" min="0" max="100" prec="0" />
+        <range uom="25" subset="0,99" nls="error" />
     </editor>
 
     <editor id="rain">
         <range uom="82" min="0" max="100000" prec="3" />
+        <range uom="25" subset="0,99" nls="error" />
     </editor>
 
     <editor id="w_strength">
         <range uom="48" min="0" max="1000" prec="0" />
+        <range uom="25" subset="0,99" nls="error" />
     </editor>
 
     <editor id="w_angle">
         <range uom="76" min="0" max="360" prec="0" />
+        <range uom="25" subset="0,99" nls="error" />
     </editor>
+
     <editor id="battery">
         <range uom="25" subset="0-6,99" nls="battery" />
     </editor>
     <editor id="rf_status">
         <range uom="25" subset="0-2,99" nls="rf_status" />
     </editor>
+
     <editor id="rf_strength">
         <range uom="131"  min="-174" max="30" prec="0" />
+        <range uom="25" subset="0,99" nls="error" />
     </editor>
 
 </editors>

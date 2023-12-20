@@ -77,8 +77,8 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         logging.debug('self.module = {}'.format(self.module))
         self.id = 'mainunit'
         self.drivers = [
-            {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
-            {'driver' : 'CO2LVL', 'value': 0,  'uom':54}, 
+            {'driver' : 'CLITEMP', 'value': 99,  'uom':25}, 
+            {'driver' : 'CO2LVL', 'value': 99,  'uom':25}, 
             {'driver' : 'CLIHUM', 'value': 0,  'uom':51}, 
             {'driver' : 'GV3', 'value': 0,  'uom':12}, 
             {'driver' : 'BARPRES', 'value': 0,  'uom':117}, 
@@ -209,21 +209,35 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                     self.node.setDriver('CLITEMP', (self.weather.get_temperature_C(self.module)*9/5+32), True, False, 17 )
                     self.node.setDriver('GV6', (self.weather.get_min_temperature_C(self.module)*9/5+32), True, False, 17 )
                     self.node.setDriver('GV7', (self.weather.get_max_temperature_C(self.module)*9/5+32), True, False, 17 )                     
-                self.node.setDriver('CO2LVL', self.weather.get_co2(self.module))
-                self.node.setDriver('CLIHUM', self.weather.get_humidity(self.module))
-                self.node.setDriver('GV3', self.weather.get_noise(self.module))
-                self.node.setDriver('BARPRES', self.weather.get_pressure(self.module))
-                self.node.setDriver('GV5', self.weather.get_abs_pressure(self.module))
+                self.node.setDriver('CO2LVL', self.weather.get_co2(self.module), True, False, 54)
+                self.node.setDriver('CLIHUM', self.weather.get_humidity(self.module), True, False, 51)
+                self.node.setDriver('GV3', self.weather.get_noise(self.module), True, False, 12)
+                self.node.setDriver('BARPRES', self.weather.get_pressure(self.module), True, False, 117)
+                self.node.setDriver('GV5', self.weather.get_abs_pressure(self.module), True, False, 117)
 
                 tmp_trend, trend_val = self.weather.get_temp_trend(self.module)
                 self.node.setDriver('GV8', trend_val)
                 hum_trend, trend_val = self.weather.get_hum_trend(self.module)
                 self.node.setDriver('GV9', trend_val)
-                self.node.setDriver('GV10', self.weather.get_time_stamp(self.module) )
+                self.node.setDriver('GV10', self.weather.get_time_stamp(self.module) , True, False, 151)
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
-                self.node.setDriver('GV11', rf1  )
+                self.node.setDriver('GV11', rf1 )
             else:
                  self.node.setDriver('CLITEMP', 99, True, False, 25 )
+                 self.node.setDriver('GV6', 99, True, False, 25 )
+                 self.node.setDriver('GV7', 99, True, False, 25 )
+                 self.node.setDriver('CO2LVL', 99, True, False, 25 )
+                 self.node.setDriver('CLIHUM', 99, True, False, 25 )
+                 self.node.setDriver('GV3', 99, True, False, 25 )
+                 self.node.setDriver('BARPRES', 99, True, False, 25 )
+                 self.node.setDriver('GV5', 99, True, False, 25 )
+                 self.node.setDriver('GV8', 99, True, False, 25 )
+                 self.node.setDriver('GV9', 99, True, False, 25 )
+                 self.node.setDriver('GV10', 99, True, False, 25 )
+                 self.node.setDriver('GV11', 99, True, False, 25 )
+
+
+
     commands = {        
                 'UPDATE': update,
                 }
