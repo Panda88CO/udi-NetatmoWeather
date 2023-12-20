@@ -352,31 +352,15 @@ class NetatmoWeather (NetatmoCloud):
     def get_temp_trend(self, module):
         try:
             trend = self.weather_data[module['home_id']][module['type']][module['module_id']]['temp_trend']
-            if trend == 'stable':
-                return(trend, 0)
-            elif trend == 'up':
-                return(trend, 1)
-            elif trend =='down':
-                return(trend, 2)
-            else:
-                logging.error('unsupported temperature trend: {}'.format(trend))
-                return(trend, None)       
+            return(trend)       
         except Exception as e:
             logging.error('get_temp_trend exception; {}'.format(e))
-            return( None, None)
+            return( None)
     
     def get_hum_trend(self, module):
         try:
             trend = self.weather_data[module['home_id']][module['type']][module['module_id']]['pressure_trend']
-            if trend == 'stable':
-                return(trend, 0)
-            elif trend == 'up':
-                return(trend, 1)
-            elif trend =='down':
-                return(trend, 2)
-            else:
-                logging.error('unsupported temperature trend: {}'.format(trend))
-                return(trend, 99)       
+   
         except Exception as e:
             logging.error('get_hum_trend exception; {}'.format(e))
             return( None, None)
@@ -384,23 +368,8 @@ class NetatmoWeather (NetatmoCloud):
     def get_battery_info(self, module):
         try:
             bat1 = self.weather_data[module['home_id']][module['type']][module['module_id']]['battery_state']
-            if bat1 == 'max':
-                state = 0
-            elif bat1 == 'full':
-                state = 1
-            elif bat1 == 'high':
-                state = 2
-            elif bat1 == 'medium':
-                state = 3
-            elif bat1 == 'low':
-                state = 4
-            elif bat1 == 'very low':
-                state = 5
-            else:
-                state = 99
-
             bat2 = self.weather_data[module['home_id']][module['type']][module['module_id']]['battery_level']
-            return (state, bat1, bat2)
+            return (bat1, bat2)
         except Exception as e:
             logging.error('get_battery_info exception: {}'.format(e))
             return( None, None)
@@ -410,16 +379,7 @@ class NetatmoWeather (NetatmoCloud):
             rf1 = None
             rf2 = None
             if 'rf_state' in self.weather_data[module['home_id']][module['type']][module['module_id']]:
-                rftmp = self.weather_data[module['home_id']][module['type']][module['module_id']]['rf_state']
-                if rftmp.lower() == 'high':
-                    rf1 = 0
-                elif rftmp.lower() == 'medium':
-                    rf1 = 1
-                elif rftmp.lower() == 'low':
-                    rf1 = 2                    
-                else:
-                    rf2= 99
-                    logging.error('Unsupported RF state {}'.format(rftmp))
+                rf1 = self.weather_data[module['home_id']][module['type']][module['module_id']]['rf_state']               
             if 'wifi_state' in self.weather_data[module['home_id']][module['type']][module['module_id']]:
                 rf1 = self.weather_data[module['home_id']][module['type']][module['module_id']]['wifi_state']
             if 'rf_strength' in self.weather_data[module['home_id']][module['type']][module['module_id']]:

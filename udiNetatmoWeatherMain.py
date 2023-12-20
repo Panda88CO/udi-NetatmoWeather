@@ -192,8 +192,48 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.weather.update_weather_info_instant(self.module['home_id'])
         self.updateISYdrivers()
 
+    def rfstate2ISY(self, rf_state):
+        if rf_state.lower() == 'high':
+            rf = 0
+        elif rf_state.lower() == 'medium':
+            rf = 1
+        elif rf_state.lower() == 'low':
+            rf = 2
+        else:
+            rf= 99
+            logging.error('Unsupported RF state {}'.format(rf_state))
+        return(rf)
+    
 
+    def battery2ISY(self, batlvl):
+        if batlvl == 'max':
+            state = 0
+        elif batlvl == 'full':
+            state = 1
+        elif batlvl == 'high':
+            state = 2
+        elif batlvl == 'medium':
+            state = 3
+        elif batlvl == 'low':
+            state = 4
+        elif batlvl == 'very low':
+            state = 5
+        else:
+            state = 99
+        return(state)
+    
 
+    def trend2ISY (self, trend)
+        if trend == 'stable':
+            return(0)
+        elif trend == 'up':
+            return(1)
+        elif trend =='down':
+            return(2)
+        else:
+            logging.error('unsupported temperature trend: {}'.format(trend))
+            return(99)    
+        
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
         data = self.weather.get_module_data(self.module)
@@ -215,13 +255,14 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 self.node.setDriver('BARPRES', self.weather.get_pressure(self.module), True, False, 117)
                 self.node.setDriver('GV5', self.weather.get_abs_pressure(self.module), True, False, 117)
 
-                tmp_trend, trend_val = self.weather.get_temp_trend(self.module)
-                self.node.setDriver('GV8', trend_val)
-                #hum_trend, trend_val = self.weather.get_hum_trend(self.module)
+                temp_trend = self.weather.get_temp_trend(self.module)
+                self.node.setDriver('GV8', self.trend2ISY(temp_trend))
+
+                #hum_trend= self.weather.get_hum_trend(self.module)
                 #self.node.setDriver('GV9', trend_val)
                 self.node.setDriver('GV10', self.weather.get_time_stamp(self.module) , True, False, 151)
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
-                self.node.setDriver('GV11', rf1 )
+                self.node.setDriver('GV11', self.rfstate2ISY(rf1) )
             else:
                  self.node.setDriver('CLITEMP', 99, True, False, 25 )
                  self.node.setDriver('GV6', 99, True, False, 25 )
