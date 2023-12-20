@@ -18,6 +18,7 @@ ST-MAIN-GV8-NAME = Temperature Trend
 ST-MAIN-GV9-NAME = Pressure Trend
 ST-MAIN-GV10-NAME = Timestamp
 ST-MAIN-GV11-NAME = Wi-Fi Status
+CMD-MAIN-UPDATE-NAME = Force Update 
 
 ND-indoor-NAME = Indoor Module
 ND-indoor-ICON = Weather
@@ -31,6 +32,7 @@ ST-INDM-GV5-NAME = Temperature Trend
 ST-INDM-GV6-NAME = Timestamp
 ST-INDM-GV7-NAME = Battery
 ST-INDM-GV8-NAME = RF Status
+CMD-INDM-UPDATE-NAME = Force Update 
 
 ND-outdoor-NAME = Outdoor Module
 ND-outdoor-ICON = Weather
@@ -43,6 +45,7 @@ ST-OUTM-GV4-NAME = Temperature Trend
 ST-OUTM-GV5-NAME = Timestamp
 ST-OUTM-GV6-NAME = Battery
 ST-OUTM-GV7-NAME = RF Status
+CMD-OUTM-UPDATE-NAME = Force Update 
 
 ND-wind-NAME = Wind Module
 ND-wind-ICON = Weather
@@ -56,6 +59,7 @@ ST-WINM-GV5-NAME = Max Wind Angle
 ST-WINM-GV6-NAME = Timestamp
 ST-WINM-GV7-NAME = Battery
 ST-WINM-GV8-NAME = RF Status
+CMD-WINM-UPDATE-NAME = Force Update 
 
 ND-rain-NAME = Rain Module
 ND-rain-ICON = Weather
@@ -66,10 +70,12 @@ ST-RAIM-GV2-NAME = Sum Rain 24h
 ST-RAIM-GV3-NAME = Timestamp
 ST-RAIM-GV4-NAME = Battery
 ST-RAIM-GV5-NAME = RF Status
+CMD-RAIM-UPDATE-NAME = Force Update 
 
 EN_TREND-0 = Stable
 EN_TREND-1 = Up
 EN_TREND-2 = Down
+EN_TREND-99 = Unknown
 
 error-0 = No reading
 error-99 = Unknown

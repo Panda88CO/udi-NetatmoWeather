@@ -30,7 +30,7 @@
     </editor>
 
     <editor id="trend">
-        <range uom="25" subset="-1,0,1,99" nls="EN_TREND" />
+        <range uom="25" subset="0-2,99" nls="EN_TREND" />
     </editor>
 
     <editor id="t_timestamp">

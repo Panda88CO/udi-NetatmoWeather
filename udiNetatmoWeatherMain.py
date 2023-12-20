@@ -152,7 +152,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         logging.debug('Executing NetatmoWeatherMain start')
         
         self.addNodes()
-        self.updateISYdrivers()
+        self.update() # get latest data 
 
     def stop (self):
         pass

@@ -32,8 +32,7 @@
     <cmds>
       <sends />
       <accepts>
-        <cmd id="UPDATE" /> 
-        <cmd id="QUERY" />     
+        <cmd id="UPDATE" />  
       </accepts>
     </cmds>
   </nodeDef>
@@ -54,8 +53,7 @@
     <cmds>
       <sends />
       <accepts>
-        <cmd id="UPDATE" /> 
-        <cmd id="QUERY" />     
+        <cmd id="UPDATE" />   
       </accepts>
     </cmds>
   </nodeDef>
@@ -75,6 +73,7 @@
     <cmds>
       <sends />
       <accepts>
+      <cmd id="UPDATE" />   
       </accepts>
     </cmds>
   </nodeDef>
@@ -95,8 +94,7 @@
     <cmds>
       <sends />
       <accepts>
-        <cmd id="UPDATE" /> 
-        <cmd id="QUERY" />           
+        <cmd id="UPDATE" />        
       </accepts>
     </cmds>
   </nodeDef>
@@ -114,8 +112,7 @@
     <cmds>
       <sends />
       <accepts>
-        <cmd id="UPDATE" /> 
-        <cmd id="QUERY" />           
+        <cmd id="UPDATE" />    
       </accepts>
     </cmds>
   </nodeDef>
