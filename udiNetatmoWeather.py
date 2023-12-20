@@ -355,9 +355,9 @@ class NetatmoController(udi_interface.Node):
 
                         #nodes = self.poly.getNodes()
                         for nde in nodes:
-                            if nde != 'controller':   # but not the setup node
+                            if nde.address != 'controller':   # but not the setup node
                                 logging.debug('updating node {} data'.format(nde))
-                                nodes[nde].updateISYdrivers()
+                                nde.updateISYdrivers()
                                                 
                 if 'shortPoll' in polltype:
                     self.heartbeat()
@@ -365,9 +365,9 @@ class NetatmoController(udi_interface.Node):
                     for home in self.homes_list:
                         self.myNetatmo.update_weather_info_instant(home)
                     for nde in nodes:
-                        if nde != 'controller':   # but not the setup node
+                        if nde.address != 'controller':   # but not the setup node
                             logging.debug('updating node {} data'.format(nde))
-                            nodes[nde].updateISYdrivers()                   
+                            nde.updateISYdrivers()                   
             except Exception as e:
                     logging.error('Exeption occcured : {}'.format(e))
    
