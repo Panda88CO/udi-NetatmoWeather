@@ -25,7 +25,7 @@
       <st id="GV6" editor="temperature" />
       <st id="GV7" editor="temperature" />
       <st id="GV8" editor="trend" />
-      <st id="GV9" editor="trend" />
+      <!--<st id="GV9" editor="trend" /> -->
       <st id="GV10" editor="t_timestamp" />
       <st id="GV11" editor="rf_status" />
     </sts>

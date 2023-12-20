@@ -286,7 +286,7 @@ class NetatmoWeather (NetatmoCloud):
             return(None)
     def get_max_temperature_C (self, module):
         try:
-            logging.debug('get_max_temperature_C {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['temp_max'],module['home_id'], module['type'], module['module_id'] ))
+            logging.debug('get_max_temperature_C {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['max_temp'],module['home_id'], module['type'], module['module_id'] ))
             return(self.weather_data[module['home_id']][module['type']][module['module_id']]['max_temp'])       
         except Exception as e:
             logging.error('get_max_temperature_C exception; {}'.format(e))
@@ -294,7 +294,7 @@ class NetatmoWeather (NetatmoCloud):
 
     def get_min_temperature_C(self, module):
         try:
-            logging.debug('get_min_temperature_C {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['temp_min'],module['home_id'], module['type'], module['module_id'] ))
+            logging.debug('get_min_temperature_C {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['min_temp'],module['home_id'], module['type'], module['module_id'] ))
             return(self.weather_data[module['home_id']][module['type']][module['module_id']]['min_temp'])       
         except Exception as e:
             logging.error('get_min_temperature_C exception; {}'.format(e))

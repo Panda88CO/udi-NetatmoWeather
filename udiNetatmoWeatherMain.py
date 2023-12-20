@@ -86,7 +86,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
             {'driver' : 'GV6', 'value': 0,  'uom':4}, 
             {'driver' : 'GV7', 'value': 0,  'uom':4}, 
             {'driver' : 'GV8', 'value': 0,  'uom':25}, 
-            {'driver' : 'GV9', 'value': 0,  'uom':25}, 
+            #{'driver' : 'GV9', 'value': 0,  'uom':25}, 
             {'driver' : 'GV10', 'value': 0,  'uom':151},
             {'driver' : 'GV11', 'value': 0,  'uom':131},         
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
@@ -217,8 +217,8 @@ class udiNetatmoWeatherMain(udi_interface.Node):
 
                 tmp_trend, trend_val = self.weather.get_temp_trend(self.module)
                 self.node.setDriver('GV8', trend_val)
-                hum_trend, trend_val = self.weather.get_hum_trend(self.module)
-                self.node.setDriver('GV9', trend_val)
+                #hum_trend, trend_val = self.weather.get_hum_trend(self.module)
+                #self.node.setDriver('GV9', trend_val)
                 self.node.setDriver('GV10', self.weather.get_time_stamp(self.module) , True, False, 151)
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
                 self.node.setDriver('GV11', rf1 )
@@ -232,7 +232,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                  self.node.setDriver('BARPRES', 99, True, False, 25 )
                  self.node.setDriver('GV5', 99, True, False, 25 )
                  self.node.setDriver('GV8', 99, True, False, 25 )
-                 self.node.setDriver('GV9', 99, True, False, 25 )
+                 #self.node.setDriver('GV9', 99, True, False, 25 )
                  self.node.setDriver('GV10', 99, True, False, 25 )
                  self.node.setDriver('GV11', 99, True, False, 25 )
 
