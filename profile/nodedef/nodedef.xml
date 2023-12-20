@@ -61,8 +61,8 @@
   <nodeDef id="outdoor" nls="OUTM">
     <sts>
       <st id="ST" editor="bool" />
-      <st id="GV0" editor="temperature" />
-      <st id="GV1" editor="humidity" />
+      <st id="CLITEMP" editor="temperature" />
+      <st id="CLIHUM" editor="humidity" />
       <st id="GV2" editor="temperature" />
       <st id="GV3" editor="temperature" />
       <st id="GV4" editor="trend" />
