@@ -21,7 +21,7 @@
       <st id="CLIHUM" editor="humidity" />
       <st id="GV3" editor="noise" />
       <st id="BARPRES" editor="pressure" />
-      #<st id="GV5" editor="pressure" />
+      <st id="GV5" editor="pressure" />
       <st id="GV6" editor="temperature" />
       <st id="GV7" editor="temperature" />
       <st id="GV8" editor="trend" />
