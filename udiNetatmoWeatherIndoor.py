@@ -140,6 +140,7 @@ class udiN_WeatherIndoor(udi_interface.Node):
             state = 3
         elif batlvl == 'low':
             state = 4
+        elif batlvl == 'very low':
             state = 5
         else:
             state = 99
