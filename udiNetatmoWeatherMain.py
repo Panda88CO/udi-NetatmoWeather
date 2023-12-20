@@ -214,14 +214,13 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 self.node.setDriver('GV7', self.weather.get_max_temperature_C(self.module))
                 self.node.setDriver('GV8', self.weather.get_temp_trend(self.module))
                 self.node.setDriver('GV9', self.weather.get_hum_trend(self.module))
-                self.node.serDriver('GV10', self.weather.get_time_stamp(self.module) )
+                self.node.setDriver('GV10', self.weather.get_time_stamp(self.module) )
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
-                self.node.serDriver('GV11', rf1  )
+                self.node.setDriver('GV11', rf1  )
             else:
                  self.node.setDriver('CLITEMP', 99, True, False, 25 )
     commands = {        
                 'UPDATE': update,
-                'QUERY' : update, 
                 }
 
         
