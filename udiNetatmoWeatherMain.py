@@ -199,7 +199,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         data = self.weather.get_module_data(self.module)
         logging.debug('Main module data: {}'.format(data))
         if self.node is not None:
-            if self.weather.get_online():
+            if self.weather.get_online(self.module):
                 self.node.setDriver('ST', 1)
                 if self.convert_temp_unit(self.weather.temp_unit) == 1:
                     self.node.setDriver('CLITEMP', self.weather.get_temperature(self.module), True, False, 4 )

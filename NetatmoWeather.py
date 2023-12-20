@@ -419,12 +419,12 @@ class NetatmoWeather (NetatmoCloud):
             logging.error('get_rf_info exception; {}'.format(e))
             return(None)
 
-    def get_hum_trend(self, module):
+    def get_online(self, module):
         try:
             logging.debug('get_online {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['online'],module['home_id'], module['type'], module['dev_id'] ))
             return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['online'])       
         except Exception as e:
-            logging.debug('get_hum_trend exception: {}'.format(e))
+            logging.debug('get_online exception: {}'.format(e))
             return(None)
 
 
