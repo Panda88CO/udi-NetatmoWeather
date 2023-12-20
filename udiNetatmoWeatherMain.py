@@ -203,6 +203,8 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 self.node.setDriver('ST', 1)
                 if self.convert_temp_unit(self.weather.temp_unit) == 1:
                     self.node.setDriver('CLITEMP', self.weather.get_temperature_C(self.module), True, False, 4 )
+                else:
+                     self.node.setDriver('CLITEMP', (self.weather.get_temperature_C(self.module)*9/5+32), True, False, 17 )
                 self.node.setDriver('CO2LVL', self.weather.get_co2(self.module))
                 self.node.setDriver('CLIHUM', self.weather.get_humidity(self.module))
                 self.node.setDriver('GV3', self.weather.get_noise(self.module))
@@ -214,8 +216,9 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 self.node.setDriver('GV9', self.weather.get_hum_trend(self.module))
                 self.node.serDriver('GV10', self.weather.get_time_stamp(self.module) )
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
-                self.node.serDriver('GV11', rf2  )
-
+                self.node.serDriver('GV11', rf1  )
+            else:
+                 self.node.setDriver('CLITEMP', 99, True, False, 25 )
     commands = {        
                 'UPDATE': update,
                 'QUERY' : update, 
