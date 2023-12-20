@@ -341,6 +341,7 @@ class NetatmoController(udi_interface.Node):
         if self.nodeDefineDone:
             logging.info('System Poll executing: {}'.format(polltype))
             nodes = self.poly.nodes()
+            logging.debug('nodes : {}'.format(nodes))
             try:
                 if 'longPoll' in polltype:
                     #Keep token current
@@ -352,7 +353,7 @@ class NetatmoController(udi_interface.Node):
                             self.myNetatmo.update_weather_info_instant(home)
 
 
-                        nodes = self.poly.getNodes()
+                        #nodes = self.poly.getNodes()
                         for nde in nodes:
                             if nde != 'controller':   # but not the setup node
                                 logging.debug('updating node {} data'.format(nde))
@@ -368,7 +369,7 @@ class NetatmoController(udi_interface.Node):
                             logging.debug('updating node {} data'.format(nde))
                             nodes[nde].updateISYdrivers()                   
             except Exception as e:
-                    logging.debug('Exeption occcured : {}'.format(e))
+                    logging.error('Exeption occcured : {}'.format(e))
    
                 
         else:
