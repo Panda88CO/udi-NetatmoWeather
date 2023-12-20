@@ -341,7 +341,7 @@ class NetatmoController(udi_interface.Node):
         if self.nodeDefineDone:
             logging.info('System Poll executing: {}'.format(polltype))
             nodes = self.poly.nodes()
-            logging.debug('nodes : {}'.format(nodes))
+            #logging.debug('nodes : {}'.format(nodes))
             try:
                 if 'longPoll' in polltype:
                     #Keep token current

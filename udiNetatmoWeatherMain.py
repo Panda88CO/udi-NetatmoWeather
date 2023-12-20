@@ -79,16 +79,16 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.drivers = [
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
             {'driver' : 'CO2LVL', 'value': 0,  'uom':54}, 
-            {'driver' : 'CLIHUM', 'value': 0,  'uom':22}, 
+            {'driver' : 'CLIHUM', 'value': 0,  'uom':51}, 
             {'driver' : 'GV3', 'value': 0,  'uom':12}, 
-            {'driver' : 'BARPRES', 'value': 0,  'uom':23}, 
-            {'driver' : 'GV5', 'value': 0,  'uom':23}, 
+            {'driver' : 'BARPRES', 'value': 0,  'uom':117}, 
+            {'driver' : 'GV5', 'value': 0,  'uom':117}, 
             {'driver' : 'GV6', 'value': 0,  'uom':4}, 
             {'driver' : 'GV7', 'value': 0,  'uom':4}, 
             {'driver' : 'GV8', 'value': 0,  'uom':25}, 
             {'driver' : 'GV9', 'value': 0,  'uom':25}, 
             {'driver' : 'GV10', 'value': 0,  'uom':151},
-            {'driver' : 'GV11', 'value': 0,  'uom':131},            
+            {'driver' : 'GV11', 'value': 0,  'uom':131},         
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
         self.primary = primary
@@ -198,6 +198,23 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         logging.debug('updateISYdrivers')
         data = self.weather.get_module_data(self.module)
         logging.debug('Main module data: {}'.format(data))
+        if self.node is not None:
+            if self.weather.get_online():
+                self.node.setDriver('ST', 1)
+                if self.convert_temp_unit(self.weather.temp_unit) == 1:
+                    self.node.setDriver('CLITEMP', self.weather.get_temperature(self.module), True, False, 4 )
+                self.node.setDriver('CO2LVL', self.weather.get_co2(self.module))
+                self.node.setDriver('CLIHUM', self.weather.get_humidity(self.module))
+                self.node.setDriver('GV3', self.weather.get_noise(self.module))
+                self.node.setDriver('BARPRES', self.weather.get_pressure(self.module))
+                self.node.setDriver('GV5', self.weather.get_abs_pressure(self.module))
+                self.node.setDriver('GV6', self.weather.get_min_temperature(self.module))
+                self.node.setDriver('GV7', self.weather.get_max_temperature(self.module))
+                self.node.setDriver('GV8', self.weather.get_temp_trend(self.module))
+                self.node.setDriver('GV9', self.weather.get_hum_trend(self.module))
+                self.node.serDriver('GV10', self.weather.get_time_stamp(self.module) )
+                rf1, rf2 = self.weather.get_rf_info(self.module) 
+                self.node.serDriver('GV11', rf1  )
 
     commands = {        
                 'UPDATE': update,

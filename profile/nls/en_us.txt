@@ -70,3 +70,6 @@ ST-RAIM-GV5-NAME = RF Status
 EN_TREND-0 = Stable
 EN_TREND-1 = Up
 EN_TREND-2 = Down
+
+error-0 = No reading
+error-99 = Unknown

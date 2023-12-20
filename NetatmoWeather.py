@@ -308,15 +308,47 @@ class NetatmoWeather (NetatmoCloud):
             logging.error('get_co2 exception; {}'.format(e))
             return(None)
 
-
+    def get_noise(self, module):
+        try:
+            logging.debug('get_noise {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['noise'],module['home_id'], module['type'], module['dev_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['noise'])       
+        except Exception as e:
+            logging.error('get_co2 exception; {}'.format(e))
+            return(None)
+        
     def get_humidity(self, module):
         try:
-            logging.debug('get_humidity {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['temp_trend'],module['home_id'], module['type'], module['dev_id'] ))
+            logging.debug('get_humidity {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['humidity'],module['home_id'], module['type'], module['dev_id'] ))
             return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['humidity'])       
         except Exception as e:
             logging.error('get_humidity exception; {}'.format(e))
             return(None)
-     
+
+    def get_pressure(self, module):
+        try:
+            logging.debug('get_pressure {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['pressure'],module['home_id'], module['type'], module['dev_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['pressure'])       
+        except Exception as e:
+            logging.error('get_pressure exception; {}'.format(e))
+            return(None)
+
+    def get_abs_pressure(self, module):
+        try:
+            logging.debug('get_abs_pressure {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['absolute_pressure'],module['home_id'], module['type'], module['dev_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['absolute_pressure'])       
+        except Exception as e:
+            logging.error('absolute_pressure exception; {}'.format(e))
+            return(None)        
+
+    def get_time_stamp(self, module):
+        try:
+            logging.debug('get_time_stamp {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['time_stamp'],module['home_id'], module['type'], module['dev_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['time_stamp'])       
+        except Exception as e:
+            logging.error('get_time_stamp exception; {}'.format(e))
+            return(None)        
+             
+
     def get_temp_trend(self, module):
         try:
             trend = self.weather_data[module['home_id']][module['type']][module['dev_id']]['temp_trend']
@@ -331,6 +363,22 @@ class NetatmoWeather (NetatmoCloud):
                 return(trend, None)       
         except Exception as e:
             logging.error('get_temp_trend exception; {}'.format(e))
+            return( None, None)
+    
+    def get_hum_trend(self, module):
+        try:
+            trend = self.weather_data[module['home_id']][module['type']][module['dev_id']]['pressure_trend']
+            if trend == 'stable':
+                return(trend, 0)
+            elif trend == 'up':
+                return(trend, 1)
+            elif trend =='down':
+                return(trend, -1)
+            else:
+                logging.error('unsupported temperature trend: {}'.format(trend))
+                return(trend, None)       
+        except Exception as e:
+            logging.error('get_hum_trend exception; {}'.format(e))
             return( None, None)
         
     def get_battery_info(self, module):
@@ -371,12 +419,12 @@ class NetatmoWeather (NetatmoCloud):
             logging.error('get_rf_info exception; {}'.format(e))
             return(None)
 
-    def get_online(self, module):
+    def get_hum_trend(self, module):
         try:
             logging.debug('get_online {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['dev_id']]['online'],module['home_id'], module['type'], module['dev_id'] ))
             return(self.weather_data[module['home_id']][module['type']][module['dev_id']]['online'])       
         except Exception as e:
-            logging.debug('get_battery_info exception: {}'.format(e))
+            logging.debug('get_hum_trend exception: {}'.format(e))
             return(None)
 
 

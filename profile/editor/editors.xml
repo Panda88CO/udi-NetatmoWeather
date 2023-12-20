@@ -8,7 +8,9 @@
     </editor>
 
     <editor id="temperature">
+        <range uom="4" min="-50" max="65" prec="1" />
         <range uom="17" min="-50" max="150" prec="1" />
+        <range uom="25" subset="0,99" nls="error" />
     </editor>
 
     <editor id="co2">
@@ -16,7 +18,7 @@
     </editor>
 
     <editor id="humidity">
-        <range uom="22" min="0" max="100" prec="0" />
+        <range uom="51" min="0" max="100" prec="0" />
     </editor>
 
     <editor id="noise">
@@ -24,7 +26,7 @@
     </editor>
 
     <editor id="pressure">
-        <range uom="23" min="0" max="10000" prec="2" />
+        <range uom="117" min="0" max="10000" prec="2" />
     </editor>
 
     <editor id="trend">

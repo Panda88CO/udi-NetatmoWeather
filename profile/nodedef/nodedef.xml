@@ -16,12 +16,12 @@
   <nodeDef id="mainunit" nls="MAIN">
     <sts>
       <st id="ST" editor="bool" />
-      <st id="GV0" editor="temperature" />
-      <st id="GV1" editor="co2" />
-      <st id="GV2" editor="humidity" />
+      <st id="CLITEMP" editor="temperature" />
+      <st id="CO2LVL" editor="co2" />
+      <st id="CLIHUM" editor="humidity" />
       <st id="GV3" editor="noise" />
-      <st id="GV4" editor="pressure" />
-      <st id="GV5" editor="pressure" />
+      <st id="BARPRES" editor="pressure" />
+      #<st id="GV5" editor="pressure" />
       <st id="GV6" editor="temperature" />
       <st id="GV7" editor="temperature" />
       <st id="GV8" editor="trend" />
