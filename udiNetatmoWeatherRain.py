@@ -49,9 +49,9 @@ class udiN_WeatherRain(udi_interface.Node):
             {'driver' : 'GV0', 'value': 0,  'uom':82}, 
             {'driver' : 'GV1', 'value': 0,  'uom':82}, 
             {'driver' : 'GV2', 'value': 0,  'uom':82}, 
-            {'driver' : 'GV3', 'value': 0,  'uom':12}, 
-            {'driver' : 'GV4', 'value': 0,  'uom':151}, 
-            {'driver' : 'GV5', 'value': 0,  'uom':51}, 
+            {'driver' : 'GV3', 'value': 0,  'uom':151}, 
+            {'driver' : 'GV4', 'value': 99,  'uom':25}, 
+            {'driver' : 'GV5', 'value': 99,  'uom':25}, 
           
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
@@ -111,10 +111,77 @@ class udiN_WeatherRain(udi_interface.Node):
         self.updateISYdrivers()
 
 
+    def rfstate2ISY(self, rf_state):
+        if rf_state.lower() == 'high':
+            rf = 0
+        elif rf_state.lower() == 'medium':
+            rf = 1
+        elif rf_state.lower() == 'low':
+            rf = 2
+        else:
+            rf= 99
+            logging.error('Unsupported RF state {}'.format(rf_state))
+        return(rf)
+    
+
+    def battery2ISY(self, batlvl):
+        if batlvl == 'max':
+            state = 0
+        elif batlvl == 'full':
+            state = 1
+        elif batlvl == 'high':
+            state = 2
+        elif batlvl == 'medium':
+            state = 3
+        elif batlvl == 'low':
+            state = 4
+        elif batlvl == 'very low':
+            state = 5
+        else:
+            state = 99
+        return(state)
+    
+
+    def trend2ISY (self, trend):
+        if trend == 'stable':
+            return(0)
+        elif trend == 'up':
+            return(1)
+        elif trend =='down':
+            return(2)
+        else:
+            logging.error('unsupported temperature trend: {}'.format(trend))
+            return(99)    
+        
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
         data = self.weather.get_module_data(self.module)
         logging.debug('Rain module data: {}'.format(data))
+        if self.node is not None:
+            if self.weather.get_online(self.module):
+                self.node.setDriver('ST', 1)
+              
+                self.node.setDriver('GV0', self.weather.get_rain(self.module), True, False, 82)
+                self.node.setDriver('GV1', self.weather.get_rain_1hour(self.module), True, False, 82)
+                self.node.setDriver('GV2', self.weather.get_rain_24hour(self.module), True, False, 82)
+
+                self.node.setDriver('GV3', self.weather.get_time_stamp(self.module) , True, False, 151)
+                
+                bat_state, bat_lvl  = self.weather.get_battery_info(self.module)    
+                self.node.setDriver('GV4', self.battery2ISY(bat_state), True, False, 25 )     
+                rf1, rf2 = self.weather.get_rf_info(self.module) 
+                self.node.setDriver('GV5', self.rfstate2ISY(rf1) )
+                self.node.serDriver('ERR', 0)
+            else:
+                 self.node.setDriver('GV0', 99, True, False, 25 )
+                 self.node.setDriver('GV1', 99, True, False, 25 )
+                 self.node.setDriver('GV2', 99, True, False, 25 )
+                 self.node.setDriver('GV3', 99, True, False, 25 )
+                 self.node.setDriver('GV4', 99, True, False, 25 )
+                 self.node.setDriver('GV5', 99, True, False, 25 )
+                 self.node.setDriver('ST', 0)
+                 self.node.serDriver('ERR', 1)
+
 
     commands = {        
                 'UPDATE': update,

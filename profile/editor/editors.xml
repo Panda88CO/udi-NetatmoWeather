@@ -24,12 +24,12 @@
     </editor>
 
     <editor id="noise">
-        <range uom="12" min="0" max="1000" prec="1" />
+        <range uom="12" min="0" max="1000" prec="0" />
         <range uom="25" subset="0,99" nls="error" />
     </editor>
 
     <editor id="pressure">
-        <range uom="117" min="0" max="10000" prec="2" />
+        <range uom="117" min="0" max="10000" prec="0" />
         <range uom="25" subset="0,99" nls="error" />
     </editor>
 
@@ -49,7 +49,7 @@
     </editor>
 
     <editor id="rain">
-        <range uom="82" min="0" max="100000" prec="3" />
+        <range uom="82" min="0" max="100000" prec="1" />
         <range uom="25" subset="0,99" nls="error" />
     </editor>
 
@@ -66,6 +66,7 @@
     <editor id="battery">
         <range uom="25" subset="0-6,99" nls="battery" />
     </editor>
+
     <editor id="rf_status">
         <range uom="25" subset="0-2,99" nls="rf_status" />
     </editor>

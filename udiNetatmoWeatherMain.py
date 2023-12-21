@@ -263,6 +263,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 self.node.setDriver('GV10', self.weather.get_time_stamp(self.module) , True, False, 151)
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
                 self.node.setDriver('GV11', self.rfstate2ISY(rf1) )
+                self.node.serDriver('ERR', 0)    
             else:
                  self.node.setDriver('CLITEMP', 99, True, False, 25 )
                  self.node.setDriver('GV6', 99, True, False, 25 )
@@ -276,6 +277,8 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                  #self.node.setDriver('GV9', 99, True, False, 25 )
                  self.node.setDriver('GV10', 99, True, False, 25 )
                  self.node.setDriver('GV11', 99, True, False, 25 )
+                 self.node.serDriver('ST', 0) 
+                 self.node.serDriver('ERR', 1)                     
 
 
 

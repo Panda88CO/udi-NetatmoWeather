@@ -55,12 +55,12 @@ class udiN_WeatherOutdoor(udi_interface.Node):
             {'driver' : 'CLITEMP', 'value': 0,  'uom':4}, 
             {'driver' : 'CO2LVL', 'value': 0,  'uom':54}, 
             {'driver' : 'CLIHUM', 'value': 0,  'uom':22}, 
+            {'driver' : 'GV2', 'value': 0,  'uom':4}, 
             {'driver' : 'GV3', 'value': 0,  'uom':4}, 
-            {'driver' : 'GV4', 'value': 0,  'uom':4}, 
-            {'driver' : 'GV5', 'value': 0,  'uom':25}, 
-            {'driver' : 'GV6', 'value': 0,  'uom':151}, 
-            {'driver' : 'GV7', 'value': 0,  'uom':51}, 
-            {'driver' : 'GV8', 'value': 0,  'uom':131},          
+            {'driver' : 'GV4', 'value': 99,  'uom':25}, 
+            {'driver' : 'GV5', 'value': 0,  'uom':151}, 
+            {'driver' : 'GV6', 'value': 99,  'uom':25}, 
+            {'driver' : 'GV7', 'value': 99,  'uom':25},       
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
         
@@ -117,7 +117,7 @@ class udiN_WeatherOutdoor(udi_interface.Node):
 
 
     def rfstate2ISY(self, rf_state):
-        if rf_state.lower() == 'high':
+        if rf_state.lower() == 'full':
             rf = 0
         elif rf_state.lower() == 'medium':
             rf = 1
@@ -161,7 +161,7 @@ class udiN_WeatherOutdoor(udi_interface.Node):
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
         data = self.weather.get_module_data(self.module)
-        logging.debug('Main module data: {}'.format(data))
+        logging.debug('Outdoor module data: {}'.format(data))
         if self.node is not None:
             if self.weather.get_online(self.module):
                 self.node.setDriver('ST', 1)
@@ -183,7 +183,8 @@ class udiN_WeatherOutdoor(udi_interface.Node):
                 bat_state, bat_lvl  = self.weather.get_battery_info(self.module)    
                 self.node.setDriver('GV6', self.battery2ISY(bat_state), True, False, 25 )           
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
-                self.node.setDriver('GV7', self.rfstate2ISY(rf1) )
+                self.node.setDriver('GV7', self.rfstate2ISY(rf1), True, False, 25  )
+                self.node.serDriver('ERR', 0)    
             else:
                  self.node.setDriver('CLITEMP', 99, True, False, 25 )
                  self.node.setDriver('GV2', 99, True, False, 25 )
@@ -193,6 +194,9 @@ class udiN_WeatherOutdoor(udi_interface.Node):
                  self.node.setDriver('GV5', 99, True, False, 25 )
                  self.node.setDriver('GV6', 99, True, False, 25 )
                  self.node.setDriver('GV7', 99, True, False, 25 )
+                 self.node.setDriver('ST', 0)
+                 self.node.serDriver('ERR', 1)                 
+
 
     commands = {        
                 'UPDATE': update,

@@ -365,6 +365,79 @@ class NetatmoWeather (NetatmoCloud):
             logging.error('get_hum_trend exception; {}'.format(e))
             return( None, None)
         
+
+    def get_rain(self, module):
+        try:
+            logging.debug('get_rain {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['rain'],module['home_id'], module['type'], module['module_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['rain'])       
+        except Exception as e:
+            logging.error('get_rain exception; {}'.format(e))
+            return(None)      
+
+    def get_rain_1hour(self, module):
+        try:
+            logging.debug('get_rain_1hour {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['rain_1'],module['home_id'], module['type'], module['module_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['rain_1'])       
+        except Exception as e:
+            logging.error('get_rain_1hour {}'.format(e))
+            return(None)  
+    
+    def get_rain_24hours(self, module):
+        try:
+            logging.debug('get_rain_24hours {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['rain_24'],module['home_id'], module['type'], module['module_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['rain_24'])       
+        except Exception as e:
+            logging.error('get_rain_24hours exception; {}'.format(e))
+            return(None)  
+
+    def get_wind_angle(self, module):
+        try:
+            logging.debug('get_wind_angle {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['windangle'],module['home_id'], module['type'], module['module_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['windangle'])       
+        except Exception as e:
+            logging.error('get_wind_angle exception; {}'.format(e))
+            return(None)  
+
+    def get_wind_strength(self, module):
+        try:
+            logging.debug('get_wind_strength {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['windstrength'],module['home_id'], module['type'], module['module_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['windstrength'])       
+        except Exception as e:
+            logging.error('get_wind_strength exception; {}'.format(e))
+            return(None)  
+
+    def get_gust_angle(self, module):
+        try:
+            logging.debug('get_wind_angle {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['gustangle'],module['home_id'], module['type'], module['module_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['gustangle'])       
+        except Exception as e:
+            logging.error('get_wind_angle exception; {}'.format(e))
+            return(None)  
+
+    def get_gust_strength(self, module):
+        try:
+            logging.debug('get_wind_strength {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['guststrength'],module['home_id'], module['type'], module['module_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['guststrength'])       
+        except Exception as e:
+            logging.error('get_wind_strength exception; {}'.format(e))
+            return(None)  
+        
+    def get_max_wind_angle(self, module):
+        try:
+            logging.debug('get_wind_angle {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['max_wind_angle'],module['home_id'], module['type'], module['module_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['max_wind_angle'])       
+        except Exception as e:
+            logging.error('get_wind_angle exception; {}'.format(e))
+            return(None)  
+
+    def get_max_wind_strength(self, module):
+        try:
+            logging.debug('get_wind_strength {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['max_wind_str'],module['home_id'], module['type'], module['module_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['max_wind_str'])       
+        except Exception as e:
+            logging.error('get_wind_strength exception; {}'.format(e))
+            return(None)          
+
     def get_battery_info(self, module):
         try:
             bat1 = self.weather_data[module['home_id']][module['type']][module['module_id']]['battery_state']

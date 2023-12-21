@@ -88,7 +88,7 @@ battery-4 = Low
 battery-5 = Very Low
 battery-99 = Unknown
 
-rf_status-0 = High
+rf_status-0 = Strong
 rf_status-1 = Medium
 rf_status-2 = Low
 rf_status-99 = Unknown
