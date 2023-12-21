@@ -186,7 +186,7 @@ class udiN_WeatherIndoor(udi_interface.Node):
                 self.node.setDriver('GV7', self.battery2ISY(bat_state), True, False, 25 )           
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
                 self.node.setDriver('GV8', self.rfstate2ISY(rf1), True, False, 25  )
-                self.node.serDriver('ERR', 0)                     
+                self.node.setDriver('ERR', 0)                     
 
             else:
                  self.node.setDriver('CLITEMP', 99, True, False, 25 )
@@ -198,8 +198,8 @@ class udiN_WeatherIndoor(udi_interface.Node):
                  self.node.setDriver('GV6', 99, True, False, 25 )
                  self.node.setDriver('GV7', 99, True, False, 25 )
                  self.node.setDriver('GV8', 99, True, False, 25 )
-                 self.node.serDriver('ST', 0) 
-                 self.node.serDriver('ERR', 1)                     
+                 self.node.setDriver('ST', 0) 
+                 self.node.setDriver('ERR', 1)                     
 
 
 
