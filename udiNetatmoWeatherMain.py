@@ -85,10 +85,10 @@ class udiNetatmoWeatherMain(udi_interface.Node):
             {'driver' : 'GV5', 'value': 0,  'uom':117}, 
             {'driver' : 'GV6', 'value': 0,  'uom':4}, 
             {'driver' : 'GV7', 'value': 0,  'uom':4}, 
-            {'driver' : 'GV8', 'value': 0,  'uom':25}, 
+            {'driver' : 'GV8', 'value': 99,  'uom':25}, 
             #{'driver' : 'GV9', 'value': 0,  'uom':25}, 
             {'driver' : 'GV10', 'value': 0,  'uom':151},
-            {'driver' : 'GV11', 'value': 0,  'uom':131},         
+            {'driver' : 'GV11', 'value': 99,  'uom':25},         
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
         self.primary = primary

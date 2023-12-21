@@ -376,16 +376,16 @@ class NetatmoWeather (NetatmoCloud):
 
     def get_rain_1hour(self, module):
         try:
-            logging.debug('get_rain_1hour {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['rain_1'],module['home_id'], module['type'], module['module_id'] ))
-            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['rain_1'])       
+            logging.debug('get_rain_1hour {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['sum_rain_1'],module['home_id'], module['type'], module['module_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['sum_rain_1'])       
         except Exception as e:
             logging.error('get_rain_1hour {}'.format(e))
             return(None)  
     
     def get_rain_24hours(self, module):
         try:
-            logging.debug('get_rain_24hours {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['rain_24'],module['home_id'], module['type'], module['module_id'] ))
-            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['rain_24'])       
+            logging.debug('get_rain_24hours {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['sum_rain_24'],module['home_id'], module['type'], module['module_id'] ))
+            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['sum_rain_24'])       
         except Exception as e:
             logging.error('get_rain_24hours exception; {}'.format(e))
             return(None)  

@@ -34,7 +34,7 @@ drivers = [
             {'driver' : 'GV5', 'value': 0,  'uom':25}, 
             {'driver' : 'GV6', 'value': 0,  'uom':151}, 
             {'driver' : 'GV7', 'value': 0,  'uom':51}, 
-            {'driver' : 'GV8', 'value': 0,  'uom':131},          
+            {'driver' : 'GV8', 'value': 0,  'uom':25},          
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
 '''
