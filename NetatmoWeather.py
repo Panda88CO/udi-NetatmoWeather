@@ -158,20 +158,31 @@ class NetatmoWeather (NetatmoCloud):
                         inst_mod_adr = self.instant_data[home_id][module_type][module_adr]
                         cloud_mod_adr = self.cloud_data[home_id][module_type][module_adr]
                         logging.debug('inst {} cloud {}'.format(inst_mod_adr, cloud_mod_adr))
-                        if cloud_mod_adr['time_utc'] > inst_mod_adr ['ts']:
-                            for data in inst_mod_adr:
-                                data_str = self.merge_data_str(data)
-                                self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]
+                        cloud_ok =  'time_utc' in cloud_mod_adr
+                        inst_ok = 'ts' in inst_mod_adr 
+                        if cloud_ok and inst_ok:
+                            if cloud_mod_adr['time_utc'] > inst_mod_adr ['ts']:
+                                for data in inst_mod_adr:
+                                    data_str = self.merge_data_str(data)
+                                    self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]
+                                for data in cloud_mod_adr:
+                                    data_str = self.merge_data_str(data)                               
+                                    self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr[data]
+                            else:
+                                for data in cloud_mod_adr:
+                                    data_str = self.merge_data_str(data)                            
+                                    self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr[data]
+                                for data in inst_mod_adr:
+                                    data_str = self.merge_data_str(data)
+                                    self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]
+                        elif cloud_ok:
                             for data in cloud_mod_adr:
                                 data_str = self.merge_data_str(data)                               
                                 self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr[data]
-                        else:
-                            for data in cloud_mod_adr:
-                                data_str = self.merge_data_str(data)                            
-                                self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr[data]
+                        elif inst_ok:
                             for data in inst_mod_adr:
                                 data_str = self.merge_data_str(data)
-                                self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]
+                                self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]                            
         elif cloud_data: # instant_data must be False
             for home_id in self.cloud_data:
                 for module_type in self.cloud_data[home_id]:
