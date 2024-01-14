@@ -214,7 +214,7 @@ class NetatmoWeather (NetatmoCloud):
                         for data in inst_mod_adr:
                             data_str = self.merge_data_str(data)
                             self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]
-        logging.debug('merge_data complete')
+        logging.debug('merge_data complete {}'.format(self.weather_data))
 
 
     def get_homes(self):
@@ -486,10 +486,13 @@ class NetatmoWeather (NetatmoCloud):
     def get_online(self, module):
         try:
             logging.debug('module {}'.format(module))
-            logging.debug('get_online {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['online'],module['home_id'], module['type'], module['module_id'] ))
-            return(self.weather_data[module['home_id']][module['type']][module['module_id']]['online'])       
+            #logging.debug('get_online {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['online'],module['home_id'], module['type'], module['module_id'] ))
+            if 'online' in self.weather_data[module['home_id']][module['type']][module['module_id']]:    
+                return(self.weather_data[module['home_id']][module['type']][module['module_id']]['online'])
+            else:
+                return(False)      
         except Exception as e:
-            logging.debug('get_online exception: {}'.format(e))
+            logging.error('get_online exception: {}'.format(e))
             return(None)
 
 
