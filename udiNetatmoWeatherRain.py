@@ -171,16 +171,16 @@ class udiN_WeatherRain(udi_interface.Node):
                 self.node.setDriver('GV4', self.battery2ISY(bat_state), True, False, 25 )     
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
                 self.node.setDriver('GV5', self.rfstate2ISY(rf1) )
-                self.node.setDriver('ERR', 0)
+                #self.node.setDriver('ERR', 0)
             else:
-                 self.node.setDriver('GV0', 99, True, False, 25 )
-                 self.node.setDriver('GV1', 99, True, False, 25 )
-                 self.node.setDriver('GV2', 99, True, False, 25 )
-                 self.node.setDriver('GV3', 99, True, False, 25 )
-                 self.node.setDriver('GV4', 99, True, False, 25 )
-                 self.node.setDriver('GV5', 99, True, False, 25 )
-                 self.node.setDriver('ST', 0)
-                 self.node.setDriver('ERR', 1)
+                self.node.setDriver('GV0', 99, True, False, 25 )
+                self.node.setDriver('GV1', 99, True, False, 25 )
+                self.node.setDriver('GV2', 99, True, False, 25 )
+                self.node.setDriver('GV3', 99, True, False, 25 )
+                self.node.setDriver('GV4', 99, True, False, 25 )
+                self.node.setDriver('GV5', 99, True, False, 25 )
+                self.node.setDriver('ST', 0)
+                #self.node.setDriver('ERR', 1)
 
 
     commands = {        

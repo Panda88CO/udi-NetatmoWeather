@@ -380,7 +380,7 @@ class NetatmoController(udi_interface.Node):
         # Set nodes offline
         for node in self.poly.nodes():
             if hasattr(node, 'setOffline'):
-                node.setDriver('ERR', 1)
+                #node.setDriver('ERR', 1)
                 node.setOffline()
         self.poly.stop()
 
