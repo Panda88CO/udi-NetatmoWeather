@@ -77,9 +77,9 @@ class NetatmoWeather (NetatmoCloud):
                             self.cloud_data[home_id]['MAIN'][dev_id]['data_type'] = temp_data['data_type']
                             if temp_data['reachable']:
                                 self.cloud_data[home_id]['MAIN'][dev_id] = temp_data['dashboard_data']
-
-                            for module in range(0,len(temp_data['modules'])):
-                                mod = temp_data['modules'][module]
+                            logging.debug('past main {}'.format(self.cloud_data))
+                            for module in range(0,len(temp_data['devices']['modules'])):
+                                mod = temp_data['devices']['modules'][module]
 
                                 self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['reachable'] = mod['reachable']   
                                 self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['data_type'] = mod['data_type']
