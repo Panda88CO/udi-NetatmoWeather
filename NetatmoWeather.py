@@ -85,7 +85,7 @@ class NetatmoWeather (NetatmoCloud):
                                 if 'reachable' in mod:
                                     self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['reachable'] = mod['reachable'] 
                                     if  mod['reachable']:
-                                            self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = mod['dashboard_data']                                      
+                                        self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = mod['dashboard_data']                                      
                                 self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['data_type'] = mod['data_type']
 
                         self.merge_data()         
