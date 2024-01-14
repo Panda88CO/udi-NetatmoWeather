@@ -80,6 +80,7 @@ class NetatmoWeather (NetatmoCloud):
                             logging.debug('past main {}'.format(self.cloud_data))
                             for module in range(0,len(temp_data['modules'])):
                                 mod = temp_data['modules'][module]
+                                logging.debug('{} {}c data {}, mod  {}'.format(self.module_type(mod['type']),mod['_id'], self.cloud_data, mod))
                                 self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = {}
                                 self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['reachable'] = mod['reachable']   
                                 self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['data_type'] = mod['data_type']
