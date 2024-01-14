@@ -65,7 +65,7 @@ class NetatmoWeather (NetatmoCloud):
                                 logging.error('Code only handles 1st main weather station : {} found'.format(len(temp_data['body']['devices'])))
                                 logging.error('Processing first one')
                                 temp_data = temp_data['body']['devices'][0]
-
+                            logging.debug('past temp data {}'.format(temp_data))
                             self.cloud_data[home_id] = {}
                             self.cloud_data[home_id]['MAIN'] = {}
                             self.cloud_data[home_id]['INDOOR'] = {}
