@@ -157,6 +157,7 @@ class NetatmoWeather (NetatmoCloud):
                         # data exists so data must exist for weather_data
                         inst_mod_adr = self.instant_data[home_id][module_type][module_adr]
                         cloud_mod_adr = self.cloud_data[home_id][module_type][module_adr]
+                        logging.debug('inst {} cloud {}'.format(inst_mod_adr, cloud_mod_adr))
                         if cloud_mod_adr['time_utc'] > inst_mod_adr ['ts']:
                             for data in inst_mod_adr:
                                 data_str = self.merge_data_str(data)
