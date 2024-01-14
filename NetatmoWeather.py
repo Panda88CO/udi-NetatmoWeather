@@ -57,35 +57,35 @@ class NetatmoWeather (NetatmoCloud):
 
                     #test = self._callApi('GET', '/getstationsdata' )
                     #logging.debug(temp_data)
+                    if 'status'  in temp_data:
+                        if temp_data['status'] == 'ok':
+                            if len(temp_data['body']['devices'] ) == 1:
+                                temp_data = temp_data['body']['devices'][0]  # there should only be 1 dev_id
+                            else:
+                                logging.error('Code only handles 1st main weather station : {} found'.format(len(temp_data['body']['devices'])))
+                                logging.error('Processing first one')
+                                temp_data = temp_data['body']['devices'][0]
 
-                    if temp_data['status'] == 'ok':
-                        if len(temp_data['body']['devices'] ) == 1:
-                            temp_data = temp_data['body']['devices'][0]  # there should only be 1 dev_id
-                        else:
-                            logging.error('Code only handles 1st main weather station : {} found'.format(len(temp_data['body']['devices'])))
-                            logging.error('Processing first one')
-                            temp_data = temp_data['body']['devices'][0]
+                            self.cloud_data[home_id] = {}
+                            self.cloud_data[home_id]['MAIN'] = {}
+                            self.cloud_data[home_id]['INDOOR'] = {}
+                            self.cloud_data[home_id]['OUTDOOR'] = {}
+                            self.cloud_data[home_id]['RAIN'] = {}
+                            self.cloud_data[home_id]['WIND'] = {}
 
-                        self.cloud_data[home_id] = {}
-                        self.cloud_data[home_id]['MAIN'] = {}
-                        self.cloud_data[home_id]['INDOOR'] = {}
-                        self.cloud_data[home_id]['OUTDOOR'] = {}
-                        self.cloud_data[home_id]['RAIN'] = {}
-                        self.cloud_data[home_id]['WIND'] = {}
+                            self.cloud_data[home_id]['MAIN'][dev_id]['reachable'] = temp_data['reachable']
+                            self.cloud_data[home_id]['MAIN'][dev_id]['data_type'] = temp_data['data_type']
+                            if temp_data['reachable']:
+                                self.cloud_data[home_id]['MAIN'][dev_id] = temp_data['dashboard_data']
 
-                        self.cloud_data[home_id]['MAIN'][dev_id]['reachable'] = temp_data['reachable']
-                        self.cloud_data[home_id]['MAIN'][dev_id]['data_type'] = temp_data['data_type']
-                        if temp_data['reachable']:
-                            self.cloud_data[home_id]['MAIN'][dev_id] = temp_data['dashboard_data']
+                            for module in range(0,len(temp_data['modules'])):
+                                mod = temp_data['modules'][module]
 
-                        for module in range(0,len(temp_data['modules'])):
-                            mod = temp_data['modules'][module]
-
-                            self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['reachable'] = mod['reachable']   
-                            self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['data_type'] = mod['data_type']
-                        if  mod['reachable']:
-                                self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = mod['dashboard_data']
-                self.merge_data()         
+                                self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['reachable'] = mod['reachable']   
+                                self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['data_type'] = mod['data_type']
+                            if  mod['reachable']:
+                                    self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = mod['dashboard_data']
+                        self.merge_data()         
             return(self.cloud_data)
         except Exception as e:
             logging.error('update_weather_info_cloud failed : {}'.format(e))

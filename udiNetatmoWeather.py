@@ -184,7 +184,7 @@ class NetatmoController(udi_interface.Node):
                         self.myNetatmo.update_weather_info_cloud(home)
                         self.myNetatmo.update_weather_info_instant(home)
 
-        if not selected and len(self.home_ids > 1):
+        if not selected and len(self.home_ids) > 1:
             self.poly.Notices['home_id'] = 'Check config to select which home/modules should be used (1 - used, 0 - not used) - then restart'
         else:
             logging.debug('enabled list - outside {}'.format(self.enabled_list))
