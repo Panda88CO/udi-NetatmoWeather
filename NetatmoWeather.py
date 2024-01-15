@@ -75,17 +75,21 @@ class NetatmoWeather (NetatmoCloud):
                             self.cloud_data[home_id]['MAIN'][dev_id] = {}
                             self.cloud_data[home_id]['MAIN'][dev_id]['reachable'] = temp_data['reachable']
                             self.cloud_data[home_id]['MAIN'][dev_id]['data_type'] = temp_data['data_type']
-                            if temp_data['reachable']:
+                            if 'dashboard_data' in temp_data:
                                 self.cloud_data[home_id]['MAIN'][dev_id] = temp_data['dashboard_data']
+                                self.cloud_data[home_id]['MAIN'][dev_id]['online'] = True
+                            else:
+                                self.cloud_data[home_id]['MAIN'][dev_id]['online'] = True
                             logging.debug('past main {}'.format(self.cloud_data))
                             for module in range(0,len(temp_data['modules'])):
                                 mod = temp_data['modules'][module]
                                 logging.debug('{} {}c data {}, mod  {}'.format(self.module_type(mod['type']),mod['_id'], self.cloud_data, mod))
                                 self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = {}
-                                if 'reachable' in mod:
-                                    self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['reachable'] = mod['reachable'] 
-                                    if  mod['reachable']:
-                                        self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = mod['dashboard_data']                                      
+                                if 'dashboard_data' in mod:
+                                    self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['online'] = True 
+                                    self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']] = mod['dashboard_data']
+                                else:
+                                    self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['online'] = False                                   
                                 self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['data_type'] = mod['data_type']
 
                         self.merge_data()         
