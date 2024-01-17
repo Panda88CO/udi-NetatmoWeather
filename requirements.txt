@@ -1,4 +1,4 @@
-polyinterface>=2.0.28
+udi_interface>=3.0.51
 requests>=2.20
 urllib3>=1.24.1
 udiProfileHandler
