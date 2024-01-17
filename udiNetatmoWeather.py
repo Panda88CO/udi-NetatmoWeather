@@ -52,9 +52,7 @@ class NetatmoController(udi_interface.Node):
         self.name = name
         self.primary = primary
         self.address = address
-        self.Parameters = Custom(self.poly, 'customparams')
-        self.Notices = Custom(self.poly, 'notices')
-        self.config_completed = False
+v
         self.myNetatmo = NetatmoWeather(self.poly)
         self.hb  = 0
         logging.debug('testing 1')
