@@ -147,6 +147,7 @@ v
             self.addNodes()
         
 
+
     def addNodes(self):
         ''''''
         logging.info('Adding selected weather stations')
