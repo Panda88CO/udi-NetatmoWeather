@@ -163,7 +163,7 @@ class udiN_WeatherRain(udi_interface.Node):
               
                 self.node.setDriver('GV0', self.weather.get_rain(self.module), True, False, 82)
                 self.node.setDriver('GV1', self.weather.get_rain_1hour(self.module), True, False, 82)
-                self.node.setDriver('GV2', self.weather.get_rain_24hour(self.module), True, False, 82)
+                self.node.setDriver('GV2', self.weather.get_rain_24hours(self.module), True, False, 82)
 
                 self.node.setDriver('GV3', self.weather.get_time_stamp(self.module) , True, False, 151)
                 

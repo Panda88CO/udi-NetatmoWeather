@@ -116,7 +116,7 @@ class udiN_WeatherIndoor(udi_interface.Node):
 
 
     def rfstate2ISY(self, rf_state):
-        if rf_state.lower() == 'high':
+        if rf_state.lower() == 'full':
             rf = 0
         elif rf_state.lower() == 'medium':
             rf = 1
