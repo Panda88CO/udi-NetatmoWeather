@@ -41,7 +41,7 @@ class NetatmoCloud(OAuth):
         self.client_ID = None
         self.client_SECRET = None
         self.handleCustomParamsDone = False
-        self.customerDataHandlerDone = False
+        #self.customerDataHandlerDone = False
         self.customNsHandlerDone = False
         self.temp_unit = 'C'
 
@@ -67,10 +67,10 @@ class NetatmoCloud(OAuth):
             logging.debug('Waiting for customParams to complete - customDataHandler')
             time.sleep(1)
         super()._customDataHandler(data)
-        self.customerDataHandlerDone = True
+        #self.customerDataHandlerDone = True
 
     def customNsHandler(self, key, data):
-        while not self.handleCustomParamsDone or not self.customerDataHandlerDone :
+        while not self.handleCustomParamsDone:
             logging.debug('Waiting for customParams to complete - customNsHandler')
             time.sleep(1)
         self.updateOauthConfig()
@@ -78,7 +78,7 @@ class NetatmoCloud(OAuth):
         self.customNsHandlerDone = True
 
     def oauthHandler(self, token):
-        while not self.handleCustomParamsDone or not self.customNsHandlerDone or not self.customerDataHandlerDone :
+        while not self.handleCustomParamsDone or not self.customNsHandlerDone:
             logging.debug('Waiting for customParams to complete - oauthHandler')
             time.sleep(1)
         
