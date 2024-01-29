@@ -18,9 +18,9 @@ import urllib.parse
 #from udi_interface import LOGGER, Custom
 #from oauth import OAuth
 try:
-    import  udi_interface
-    logging = udi_interface.LOGGER
-    Custom = udi_interface.Custom
+    from udi_interface import LOGGER, Custom, OAuth
+    logging = LOGGER
+    Custom = Custom
 except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
