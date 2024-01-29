@@ -18,9 +18,9 @@ import urllib.parse
 #from udi_interface import LOGGER, Custom
 #from oauth import OAuth
 try:
-    from udi_interface import LOGGER, Custom, OAuth
-    logging = LOGGER
-    Custom = Custom
+    import  udi_interface
+    logging = udi_interface.LOGGER
+    Custom = udi_interface.Custom
 except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
@@ -66,7 +66,7 @@ class NetatmoCloud(OAuth):
         while not self.handleCustomParamsDone:
             logging.debug('Waiting for customParams to complete - customDataHandler')
             time.sleep(1)
-        super()._customDataHandler(data)
+        super().customDataHandler(data)
         #self.customerDataHandlerDone = True
 
     def customNsHandler(self, key, data):
@@ -74,7 +74,7 @@ class NetatmoCloud(OAuth):
             logging.debug('Waiting for customParams to complete - customNsHandler')
             time.sleep(1)
         #self.updateOauthConfig()
-        super()._customNsHandler(key, data)
+        super().customNsHandler(key, data)
         self.customNsHandlerDone = True
 
     def oauthHandler(self, token):
@@ -82,7 +82,7 @@ class NetatmoCloud(OAuth):
             logging.debug('Waiting for customParams to complete - oauthHandler')
             time.sleep(1)
         
-        super()._oauthHandler(token)
+        super().oauthHandler(token)
 
     #def refresh_token(self):
     #    logging.debug('checking token for refresh')
