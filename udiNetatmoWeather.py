@@ -56,8 +56,8 @@ class NetatmoController(udi_interface.Node):
         self.myNetatmo = NetatmoWeather(self.poly)
         self.hb  = 0
         logging.debug('testing 1')
-        #self.Parameters = Custom(self.poly, 'customparams')
-        #self.Notices = Custom(self.poly, 'notices')
+        self.customParameters = Custom(self.poly, 'customparams')
+        self.Notices = Custom(self.poly, 'notices')
         self.n_queue = []
         logging.debug('drivers : {}'.format(self.drivers))
         self.poly.subscribe(self.poly.STOP, self.stopHandler)
@@ -165,8 +165,8 @@ class NetatmoController(udi_interface.Node):
                 tmp = {}
                 tmp['home'] = home
                 tmp['main_module'] = m_module
-                if node_name in self.Parameters:
-                    if self.Parameters[node_name] == 1:
+                if node_name in self.customParameters:
+                    if self.customParameters[node_name] == 1:
                         self.enabled_list.append(tmp)
                         logging.debug('enabled list {}'.format(self.enabled_list))
                         if tmp['home'] not in self.homes_list:
@@ -175,7 +175,7 @@ class NetatmoController(udi_interface.Node):
                             self.myNetatmo.update_weather_info_instant(home)
                         selected = True
                 else:
-                    self.Parameters[node_name] = 1 #enable by default
+                    self.customParameters[node_name] = 1 #enable by default
                     self.enabled_list.append(tmp)
                     logging.debug('enabled list - else {}'.format(self.enabled_list))
                     if tmp['home'] not in self.homes_list:
@@ -204,40 +204,40 @@ class NetatmoController(udi_interface.Node):
         self.nodeDefineDone = True
 
     def customParamsHandler(self, userParams):
-        self.Parameters.load(userParams)
+        self.customParameters.load(userParams)
         logging.debug('customParamsHandler called')
         # Example for a boolean field
 
         if 'clientID' in userParams:
-            self.client_ID = self.Parameters['clientID'] 
+            self.client_ID = self.customParameters['clientID'] 
             self.myNetatmo.client_ID = self.client_ID 
             #self.addOauthParameter('client_id',self.client_ID )
             #self.oauthConfig['client_id'] =  self.client_ID
         else:
-            self.Parameters['clientID'] = 'enter client_id'
+            self.customParameters['clientID'] = 'enter client_id'
             self.client_ID = None
             
-        if 'clientSecret' in self.Parameters:
-            self.client_SECRET = self.Parameters['clientSecret'] 
+        if 'clientSecret' in self.customParameters:
+            self.client_SECRET = self.customParameters['clientSecret'] 
             self.myNetatmo.client_SECRET = self.client_SECRET 
             #self.addOauthParameter('client_secret',self.client_SECRET )
             #self.oauthConfig['client_secret'] =  self.client_SECRET
         else:
-            self.Parameters['clientSecret'] = 'enter client_secret'
+            self.customParameters['clientSecret'] = 'enter client_secret'
             self.client_SECRET = None
 
-        if 'refreshToken' in self.Parameters:
-            self.refreshToken = self.Parameters['refreshToken'] 
+        if 'refreshToken' in self.customParameters:
+            self.refreshToken = self.customParameters['refreshToken'] 
 
             #self.addOauthParameter('client_secret',self.client_SECRET )
             #self.oauthConfig['client_secret'] =  self.client_SECRET
         else:
-            self.Parameters['refreshToken'] = 'enter refreshToken'
+            self.customParameters['refreshToken'] = 'enter refreshToken'
             self.refreshToken = None
 
         
-        #if 'scope' in self.Parameters:
-        #    temp = self.Parameters['scope'] 
+        #if 'scope' in self.customParameters:
+        #    temp = self.customParameters['scope'] 
         #    temp1 = temp.split()
         #    self.scope_str = ''
         #    for net_scope in temp1:
@@ -247,14 +247,14 @@ class NetatmoController(udi_interface.Node):
         #            logging.error('Unknown scope provided: {} - removed '.format(net_scope))
         #    self.scope = self.scope_str.split()
         #else:
-        #    self.Parameters['scope'] = 'enter desired scopes space separated'
+        #    self.customParameters['scope'] = 'enter desired scopes space separated'
         #    self.scope_str = ""
 
-        if "TEMP_UNIT" in self.Parameters:
-            self.temp_unit = self.Parameters['TEMP_UNIT'][0].upper()
+        if "TEMP_UNIT" in self.customParameters:
+            self.temp_unit = self.customParameters['TEMP_UNIT'][0].upper()
         else:
             self.temp_unit = 'C'
-            self.Parameters['TEMP_UNIT'] = 'C'
+            self.customParameters['TEMP_UNIT'] = 'C'
         self.myNetatmo.temp_unit = self.temp_unit
             #attempts = 0
             #while not self.customData and attempts <3:
@@ -280,9 +280,9 @@ class NetatmoController(udi_interface.Node):
             #logging.debug('Following scopes are selected : {}'.format(self.scope_str))
 
 
-        #if 'refresh_token' in self.Parameters:
-        #    if self.Parameters['refresh_token'] is not None and self.Parameters['refresh_token'] != "":
-        #        self.customData.token['refresh_token'] = self.Parameters['refresh_token']
+        #if 'refresh_token' in self.customParameters:
+        #    if self.customParameters['refresh_token'] is not None and self.customParameters['refresh_token'] != "":
+        #        self.customData.token['refresh_token'] = self.customParameters['refresh_token']
         #self.myNetatmo.handleCustomParamsDone = True
 
 
@@ -290,22 +290,23 @@ class NetatmoController(udi_interface.Node):
         self.myNetatmo.handleCustomParamsDone = True
 
         #self.updateOauthConfig()
-        #self.myParamBoolean = ('myParam' in self.Parametersand self.Parameters['myParam'].lower() == 'true')
+        #self.myParamBoolean = ('myParam' in self.customParametersand self.customParameters['myParam'].lower() == 'true')
         #logging.info(f"My param boolean: { self.myParamBoolean }")
 
     def configDoneHandler(self):
         # We use this to discover devices, or ask to authenticate if user has not already done so
         self.poly.Notices.clear()
-        '''
-        self.myNetatmo.updateOauthConfig()
-        accessToken = self.myNetatmo.getAccessToken()
-        #accessToken = self.myNetatmo._oAuthTokensRefresh()
-        logging.debug('configDoneHandler - accessToken {}'.format(accessToken))
-        if accessToken is None:
+        
+        #self.myNetatmo.updateOauthConfig()
+
+        try :
+            accessToken = self.myNetatmo.getAccessToken()
+        except ValueError as err:
             logging.info('Access token is not yet available. Please authenticate.')
             self.poly.Notices['auth'] = 'Please initiate authentication'
             return
-        '''
+        
+        logging.debug('configDoneHandler - accessToken {}'.format(accessToken))
         self.configDone = True
         
         #res = self.myNetatmo.get_home_info()

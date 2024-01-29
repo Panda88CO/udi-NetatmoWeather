@@ -12,7 +12,7 @@ from NetatmoControlVentilation import NetatmoControlVentilation
 import urllib.parse
 
 try:
-    import udi_interface
+    from udi_interface import LOGGER, Custom, OAuth
     logging = udi_interface.LOGGER
     Custom = udi_interface.Custom
 except ImportError:

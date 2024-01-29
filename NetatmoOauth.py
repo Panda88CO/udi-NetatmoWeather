@@ -16,11 +16,11 @@ import time
 import json
 import urllib.parse
 #from udi_interface import LOGGER, Custom
-from oauth import OAuth
+#from oauth import OAuth
 try:
-    import udi_interface
-    logging = udi_interface.LOGGER
-    Custom = udi_interface.Custom
+    from udi_interface import LOGGER, Custom, OAuth
+    logging = LOGGER
+    Custom = Custom
 except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
@@ -49,7 +49,7 @@ class NetatmoCloud(OAuth):
              'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
         
         self.poly = polyglot
-        #self.Parameters= Custom(polyglot, 'customparams')
+        #self.customParameters= Custom(polyglot, 'customparams')
         #self.Notices = Custom(self.poly, 'notices')
 
         logging.info('External service connectivity initialized...')
@@ -78,8 +78,6 @@ class NetatmoCloud(OAuth):
         self.customNsHandlerDone = True
 
     def oauthHandler(self, token):
-        
-
         while not self.handleCustomParamsDone or not self.customNsHandlerDone or not self.customerDataHandlerDone :
             logging.debug('Waiting for customParams to complete - oauthHandler')
             time.sleep(0.2)
@@ -91,30 +89,32 @@ class NetatmoCloud(OAuth):
         
 
     # Your service may need to access custom params as well...
-    '''
+    
     def customParamsHandler(self, userParams):
-        self.Parameters.load(userParams)
+        self.customParameters.load(userParams)
         logging.debug('customParamsHandler called')
+        oauthSettingsUpdate = {}
         # Example for a boolean field
 
-        if 'clientID' in userParams and self.client_ID is None:
-            self.client_ID = self.Parameters['clientID'] 
+        if 'clientID' in userParams:
+            self.client_ID = self.customParameters['clientID'] 
+            oauthSettingsUpdate['client_id'] = self.customParameters['clientID']
             #self.addOauthParameter('client_id',self.client_ID )
             #self.oauthConfig['client_id'] =  self.client_ID
         else:
-            self.Parameters['clientID'] = 'enter client_id'
+            self.customParameters['clientID'] = 'enter client_id'
             self.client_ID = None
             
-        if 'clientSecret' in self.Parameters:
-            self.client_SECRET = self.Parameters['clientSecret'] 
-            #self.addOauthParameter('client_secret',self.client_SECRET )
+        if 'clientSecret' in self.customParameters:
+            self.client_SECRET = self.customParameters['clientSecret'] 
+            oauthSettingsUpdate['client_secret'] = self.customParameters['clientSecret']
             #self.oauthConfig['client_secret'] =  self.client_SECRET
         else:
-            self.Parameters['clientSecret'] = 'enter client_secret'
+            self.customParameters['clientSecret'] = 'enter client_secret'
             self.client_SECRET = None
             
-        #if 'scope' in self.Parameters:
-        #    temp = self.Parameters['scope'] 
+        #if 'scope' in self.customParameters:
+        #    temp = self.customParameters['scope'] 
         #    temp1 = temp.split()
         #    self.scope_str = ''
         #    for net_scope in temp1:
@@ -124,14 +124,14 @@ class NetatmoCloud(OAuth):
         #            logging.error('Unknown scope provided: {} - removed '.format(net_scope))
         #    self.scope = self.scope_str.split()
         #else:
-        #    self.Parameters['scope'] = 'enter desired scopes space separated'
+        #    self.customParameters['scope'] = 'enter desired scopes space separated'
         #    self.scope_str = ""
 
-        if "TEMP_UNIT" in self.Parameters:
-            self.temp_unit = self.Parameters['TEMP_UNIT'][0].upper()
+        if "TEMP_UNIT" in self.customParameters:
+            self.temp_unit = self.customParameters['TEMP_UNIT'][0].upper()
         else:
             self.temp_unit = 0
-            self.Parameters['TEMP_UNIT'] = 'C'
+            self.customParameters['TEMP_UNIT'] = 'C'
 
             #attempts = 0
             #while not self.customData and attempts <3:
@@ -157,28 +157,40 @@ class NetatmoCloud(OAuth):
             #logging.debug('Following scopes are selected : {}'.format(self.scope_str))
 
 
-        #if 'refresh_token' in self.Parameters:
-        #    if self.Parameters['refresh_token'] is not None and self.Parameters['refresh_token'] != "":
-        #        self.customData.token['refresh_token'] = self.Parameters['refresh_token']
+        #if 'refresh_token' in self.customParameters:
+        #    if self.customParameters['refresh_token'] is not None and self.customParameters['refresh_token'] != "":
+        #        self.customData.token['refresh_token'] = self.customParameters['refresh_token']
+        self.updateOauthSettings(oauthSettingsUpdate)
         self.handleCustomParamsDone = True
 
         #self.updateOauthConfig()
-        #self.myParamBoolean = ('myParam' in self.Parametersand self.Parameters['myParam'].lower() == 'true')
+        #self.myParamBoolean = ('myParam' in self.customParametersand self.customParameters['myParam'].lower() == 'true')
         #logging.info(f"My param boolean: { self.myParamBoolean }")
     
-    '''
-    """
+
     def add_to_parameters(self,  key, value):
         '''add_to_parameters'''
-        self.Parameters[key] = value
+        self.customParameters[key] = value
 
     def check_parameters(self, key, value):
         '''check_parameters'''
-        if key in self.Parameters:
-            return(self.Parameters[key]  == value)
+        if key in self.customParameters:
+            return(self.customParameters[key]  == value)
         else:
             return(False)
-    """
+
+    def setOauthScope(self, scope):
+        oauthSettingsUpdate = {}
+        logging.debug('Set Scope to {}'.format(scope))
+        oauthSettingsUpdate['scope'] = str(scope)
+        self.updateOauthSettings(oauthSettingsUpdate)
+    
+    def setOauthName(self, name):
+        oauthSettingsUpdate = {} 
+        logging.debug('Set name to {}'.format(name))
+        oauthSettingsUpdate['name'] = str(name)
+        self.updateOauthSettings(oauthSettingsUpdate)
+    
     '''
     def _insert_refreshToken(self, refresh_token, clientId, clientSecret):
         data = {
@@ -248,6 +260,7 @@ class NetatmoCloud(OAuth):
             return None
 
     # Then implement your service specific APIs
+    '''
     def getAllDevices(self):
         return self._callApi(url='/devices')
 
@@ -256,8 +269,8 @@ class NetatmoCloud(OAuth):
 
     def getUserInfo(self):
         return self._callApi(url='/user/info')
-
-
+    '''
+    '''
     def updateOauthConfig(self):
         logging.debug('updateOauthConfig')
         logging.debug(' {} {} {}'.format(self.client_ID,self.client_SECRET, self.scope_str  ))
@@ -270,7 +283,7 @@ class NetatmoCloud(OAuth):
         self.addOauthParameter('cloudlink', True )
         self.addOauthParameter('addRedirect', True )
         logging.debug('updateOauthConfig = {}'.format(self.oauthConfig))
-
+    '''
 ### Main node server code
 
     #def set_temp_unit(self, value):
