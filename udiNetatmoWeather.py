@@ -128,23 +128,23 @@ class NetatmoController(udi_interface.Node):
         logging.info('Executing start')
         self.myNetatmo = NetatmoWeather(self.poly)
         #self.accessToken = self.myNetatmo.getAccessToken()
-        while not self.configDone and not self.myNetatmo.handleCustomParamsDone and not self.myNetatmo.customNsHandlerDone  and not self.myNetatmo.customerDataHandlerDone:
+        while not self.configDone and not self.myNetatmo.handleCustomParamsDone and not self.myNetatmo.customNsHandlerDone:
             time.sleep(2)
             logging.debug('Waiting for config to complete')
         #time.sleep(1)
-        if self.refreshToken and self.client_ID and self.client_SECRET:
-            self.myNetatmo._insert_refreshToken(self.refreshToken, self.client_ID, self.client_SECRET)
-            #logging.debug('AccessToken = {}'.format(self.accessToken))
-            time.sleep(1)
-            self.home_ids = self.myNetatmo.get_homes()
-            if self.home_ids:
-                self.node.setDriver('ST', 1, True, True)
+        #if self.refreshToken and self.client_ID and self.client_SECRET:
+        #    self.myNetatmo._insert_refreshToken(self.refreshToken, self.client_ID, self.client_SECRET)
+        #    logging.debug('AccessToken = {}'.format(self.accessToken))
+        time.sleep(1)
+        self.home_ids = self.myNetatmo.get_homes()
+        if self.home_ids:
+            self.node.setDriver('ST', 1, True, True)
 
-            self.temp_unit = self.convert_temp_unit(self.myNetatmo.temp_unit)
-            logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
+        self.temp_unit = self.convert_temp_unit(self.myNetatmo.temp_unit)
+        logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
 
 
-            self.addNodes()
+        self.addNodes()
         
 
 

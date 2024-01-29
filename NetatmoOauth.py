@@ -73,7 +73,7 @@ class NetatmoCloud(OAuth):
         while not self.handleCustomParamsDone:
             logging.debug('Waiting for customParams to complete - customNsHandler')
             time.sleep(1)
-        self.updateOauthConfig()
+        #self.updateOauthConfig()
         super()._customNsHandler(key, data)
         self.customNsHandlerDone = True
 
