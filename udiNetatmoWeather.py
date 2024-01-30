@@ -128,15 +128,32 @@ class NetatmoController(udi_interface.Node):
         logging.info('Executing start')
         self.myNetatmo = NetatmoWeather(self.poly)
         #self.accessToken = self.myNetatmo.getAccessToken()
-        logging.debug('Waiting start: {} {} {}'.format(self.configDone, self.myNetatmo.customParamsDone(), self.myNetatmo.customNsDone()))
-        while not (self.configDone and self.myNetatmo.customParamsDone() and self.myNetatmo.customNsDone()):
+        #logging.debug('Waiting start: {} {} {}'.format(self.configDone, self.myNetatmo.customParamsDone(), self.myNetatmo.customNsDone()))
+        #while not (self.configDone and self.myNetatmo.customParamsDone() and self.myNetatmo.customNsDone()):
+        while not (self.configDone):
             time.sleep(2)
-            logging.debug('Waiting for config to complete {} {} {}'.format(self.configDone, self.myNetatmo.customParamsDone(), self.myNetatmo.customNsDone()))
+            logging.debug('Waiting for config to complete {} {} {}'.format(self.configDone))
         #time.sleep(1)
         #if self.refreshToken and self.client_ID and self.client_SECRET:
         #    self.myNetatmo._insert_refreshToken(self.refreshToken, self.client_ID, self.client_SECRET)
         #    logging.debug('AccessToken = {}'.format(self.accessToken))
+        try:
+            self.accessToken = self.getAccessToken()
+        except ValueError as err:
+            LOGGER.warning('Access token is not yet available. Please authenticate.')
+            self.poly.Notices['auth'] = 'Please initiate authentication'
+            time.sleep(5)
+            
+        while self.accessToken == None:
+            try:
+                self.accessToken = self.getAccessToken()
+            except ValueError as err:
+                time.sleep(5)            
+
+        
         time.sleep(1)
+        self.poly.Notices.clear()    
+
         self.home_ids = self.myNetatmo.get_homes()
         if self.home_ids:
             self.node.setDriver('ST', 1, True, True)
