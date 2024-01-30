@@ -137,18 +137,12 @@ class NetatmoController(udi_interface.Node):
         #if self.refreshToken and self.client_ID and self.client_SECRET:
         #    self.myNetatmo._insert_refreshToken(self.refreshToken, self.client_ID, self.client_SECRET)
         #    logging.debug('AccessToken = {}'.format(self.accessToken))
-        try:
-            self.accessToken = self.getAccessToken()
-        except ValueError as err:
+
+            
+        while not self.myNetatmo.authendicated():
             logging.warning('Access token is not yet available. Please authenticate.')
             self.poly.Notices['auth'] = 'Please initiate authentication'
-            time.sleep(5)
-            
-        while self.accessToken == None:
-            try:
-                self.accessToken = self.getAccessToken()
-            except ValueError as err:
-                time.sleep(5)            
+            time.sleep(5)            
 
         
         time.sleep(1)
