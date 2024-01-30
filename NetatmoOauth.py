@@ -213,7 +213,7 @@ class NetatmoCloud(OAuth):
         try:
             accessToken = self.getAccessToken()
         except ValueError as err:
-            LOGGER.warning('Access token is not yet available. Please authenticate.')
+            logging.warning('Access token is not yet available. Please authenticate.')
             self.poly.Notices['auth'] = 'Please initiate authentication'
             return
         if accessToken is None:
