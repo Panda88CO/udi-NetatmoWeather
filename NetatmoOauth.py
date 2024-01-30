@@ -65,27 +65,31 @@ class NetatmoCloud(OAuth):
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
         logging.debug('customDataHandler called')
-        while not self.handleCustomParamsDone:
-            logging.debug('Waiting for customDataHandler to complete')
-            time.sleep(1)
+        #while not self.handleCustomParamsDone:
+        #    logging.debug('Waiting for customDataHandler to complete')
+        #    time.sleep(1)
         super()._customDataHandler(data)
         self.customerDataHandlerDone = True
+        logging.debug('customDataHandler Finished')
 
     def customNsHandler(self, key, data):
         logging.debug('customNsHandler called')
-        while not self.handleCustomParamsDone:
-            logging.debug('Waiting for customNsHandler to complete')
-            time.sleep(1)
+        #while not self.customParamsDone():
+        #    logging.debug('Waiting for customNsHandler to complete')
+        #    time.sleep(1)
         #self.updateOauthConfig()
         super().customNsHandler(key, data)
         self.customNsHandlerDone = True
+        logging.debug('customNsHandler Finished')
 
     def oauthHandler(self, token):
         logging.debug('oauthHandler called')
-        while not self.handleCustomParamsDone or not self.customNsHandlerDone:
-            logging.debug('Waiting for oauthHandler to complete')
-            time.sleep(1)
+        #while not (self.customParamsDone() and self.customNsDone()):
+        #    logging.debug('Waiting for oauthHandler to complete')
+        #    time.sleep(1)
         super().oauthHandler(token)
+        self.customNsHandlerDone = True
+        logging.debug('oauthHandler Finished')
 
     def customNsDone(self):
         return(self.customNsHandlerDone)

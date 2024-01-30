@@ -208,7 +208,7 @@ class NetatmoController(udi_interface.Node):
     def configDoneHandler(self):
         # We use this to discover devices, or ask to authenticate if user has not already done so
         self.poly.Notices.clear()
-        
+        logging.info('configDoneHandler called')
         #self.myNetatmo.updateOauthConfig()
 
         try :
