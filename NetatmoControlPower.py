@@ -5,7 +5,7 @@ from  NetatmoOauthDev import NetatmoCloud
 #from NetatmoControl import NetatmoControl
 import urllib.parse
 
-from oauth import OAuth
+#from oauth import OAuth
 
 try:
     from udi_interface import LOGGER, Custom, OAuth

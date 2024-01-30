@@ -36,7 +36,8 @@ class NetatmoCloud(OAuth):
         super().__init__(polyglot)
         logging.info('OAuth initializing')
         self.poly = polyglot
-        self.scope_str = None
+        self.customParams = Custom(self.poly, 'customparams')
+        #self.scope_str = None
         self.apiEndpoint = 'https://api.netatmo.com'
         self.client_ID = None
         self.client_SECRET = None
@@ -44,7 +45,7 @@ class NetatmoCloud(OAuth):
         #self.customerDataHandlerDone = False
         self.customNsHandlerDone = False
         self.temp_unit = 'C'
-        self.customParams = Custom(polyglot, 'customparams')
+
         self.scopeList = ['read_station', 'read_magellan', 'write_magellan', 'read_bubendorff', 'write_bubendorff', 'read_smarther', 'write_smarther', 'read_thermostat','write_thermostat', 'read+_camera', 'write_camera', 'access_camera', 'read_boorbell', 'access_doorbell',
              'read_mx', 'write_mx', 'read_presence', 'write_presence', 'access_presence', 'read_homecoach', 'read_carbonmonoxidedetector', 'read_smokedetector', 'read_mhs1', 'write_mhs1']
         
@@ -62,7 +63,6 @@ class NetatmoCloud(OAuth):
         # self.getAccessToken()
     
     # The OAuth class needs to be hooked to these 3 handlers
-    '''
     def customDataHandler(self, data):
         logging.debug('customDataHandler called')
         while not self.handleCustomParamsDone:
@@ -70,7 +70,7 @@ class NetatmoCloud(OAuth):
             time.sleep(1)
         super()._customDataHandler(data)
         #self.customerDataHandlerDone = True
-    '''
+
     def customNsHandler(self, key, data):
         logging.debug('customNsHandler called')
         while not self.handleCustomParamsDone:
@@ -81,7 +81,7 @@ class NetatmoCloud(OAuth):
         self.customNsHandlerDone = True
 
     def oauthHandler(self, token):
-        logging.debug('oauthHandler called')
+        logging.debug('customParamsHandler called')
         while not self.handleCustomParamsDone or not self.customNsHandlerDone:
             logging.debug('Waiting for oauthHandler to complete')
             time.sleep(1)
