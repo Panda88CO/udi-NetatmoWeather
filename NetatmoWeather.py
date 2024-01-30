@@ -29,7 +29,7 @@ class NetatmoWeather (NetatmoCloud):
         self.WIND_modules = ['NAModule2']
         self.RAIN_modules = ['NAModule3']
         self.INDOOR_modules = ['NAModule4']
-        self.scope = "read_station"
+        #self.scope = "read_station"
 
     # should not be necesary - filtered by token    
     #def get_weather_stations (self):
