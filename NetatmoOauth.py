@@ -175,11 +175,12 @@ class NetatmoCloud(OAuth):
     def authendicated(self):
         try:
             accessToken = self.getAccessToken()
+            return(True)
         except ValueError as err:
             logging.warning('Access token is not yet available. Please authenticate.')
             #self.poly.Notices['auth'] = 'Please initiate authentication'
             return (False)
-        return(True)
+        
 
     def setOauthScope(self, scope):
         oauthSettingsUpdate = {}
