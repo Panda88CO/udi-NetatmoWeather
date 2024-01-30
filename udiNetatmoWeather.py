@@ -130,7 +130,7 @@ class NetatmoController(udi_interface.Node):
         #self.accessToken = self.myNetatmo.getAccessToken()
         while not self.configDone and not self.myNetatmo.handleCustomParamsDone and not self.myNetatmo.customNsHandlerDone:
             time.sleep(2)
-            logging.debug('Waiting for config to complete {self.configDone} {self.myNetatmo.handleCustomParamsDone} {self.myNetatmo.customNsHandlerDone}')
+            logging.debug('Waiting for config to complete'.format(self.configDone, self.myNetatmo.handleCustomParamsDone, self.myNetatmo.customNsHandlerDone))
         #time.sleep(1)
         #if self.refreshToken and self.client_ID and self.client_SECRET:
         #    self.myNetatmo._insert_refreshToken(self.refreshToken, self.client_ID, self.client_SECRET)
@@ -149,7 +149,7 @@ class NetatmoController(udi_interface.Node):
 
 
     def addNodes(self):
-        ''''''
+
         logging.info('Adding selected weather stations')
         selected = False
         self.enabled_list = []
