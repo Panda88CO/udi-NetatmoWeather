@@ -62,14 +62,17 @@ class NetatmoCloud(OAuth):
         # self.getAccessToken()
     
     # The OAuth class needs to be hooked to these 3 handlers
+    '''
     def customDataHandler(self, data):
+        logging.debug('customDataHandler called')
         while not self.handleCustomParamsDone:
             logging.debug('Waiting for customDataHandler to complete')
             time.sleep(1)
         super()._customDataHandler(data)
         #self.customerDataHandlerDone = True
-
+    '''
     def customNsHandler(self, key, data):
+        logging.debug('customNsHandler called')
         while not self.handleCustomParamsDone:
             logging.debug('Waiting for customNsHandler to complete')
             time.sleep(1)
@@ -78,6 +81,7 @@ class NetatmoCloud(OAuth):
         self.customNsHandlerDone = True
 
     def oauthHandler(self, token):
+        logging.debug('oauthHandler called')
         while not self.handleCustomParamsDone or not self.customNsHandlerDone:
             logging.debug('Waiting for oauthHandler to complete')
             time.sleep(1)
