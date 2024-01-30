@@ -130,7 +130,7 @@ class NetatmoController(udi_interface.Node):
         #self.accessToken = self.myNetatmo.getAccessToken()
         while not self.configDone and not self.myNetatmo.handleCustomParamsDone and not self.myNetatmo.customNsHandlerDone:
             time.sleep(2)
-            logging.debug('Waiting for config to complete')
+            logging.debug('Waiting for config to complete {self.configDone} {self.myNetatmo.handleCustomParamsDone} {self.myNetatmo.customNsHandlerDone}')
         #time.sleep(1)
         #if self.refreshToken and self.client_ID and self.client_SECRET:
         #    self.myNetatmo._insert_refreshToken(self.refreshToken, self.client_ID, self.client_SECRET)
@@ -226,14 +226,14 @@ class NetatmoController(udi_interface.Node):
             self.customParameters['clientSecret'] = 'enter client_secret'
             self.client_SECRET = None
 
-        if 'refreshToken' in self.customParameters:
-            self.refreshToken = self.customParameters['refreshToken'] 
+        #if 'refreshToken' in self.customParameters:
+        #    self.refreshToken = self.customParameters['refreshToken'] 
 
             #self.addOauthParameter('client_secret',self.client_SECRET )
             #self.oauthConfig['client_secret'] =  self.client_SECRET
-        else:
-            self.customParameters['refreshToken'] = 'enter refreshToken'
-            self.refreshToken = None
+        #else:
+        #    self.customParameters['refreshToken'] = 'enter refreshToken'
+        #    self.refreshToken = None
 
         
         #if 'scope' in self.customParameters:
@@ -319,17 +319,6 @@ class NetatmoController(udi_interface.Node):
         #logging.debug('retrieved get_weather_info2 data2 {}'.format(res))
 
         #self.poly.discoverDevices()
-    '''
-    def oauthHandler(self, token):
-        # When user just authorized, we need to store the tokens
-        logging.debug('oauthHandler starting')
-        self.myNetatmo.oauthHandler(token)
-        #accessToken = self.myNetatmo.getAccessToken()
-        #logging.debug('AccessToken obtained {}'.format(accessToken))
-
-        # Then proceed with device discovery
-        self.configDoneHandler()
-    '''
 
     def addNodeDoneHandler(self, node):
         pass

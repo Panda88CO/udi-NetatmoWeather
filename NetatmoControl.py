@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python3
 
-from NetatmoOauthDev import NetatmoCloud
+#from NetatmoOauthDev import NetatmoCloud
 from NetatmoControlHC import NetatmoControlHC
 from NetatmoControlLighting import NetatmoControlLighting
 from NetatmoControlPower import NetatmoControlPower

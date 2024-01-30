@@ -64,14 +64,14 @@ class NetatmoCloud(OAuth):
     # The OAuth class needs to be hooked to these 3 handlers
     def customDataHandler(self, data):
         while not self.handleCustomParamsDone:
-            logging.debug('Waiting for customParams to complete - customDataHandler')
+            logging.debug('Waiting for customDataHandler to complete')
             time.sleep(1)
-        super().customDataHandler(data)
+        super()._customDataHandler(data)
         #self.customerDataHandlerDone = True
 
     def customNsHandler(self, key, data):
         while not self.handleCustomParamsDone:
-            logging.debug('Waiting for customParams to complete - customNsHandler')
+            logging.debug('Waiting for customNsHandler to complete')
             time.sleep(1)
         #self.updateOauthConfig()
         super().customNsHandler(key, data)
@@ -79,7 +79,7 @@ class NetatmoCloud(OAuth):
 
     def oauthHandler(self, token):
         while not self.handleCustomParamsDone or not self.customNsHandlerDone:
-            logging.debug('Waiting for customParams to complete - oauthHandler')
+            logging.debug('Waiting for oauthHandler to complete')
             time.sleep(1)
         
         super().oauthHandler(token)
@@ -133,34 +133,12 @@ class NetatmoCloud(OAuth):
             self.temp_unit = 0
             self.customParameters['TEMP_UNIT'] = 'C'
 
-            #attempts = 0
-            #while not self.customData and attempts <3:
-            #    attempts = attempts + 1
-            #    time.sleep(1)
-
-            #if self.customData:
-            #    if 'scope' in self.customData:
-            #        if self.scope_str != self.customData['scope']:
-            #           #scope changed - we need to generate a new token/refresh token
-            #           logging.debug('scope has changed - need to get new token')
-            #           self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
-            #           self.customData['scope'] = self.scope_str
-            #    else: 
-            #        if self.oauthConfig['client_id'] is None or self.oauthConfig['client_secret'] is None:
-            #            self.updateOauthConfig()           
-            #        self.poly.Notices['auth'] = 'Please initiate authentication - scope has changed'
-            #        self.customData['scope'] = self.scope_str
-
-
-            #self.addOauthParameter('scope',self.scope_str )
-            #self.oauthConfig['scope'] = self.scope_str
-            #logging.debug('Following scopes are selected : {}'.format(self.scope_str))
-
-
         #if 'refresh_token' in self.customParameters:
         #    if self.customParameters['refresh_token'] is not None and self.customParameters['refresh_token'] != "":
         #        self.customData.token['refresh_token'] = self.customParameters['refresh_token']
-        self.updateOauthSettings(oauthSettingsUpdate)
+            
+        self.updateOauthSettings(oauthSettingsUpdate)        
+        logging.debug('Updated oAuth config: {}'.format(self.getOauthSettings()))
         self.handleCustomParamsDone = True
 
         #self.updateOauthConfig()
@@ -217,8 +195,12 @@ class NetatmoCloud(OAuth):
     # Call your external service API
     def _callApi(self, method='GET', url=None, body=None):
         # When calling an API, get the access token (it will be refreshed if necessary)
-        accessToken = self.getAccessToken()
-
+        try:
+            accessToken = self.getAccessToken()
+        except ValueError as err:
+            LOGGER.warning('Access token is not yet available. Please authenticate.')
+            self.poly.Notices['auth'] = 'Please initiate authentication'
+            return
         if accessToken is None:
             logging.error('Access token is not available')
             return None
