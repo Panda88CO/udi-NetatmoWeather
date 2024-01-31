@@ -221,15 +221,7 @@ class NetatmoController(udi_interface.Node):
         self.poly.Notices.clear()
         logging.info('configDoneHandler called')
         #self.myNetatmo.updateOauthConfig()
-
-        try :
-            accessToken = self.myNetatmo.getAccessToken()
-        except ValueError as err:
-            logging.info('Access token is not yet available. Please authenticate.')
-            self.poly.Notices['auth'] = 'Please initiate authentication'
-            return
         
-        logging.debug('configDoneHandler - accessToken {}'.format(accessToken))
         self.configDone = True
         
         #res = self.myNetatmo.get_home_info()
