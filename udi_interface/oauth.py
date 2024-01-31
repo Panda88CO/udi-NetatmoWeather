@@ -66,7 +66,7 @@ class OAuth:
         token['expiry'] = (datetime.now() + timedelta(seconds=token['expires_in'])).isoformat()
 
     def _oAuthTokensRefresh(self):
-        LOGGER.debug(f"Refresh token before: { self._oauthTokens }")
+        LOGGER.debug(f"Refresh token before : { self._oauthTokens }, {self._oauthConfig  }")
         data = {
             'grant_type': 'refresh_token',
             'refresh_token': self._oauthTokens['refresh_token'],

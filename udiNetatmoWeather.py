@@ -132,7 +132,7 @@ class NetatmoController(udi_interface.Node):
         while not (self.configDone and self.myNetatmo.customParamsDone() and self.myNetatmo.customNsDone()):
         #while not (self.configDone):
             time.sleep(2)
-            logging.debug('Waiting for config to complete {}'.format(self.configDone))
+            logging.debug('Waiting for config to complete {} {} {}'.format(self.configDone, self.myNetatmo.customParamsDone(),  self.myNetatmo.customNsDone()))
         #time.sleep(1)
         #if self.refreshToken and self.client_ID and self.client_SECRET:
         #    self.myNetatmo._insert_refreshToken(self.refreshToken, self.client_ID, self.client_SECRET)
