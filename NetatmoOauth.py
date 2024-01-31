@@ -68,7 +68,7 @@ class NetatmoCloud(OAuth):
         #while not self.handleCustomParamsDone:
         #    logging.debug('Waiting for customDataHandler to complete')
         #    time.sleep(1)
-        super()._customDataHandler(data)
+        super().customDataHandler(data)
         self.customerDataHandlerDone = True
         logging.debug('customDataHandler Finished')
 
