@@ -151,7 +151,11 @@ class NetatmoCloud(OAuth):
         #if 'refresh_token' in self.customParameters:
         #    if self.customParameters['refresh_token'] is not None and self.customParameters['refresh_token'] != "":
         #        self.customData.token['refresh_token'] = self.customParameters['refresh_token']
-        #oauthSettingsUpdate['scope'] = 'read_station'
+        oauthSettingsUpdate['scope'] = 'read_station'
+        oauthSettingsUpdate['auth_endpoint'] = 'https://api.netatmo.com/oauth2/authorize'
+        oauthSettingsUpdate['token_endpoint'] = 'https://api.netatmo.com/oauth2/token'
+        oauthSettingsUpdate['cloudlink'] = True
+        oauthSettingsUpdate['addRedirect'] = True
         self.updateOauthSettings(oauthSettingsUpdate)        
         logging.debug('Updated oAuth config: {}'.format(self.getOauthSettings()))
         self.handleCustomParamsDone = True
