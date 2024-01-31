@@ -32,10 +32,11 @@ except ImportError:
 class NetatmoCloud(OAuth):
     yourApiEndpoint = 'https://api.netatmo.com/api'
 
-    def __init__(self, polyglot):
+    def __init__(self, polyglot, scope):
         super().__init__(polyglot)
         logging.info('OAuth initializing')
         self.poly = polyglot
+        self.scope = scope
         self.customParameters = Custom(self.poly, 'customparams')
         #self.scope_str = None
         self.apiEndpoint = 'https://api.netatmo.com'
@@ -107,23 +108,30 @@ class NetatmoCloud(OAuth):
     
     def customParamsHandler(self, userParams):
         self.customParameters.load(userParams)
-        logging.debug('customParamsHandler called')
+        logging.debug('customParamsHandler called {}'.format(userParams))
+        client_ok = False
+        client_secret = False
         oauthSettingsUpdate = {}
         # Example for a boolean field
 
         if 'clientID' in userParams:
-            self.client_ID = self.customParameters['clientID'] 
-            oauthSettingsUpdate['client_id'] = self.customParameters['clientID']
-            #self.addOauthParameter('client_id',self.client_ID )
-            #self.oauthConfig['client_id'] =  self.client_ID
+            if self.customParameters['clientID'] != 'enter client_id':
+                self.client_ID = self.customParameters['clientID']
+                oauthSettingsUpdate['client_id'] = self.customParameters['clientID']
+                client_ok = True
+            else:
+                self.poly.Notices['client'] = 'Please enter valid client ID and restart'
         else:
             self.customParameters['clientID'] = 'enter client_id'
             self.client_ID = None
             
         if 'clientSecret' in self.customParameters:
-            self.client_SECRET = self.customParameters['clientSecret'] 
-            oauthSettingsUpdate['client_secret'] = self.customParameters['clientSecret']
-            #self.oauthConfig['client_secret'] =  self.client_SECRET
+            if self.customParameters['clientSecret'] != 'enter client_secret':
+                self.client_SECRET = self.customParameters['clientSecret'] 
+                oauthSettingsUpdate['client_secret'] = self.customParameters['clientSecret']
+                secret_ok = True
+            else:
+                self.poly.Notices['client'] = 'Please enter valid client_secret and restart'
         else:
             self.customParameters['clientSecret'] = 'enter client_secret'
             self.client_SECRET = None
@@ -151,14 +159,16 @@ class NetatmoCloud(OAuth):
         #if 'refresh_token' in self.customParameters:
         #    if self.customParameters['refresh_token'] is not None and self.customParameters['refresh_token'] != "":
         #        self.customData.token['refresh_token'] = self.customParameters['refresh_token']
-        oauthSettingsUpdate['scope'] = 'read_station'
+        oauthSettingsUpdate['scope'] = self.scope
         oauthSettingsUpdate['auth_endpoint'] = 'https://api.netatmo.com/oauth2/authorize'
         oauthSettingsUpdate['token_endpoint'] = 'https://api.netatmo.com/oauth2/token'
         oauthSettingsUpdate['cloudlink'] = True
         oauthSettingsUpdate['addRedirect'] = True
         self.updateOauthSettings(oauthSettingsUpdate)    
         logging.debug('Updated oAuth config: {}'.format(self.getOauthSettings()))
-        self.handleCustomParamsDone = True
+        if client_ok and secret_ok:
+            self.handleCustomParamsDone = True
+            self.poly.Notices.clear()
 
         #self.updateOauthConfig()
         #self.myParamBoolean = ('myParam' in self.customParametersand self.customParameters['myParam'].lower() == 'true')
