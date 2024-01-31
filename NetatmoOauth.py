@@ -156,7 +156,7 @@ class NetatmoCloud(OAuth):
         oauthSettingsUpdate['token_endpoint'] = 'https://api.netatmo.com/oauth2/token'
         oauthSettingsUpdate['cloudlink'] = True
         oauthSettingsUpdate['addRedirect'] = True
-        self.updateOauthSettings(oauthSettingsUpdate)        
+        self.updateOauthSettings(oauthSettingsUpdate)    
         logging.debug('Updated oAuth config: {}'.format(self.getOauthSettings()))
         self.handleCustomParamsDone = True
 
@@ -178,7 +178,8 @@ class NetatmoCloud(OAuth):
     
     def authendicated(self):
         try:
-            accessToken = self.getAccessToken()
+            logging.debug('authendicated - {}'.format(self.getOauthSettings()))
+            self.getAccessToken()
             return(True)
         except ValueError as err:
             logging.warning('Access token is not yet available. Please authenticate.')
