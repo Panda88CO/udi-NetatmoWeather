@@ -151,7 +151,7 @@ class NetatmoCloud(OAuth):
         #if 'refresh_token' in self.customParameters:
         #    if self.customParameters['refresh_token'] is not None and self.customParameters['refresh_token'] != "":
         #        self.customData.token['refresh_token'] = self.customParameters['refresh_token']
-        oauthSettingsUpdate['scope'] = 'read_station'
+        #oauthSettingsUpdate['scope'] = 'read_station'
         self.updateOauthSettings(oauthSettingsUpdate)        
         logging.debug('Updated oAuth config: {}'.format(self.getOauthSettings()))
         self.handleCustomParamsDone = True
