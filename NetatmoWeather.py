@@ -153,11 +153,12 @@ class NetatmoWeather (NetatmoCloud):
         logging.debug('merge_data')
         instant_data = self.instant_data != {}
         cloud_data = self.cloud_data != {}
-        logging.debug('merge_data data'.format(instant_data, cloud_data ))
+        logging.debug('merge_data data'.format(self.instant_data, self.cloud_data ))
         if cloud_data and instant_data:
             for home_id in self.cloud_data:
                 for module_type in self.cloud_data[home_id]:
                     for module_adr in self.cloud_data[home_id][module_type]:
+                        logging.debug('Inner for loop {} {} {}'.format(home_id,module_type, module_adr))
                         # data exists so data must exist for weather_data
                         inst_mod_adr = self.instant_data[home_id][module_type][module_adr]
                         cloud_mod_adr = self.cloud_data[home_id][module_type][module_adr]
