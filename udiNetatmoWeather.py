@@ -126,7 +126,7 @@ class NetatmoController(udi_interface.Node):
 
     def start(self):
         logging.info('Executing start')
-        self.myNetatmo = NetatmoWeather(self.poly)
+        #self.myNetatmo = NetatmoWeather(self.poly)
         #self.accessToken = self.myNetatmo.getAccessToken()
         #logging.debug('Waiting start: {} {} {}'.format(self.configDone, self.myNetatmo.customParamsDone(), self.myNetatmo.customNsDone()))
         #while not (self.configDone and self.myNetatmo.customParamsDone() and self.myNetatmo.customNsDone()):
