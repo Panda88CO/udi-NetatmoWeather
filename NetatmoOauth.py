@@ -120,7 +120,7 @@ class NetatmoCloud(OAuth):
                 oauthSettingsUpdate['client_id'] = self.customParameters['clientID']
                 client_ok = True
             else:
-                self.poly.Notices['client'] = 'Please enter valid client ID and restart'
+                self.poly.Notices['client'] = 'Please enter valid clientID and restart'
         else:
             self.customParameters['clientID'] = 'enter client_id'
             self.client_ID = None
@@ -131,7 +131,7 @@ class NetatmoCloud(OAuth):
                 oauthSettingsUpdate['client_secret'] = self.customParameters['clientSecret']
                 secret_ok = True
             else:
-                self.poly.Notices['client'] = 'Please enter valid client_secret and restart'
+                self.poly.Notices['client'] = 'Please enter valid clientSecret and restart'
         else:
             self.customParameters['clientSecret'] = 'enter client_secret'
             self.client_SECRET = None

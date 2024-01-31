@@ -91,7 +91,7 @@ class NetatmoWeather (NetatmoCloud):
                                 else:
                                     self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['online'] = False                                   
                                 self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['data_type'] = mod['data_type']
-
+                        logging.debug('data before merge: {}'.format(self.cloud_data))
                         self.merge_data()         
             return(self.cloud_data)
         except Exception as e:
@@ -153,7 +153,7 @@ class NetatmoWeather (NetatmoCloud):
         logging.debug('merge_data')
         instant_data = self.instant_data != {}
         cloud_data = self.cloud_data != {}
-
+        logging.debug('merge_data data'.format(instant_data, cloud_data ))
         if cloud_data and instant_data:
             for home_id in self.cloud_data:
                 for module_type in self.cloud_data[home_id]:
