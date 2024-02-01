@@ -56,7 +56,7 @@ class NetatmoController(udi_interface.Node):
         self.myNetatmo = NetatmoWeather(self.poly)
         self.hb  = 0
         logging.debug('testing 1')
-        self.customParameters = Custom(self.poly, 'customparams')
+        #self.customParameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
         self.n_queue = []
         logging.debug('drivers : {}'.format(self.drivers))
@@ -177,6 +177,16 @@ class NetatmoController(udi_interface.Node):
                 tmp = {}
                 tmp['home'] = home
                 tmp['main_module'] = m_module
+
+                if self.myNetatmo.main_module_enabled(m_module):
+                    self.enabled_list.append(tmp)
+                    logging.debug('enabled list {}'.format(self.enabled_list))
+                    if tmp['home'] not in self.homes_list:
+                        self.homes_list.append(tmp['home'])
+                        self.myNetatmo.update_weather_info_cloud(home)
+                        self.myNetatmo.update_weather_info_instant(home)
+                    selected = True
+                '''
                 if node_name in self.customParameters:
                     if self.customParameters[node_name] == 1:
                         self.enabled_list.append(tmp)
@@ -194,7 +204,7 @@ class NetatmoController(udi_interface.Node):
                         self.homes_list.append(tmp['home'])
                         self.myNetatmo.update_weather_info_cloud(home)
                         self.myNetatmo.update_weather_info_instant(home)
-
+                '''
         if not selected and len(self.home_ids) > 1:
             self.poly.Notices['home_id'] = 'Check config to select which home/modules should be used (1 - used, 0 - not used) - then restart'
         else:

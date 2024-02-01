@@ -106,6 +106,15 @@ class NetatmoCloud(OAuth):
 
     # Your service may need to access custom params as well...
     
+    def main_module_enabled(self, node_name):
+        logging.debug('main_module_enabled called {}'.format(node_name))
+        if node_name in self.customParameters :
+            return(self.customParameters[node_name] == 1)
+        else:
+            self.customParameters[node_name] = 1 #add and enable by default
+            return(True)
+
+                
     def customParamsHandler(self, userParams):
         self.customParameters.load(userParams)
         logging.debug('customParamsHandler called {}'.format(userParams))
@@ -120,6 +129,7 @@ class NetatmoCloud(OAuth):
                 oauthSettingsUpdate['client_id'] = self.customParameters['clientID']
                 client_ok = True
         else:
+            logging.warnig('No clientID found')
             self.customParameters['clientID'] = 'enter client_id'
             self.client_ID = None
             
@@ -129,6 +139,7 @@ class NetatmoCloud(OAuth):
                 oauthSettingsUpdate['client_secret'] = self.customParameters['clientSecret']
                 secret_ok = True
         else:
+            logging.warnig('No clientSecret found')
             self.customParameters['clientSecret'] = 'enter client_secret'
             self.client_SECRET = None
 
