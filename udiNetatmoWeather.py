@@ -187,24 +187,22 @@ class NetatmoController(udi_interface.Node):
                         self.myNetatmo.update_weather_info_cloud(home)
                         self.myNetatmo.update_weather_info_instant(home)
                     selected = True
-
-        if not selected and len(self.home_ids) > 1:
-            self.poly.Notices['home_id'] = 'Check config to select which home/modules should be used (1 - used, 0 - not used) - then restart'
-        else:
-            logging.debug('enabled list - outside {}'.format(self.enabled_list))
-            for node_nbr in range(0,len(self.enabled_list)):
-                module_info = self.enabled_list[node_nbr]
-                logging.debug('module_info {}'.format(module_info))
-                if module_info['home'] not in self.homes_list:
-                    self.homes_list.append(module_info['home'])
-                module = self.myNetatmo.get_module_info(module_info['home'],module_info['main_module'])
-                logging.debug('module info {}'.format(module))
-                node_address = self.getValidAddress(module['id'])
-                node_name = self.getValidName(module['name'])
-                logging.debug('names: {} {}, Addresses {} {}'.format(module['name'],node_name , module['id'], node_address  ))
-                if not udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.myNetatmo, module_info):
-                    logging.error('Failed to create Main Weather station: {}'.format(node_name))
-                time.sleep(1)            
+                    
+            if selected:
+                logging.debug('enabled list - outside {}'.format(self.enabled_list))
+                for node_nbr in range(0,len(self.enabled_list)):
+                    module_info = self.enabled_list[node_nbr]
+                    logging.debug('module_info {}'.format(module_info))
+                    if module_info['home'] not in self.homes_list:
+                        self.homes_list.append(module_info['home'])
+                    module = self.myNetatmo.get_module_info(module_info['home'],module_info['main_module'])
+                    logging.debug('module info {}'.format(module))
+                    node_address = self.getValidAddress(module['id'])
+                    node_name = self.getValidName(module['name'])
+                    logging.debug('names: {} {}, Addresses {} {}'.format(module['name'],node_name , module['id'], node_address  ))
+                    if not udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.myNetatmo, module_info):
+                        logging.error('Failed to create Main Weather station: {}'.format(node_name))
+                    time.sleep(1)            
 
         self.nodeDefineDone = True
 

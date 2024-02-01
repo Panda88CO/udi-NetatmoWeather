@@ -112,6 +112,7 @@ class NetatmoCloud(OAuth):
             return(self.customParameters[node_name] == 1)
         else:
             self.customParameters[node_name] = 1 #add and enable by default
+            self.poly.Notices['home_id'] = 'Check config to select which home/modules should be used (1 - used, 0 - not used) - then restart'
             return(True)
 
                 
