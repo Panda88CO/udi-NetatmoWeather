@@ -170,8 +170,9 @@ class NetatmoController(udi_interface.Node):
             logging.debug('Adding from {}'.format(home))
             home_name = self.home_ids[home]['name']
             main_modules = self.myNetatmo.get_main_modules(home)
+            logging.debug('main modules {} {} '.format(home, main_modules))
             for m_module in main_modules:
-                logging.debug('adding MAIN modules {} - {}'.format(m_module, main_modules))
+                logging.debug('{} adding MAIN modules {} - {}'.format(home_name, m_module, main_modules))
                 mod_name = main_modules[m_module]['name']
                 node_name = home_name + '_'+ mod_name
                 tmp = {}
@@ -186,25 +187,7 @@ class NetatmoController(udi_interface.Node):
                         self.myNetatmo.update_weather_info_cloud(home)
                         self.myNetatmo.update_weather_info_instant(home)
                     selected = True
-                '''
-                if node_name in self.customParameters:
-                    if self.customParameters[node_name] == 1:
-                        self.enabled_list.append(tmp)
-                        logging.debug('enabled list {}'.format(self.enabled_list))
-                        if tmp['home'] not in self.homes_list:
-                            self.homes_list.append(tmp['home'])
-                            self.myNetatmo.update_weather_info_cloud(home)
-                            self.myNetatmo.update_weather_info_instant(home)
-                        selected = True
-                else:
-                    self.customParameters[node_name] = 1 #enable by default
-                    self.enabled_list.append(tmp)
-                    logging.debug('enabled list - else {}'.format(self.enabled_list))
-                    if tmp['home'] not in self.homes_list:
-                        self.homes_list.append(tmp['home'])
-                        self.myNetatmo.update_weather_info_cloud(home)
-                        self.myNetatmo.update_weather_info_instant(home)
-                '''
+
         if not selected and len(self.home_ids) > 1:
             self.poly.Notices['home_id'] = 'Check config to select which home/modules should be used (1 - used, 0 - not used) - then restart'
         else:
