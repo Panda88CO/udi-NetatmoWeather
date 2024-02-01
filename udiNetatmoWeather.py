@@ -178,7 +178,7 @@ class NetatmoController(udi_interface.Node):
                 tmp['home'] = home
                 tmp['main_module'] = m_module
 
-                if self.myNetatmo.main_module_enabled(m_module):
+                if self.myNetatmo.main_module_enabled(node_name):
                     self.enabled_list.append(tmp)
                     logging.debug('enabled list {}'.format(self.enabled_list))
                     if tmp['home'] not in self.homes_list:
