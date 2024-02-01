@@ -92,7 +92,7 @@ class NetatmoWeather (NetatmoCloud):
                                     self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['online'] = False                                   
                                 self.cloud_data[home_id][self.module_type(mod['type'])][mod['_id']]['data_type'] = mod['data_type']
                         logging.debug('data before merge: {}'.format(self.cloud_data))
-                        self.merge_data()         
+                        self.merge_data(home_id)         
             return(self.cloud_data)
         except Exception as e:
             logging.error('update_weather_info_cloud failed : {}'.format(e))
@@ -129,7 +129,7 @@ class NetatmoWeather (NetatmoCloud):
                 self.instant_data[home_id][self.module_type(tmp['modules'][module]['type'])][module] = tmp['modules'][module]
         else:
             self.instant_data[home_id] = {}
-        self.merge_data()
+        self.merge_data(home_id)
         return(self.instant_data)
     
     def merge_data_str(self, data):
@@ -148,14 +148,14 @@ class NetatmoWeather (NetatmoCloud):
         return(data_str)
 
 
-    def merge_data(self):
+    def merge_data(self, home_id):
         '''Merges/combines cloud data and instant data '''
-        logging.debug('merge_data')
-        instant_data = self.instant_data != {}
-        cloud_data = self.cloud_data != {}
-        logging.debug('merge_data data {}  {}'.format(self.instant_data, self.cloud_data ))
-        if cloud_data and instant_data:
-            for home_id in self.cloud_data:
+        try:
+            logging.debug('merge_data')
+            instant_data = self.instant_data != {}
+            cloud_data = self.cloud_data != {}
+            logging.debug('merge_data data {}  {}'.format(self.instant_data, self.cloud_data ))
+            if cloud_data and instant_data:
                 for module_type in self.cloud_data[home_id]:
                     for module_adr in self.cloud_data[home_id][module_type]:
                         logging.debug('Inner for loop {} {} {}'.format(home_id,module_type, module_adr))
@@ -188,8 +188,7 @@ class NetatmoWeather (NetatmoCloud):
                             for data in inst_mod_adr:
                                 data_str = self.merge_data_str(data)
                                 self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]                            
-        elif cloud_data: # instant_data must be False
-            for home_id in self.cloud_data:
+            elif cloud_data: # instant_data must be False
                 for module_type in self.cloud_data[home_id]:
                     for module_adr in self.cloud_data[home_id][module_type]:
                         if home_id not in self.weather_data:
@@ -204,8 +203,7 @@ class NetatmoWeather (NetatmoCloud):
                             data_str = self.merge_data_str(data)
                             self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr[data]
 
-        else: # cloud_data must be False
-            for home_id in self.instant_data:
+            else: # cloud_data must be False
                 for module_type in self.instant_data[home_id]:
                     for module_adr in self.instant_data[home_id][module_type]:
                         if home_id not in self.weather_data:
@@ -219,9 +217,10 @@ class NetatmoWeather (NetatmoCloud):
                         for data in inst_mod_adr:
                             data_str = self.merge_data_str(data)
                             self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]
-        logging.debug('merge_data complete {}'.format(self.weather_data))
-
-
+            logging.debug('merge_data complete {}'.format(self.weather_data))
+        except Exception as E:
+            logging.error('Exception merging data: {} - {}: {} {}'.format(E, self.weather_data, self.instant_data,self.cloud_data  ))
+            
     def get_homes(self):
         '''get_homes'''
 
