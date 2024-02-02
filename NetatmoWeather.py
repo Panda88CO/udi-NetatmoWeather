@@ -197,8 +197,11 @@ class NetatmoWeather (NetatmoCloud):
                                 self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr_data[data]                            
             elif cloud_data: # instant_data must be False
                 logging.debug('cloud only')
+                logging.debug(self.cloud_data[home_id])
                 for module_type in self.cloud_data[home_id]:
+                    logging.debug(module_type)
                     for module_adr in self.cloud_data[home_id][module_type]:
+                        logging.debug(module_adr)
                         if home_id not in self.weather_data:
                             self.weather_data[home_id] = {}       
                         if module_type not in self.weather_data[home_id]:
