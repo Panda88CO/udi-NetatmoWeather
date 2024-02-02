@@ -201,14 +201,19 @@ class NetatmoWeather (NetatmoCloud):
                 for module_type in self.cloud_data[home_id]:
                     logging.debug(module_type)
                     for module_adr in self.cloud_data[home_id][module_type]:
-                        logging.debug(module_adr)
+                        logging.debug(module_adr, self.weather_data)
                         if home_id not in self.weather_data:
-                            self.weather_data[home_id] = {}       
+                            self.weather_data[home_id] = {}
+                            
                         if module_type not in self.weather_data[home_id]:
                             self.weather_data[home_id][module_type]= {}
                         if module_adr not in self.weather_data[home_id][module_type]:
                             self.weather_data[home_id][module_type][module_adr]= {}
                                 # check who has leastes data - process older first
+                        logging.debug(self.cloud_data[home_id])
+                        logging.debug(self.cloud_data[home_id][module_type])
+                        logging.debug(self.cloud_data[home_id][module_type][module_adr])
+                        logging.debug(self.cloud_data)
                         cloud_mod_adr_data = self.cloud_data[home_id][module_type][module_adr]
                         for data in cloud_mod_adr_data:
                             logging.debug('for loop cloud only ONLY { }'.format(data))
