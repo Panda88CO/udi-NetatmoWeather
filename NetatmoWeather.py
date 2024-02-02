@@ -160,35 +160,43 @@ class NetatmoWeather (NetatmoCloud):
                     for module_adr in self.cloud_data[home_id][module_type]:
                         logging.debug('Inner for loop {} {} {}'.format(home_id,module_type, module_adr))
                         # data exists so data must exist for weather_data
-                        inst_mod_adr = self.instant_data[home_id][module_type][module_adr]
-                        cloud_mod_adr = self.cloud_data[home_id][module_type][module_adr]
-                        logging.debug('inst {} cloud {}'.format(inst_mod_adr, cloud_mod_adr))
-                        cloud_ok =  'time_utc' in cloud_mod_adr
-                        inst_ok = 'ts' in inst_mod_adr 
+                        inst_mod_adr_data = self.instant_data[home_id][module_type][module_adr]
+                        cloud_mod_adr_data = self.cloud_data[home_id][module_type][module_adr]
+                        logging.debug('inst {} cloud {}'.format(inst_mod_adr_data, cloud_mod_adr_data))
+                        cloud_ok =  'time_utc' in cloud_mod_adr_data
+                        inst_ok = 'ts' in inst_mod_adr_data 
                         if cloud_ok and inst_ok:
-                            if cloud_mod_adr['time_utc'] > inst_mod_adr ['ts']:
-                                for data in inst_mod_adr:
+                            logging.debug('both cloud and instant')
+                            if cloud_mod_adr_data['time_utc'] > inst_mod_adr_data ['ts']:
+                                for data in inst_mod_adr_data:
+                                    logging.debug('for loop inst { }'.format(data))
                                     data_str = self.merge_data_str(data)
-                                    self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]
-                                for data in cloud_mod_adr:
+                                    self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr_data[data]
+                                for data in cloud_mod_adr_data:
+                                    logging.debug('for loop cloud { }'.format(data))
                                     data_str = self.merge_data_str(data)                               
-                                    self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr[data]
+                                    self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr_data[data]
                             else:
-                                for data in cloud_mod_adr:
+                                for data in cloud_mod_adr_data:
+                                    logging.debug('for loop cloud { }'.format(data))
                                     data_str = self.merge_data_str(data)                            
-                                    self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr[data]
-                                for data in inst_mod_adr:
+                                    self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr_data[data]
+                                for data in inst_mod_adr_data:
+                                    logging.debug('for loop inst { }'.format(data))
                                     data_str = self.merge_data_str(data)
-                                    self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]
+                                    self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr_data[data]
                         elif cloud_ok:
-                            for data in cloud_mod_adr:
+                            for data in cloud_mod_adr_data:
+                                logging.debug('for loop cloud only { }'.format(data))
                                 data_str = self.merge_data_str(data)                               
-                                self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr[data]
+                                self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr_data[data]
                         elif inst_ok:
-                            for data in inst_mod_adr:
+                            for data in inst_mod_adr_data:
+                                logging.debug('for loop inst only { }'.format(data))
                                 data_str = self.merge_data_str(data)
-                                self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]                            
+                                self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr_data[data]                            
             elif cloud_data: # instant_data must be False
+                logging.debug('cloud only')
                 for module_type in self.cloud_data[home_id]:
                     for module_adr in self.cloud_data[home_id][module_type]:
                         if home_id not in self.weather_data:
@@ -198,12 +206,14 @@ class NetatmoWeather (NetatmoCloud):
                         if module_adr not in self.weather_data[home_id][module_type]:
                             self.weather_data[home_id][module_type][module_adr]= {}
                                 # check who has leastes data - process older first
-                        cloud_mod_adr = self.cloud_data[home_id][module_type][module_adr]
-                        for data in cloud_mod_adr:
+                        cloud_mod_adr_data = self.cloud_data[home_id][module_type][module_adr]
+                        for data in cloud_mod_adr_data:
+                            logging.debug('for loop cloud only ONLY { }'.format(data))
                             data_str = self.merge_data_str(data)
-                            self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr[data]
+                            self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr_data[data]
 
             else: # cloud_data must be False
+                logging.debug('inst  only')
                 for module_type in self.instant_data[home_id]:
                     for module_adr in self.instant_data[home_id][module_type]:
                         if home_id not in self.weather_data:
@@ -213,10 +223,11 @@ class NetatmoWeather (NetatmoCloud):
                         if module_adr not in self.weather_data[home_id][module_type]:
                             self.weather_data[home_id][module_type][module_adr]= {}
                                 # check who has leastes data - process older first
-                        inst_mod_adr = self.instant_data[home_id][module_type][module_adr]
-                        for data in inst_mod_adr:
+                        inst_mod_adr_data = self.instant_data[home_id][module_type][module_adr]
+                        for data in inst_mod_adr_data:
+                            logging.debug('for loop inst only ONLY { }'.format(data))
                             data_str = self.merge_data_str(data)
-                            self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr[data]
+                            self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr_data[data]
             logging.debug('merge_data complete {}'.format(self.weather_data))
         except Exception as E:
             logging.error('Exception merging data: {} - {}: {} {}'.format(E, self.weather_data, self.instant_data,self.cloud_data  ))
