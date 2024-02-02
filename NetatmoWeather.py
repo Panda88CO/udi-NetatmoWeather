@@ -201,7 +201,8 @@ class NetatmoWeather (NetatmoCloud):
                 for module_type in self.cloud_data[home_id]:
                     logging.debug(module_type)
                     for module_adr in self.cloud_data[home_id][module_type]:
-                        logging.debug(module_adr, self.weather_data)
+                        logging.debug(module_adr)
+                        logging.debug(self.weather_data)
                         if home_id not in self.weather_data:
                             self.weather_data[home_id] = {}
                             
