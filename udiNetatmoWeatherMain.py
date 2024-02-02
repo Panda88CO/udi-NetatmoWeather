@@ -241,13 +241,13 @@ class udiNetatmoWeatherMain(udi_interface.Node):
             if self.weather.get_online(self.module):
                 self.node.setDriver('ST', 1)
                 if self.convert_temp_unit(self.weather.temp_unit) == 1:
-                    self.node.setDriver('CLITEMP', self.weather.get_temperature_C(self.module), True, False, 4 )
-                    self.node.setDriver('GV6', self.weather.get_min_temperature_C(self.module), True, False, 4 )
-                    self.node.setDriver('GV7', self.weather.get_max_temperature_C(self.module), True, False, 4 )
+                    self.node.setDriver('CLITEMP', round(self.weather.get_temperature_C(self.module),1), True, False, 4 )
+                    self.node.setDriver('GV6', round(self.weather.get_min_temperature_C(self.module),1), True, False, 4 )
+                    self.node.setDriver('GV7', round(self.weather.get_max_temperature_C(self.module),1), True, False, 4 )
                 else:
-                    self.node.setDriver('CLITEMP', (self.weather.get_temperature_C(self.module)*9/5+32), True, False, 17 )
-                    self.node.setDriver('GV6', (self.weather.get_min_temperature_C(self.module)*9/5+32), True, False, 17 )
-                    self.node.setDriver('GV7', (self.weather.get_max_temperature_C(self.module)*9/5+32), True, False, 17 )                     
+                    self.node.setDriver('CLITEMP', (round(self.weather.get_temperature_C(self.module)*9/5+32,1)), True, False, 17 )
+                    self.node.setDriver('GV6', (round(self.weather.get_min_temperature_C(self.module)*9/5+32,1)), True, False, 17 )
+                    self.node.setDriver('GV7', (round(self.weather.get_max_temperature_C(self.module)*9/5+32,1)), True, False, 17 )                     
                 self.node.setDriver('CO2LVL', self.weather.get_co2(self.module), True, False, 54)
                 self.node.setDriver('CLIHUM', self.weather.get_humidity(self.module), True, False, 51)
                 self.node.setDriver('GV3', self.weather.get_noise(self.module), True, False, 12)
