@@ -175,7 +175,7 @@ class NetatmoController(udi_interface.Node):
                 logging.debug('{} adding MAIN modules {} - {}'.format(home_name, m_module, main_modules))
                 mod_name = main_modules[m_module]['name']
                 node_name = home_name + '_'+ mod_name
-                node_address = self.getValidAddress(m_module['id'])
+                node_address = self.getValidAddress(m_module)
                 node_name = self.getValidName(node_name)
                 tmp_module = {}
                 tmp_module['home'] = home
