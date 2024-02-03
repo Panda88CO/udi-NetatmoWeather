@@ -164,7 +164,19 @@ class NetatmoWeather (NetatmoCloud):
                         logging.debug('Inner for loop {} {} {}'.format(home_id,module_type, module_adr))
                         # data exists so data must exist for weather_data
                         inst_mod_adr_data = self.instant_data[home_id][module_type][module_adr]
+
                         cloud_mod_adr_data = self.cloud_data[home_id][module_type][module_adr]
+                        if home_id in self.instant_data:
+                            if module_type in self.instant_data[home_id]:
+                                if module_adr in self.instant_data[home_id][module_type]
+                                    inst_mod_adr_data = self.instant_data[home_id][module_type][module_adr]
+                                else:
+                                    inst_mod_adr_data = {}
+                            else:
+                                inst_mod_adr_data = {}
+                        else:
+                            inst_mod_adr_data = {}
+
                         logging.debug('inst {} cloud {}'.format(inst_mod_adr_data, cloud_mod_adr_data))
                         cloud_ok =  'time_utc' in cloud_mod_adr_data
                         inst_ok = 'ts' in inst_mod_adr_data 
@@ -294,7 +306,7 @@ class NetatmoWeather (NetatmoCloud):
                 if dev_id in self.weather_data[home_id][mod_type]:
                     return(self.weather_data[home_id][mod_type][dev_id])
         else:
-            logging.error('No data fouond for {0} {1}'.format(home_id, dev_id))
+            logging.warning('No data fouond for {0} {1}'.format(home_id, dev_id))
     '''
     def get_main_module_data(self, home_id, dev_id):
         #Get data from main module
@@ -514,18 +526,18 @@ class NetatmoWeather (NetatmoCloud):
 
     def get_online(self, module):
         try:
-            logging.debug('module {} '.format(module) )
-            logging.debug('module data1: {}'.format(self.weather_data))
-            logging.debug('module data2: {} - {} - {}'.format(module['home_id'], module['type'],module['module_id']))
-            logging.debug('module data3: {}'.format(self.weather_data[module['home_id']]))
-            logging.debug('module data4: {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]))
+            #logging.debug('module {} '.format(module) )
+            #logging.debug('module data1: {}'.format(self.weather_data))
+            #logging.debug('module data2: {} - {} - {}'.format(module['home_id'], module['type'],module['module_id']))
+            #logging.debug('module data3: {}'.format(self.weather_data[module['home_id']]))
+            #logging.debug('module data4: {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]))
             #logging.debug('get_online {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['online'],module['home_id'], module['type'], module['module_id'] ))
             if 'online' in self.weather_data[module['home_id']][module['type']][module['module_id']]:    
                 return(self.weather_data[module['home_id']][module['type']][module['module_id']]['online'])
             else:
                 return(False)      
         except Exception as e:
-            logging.error('get_online exception: {}'.format(e))
-            return(None)
+            logging.warning('No online data exists - Assume off line : {}'.format(e))
+            return(False)
 
 
