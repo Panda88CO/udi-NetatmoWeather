@@ -511,6 +511,9 @@ class NetatmoWeather (NetatmoCloud):
     def get_online(self, module):
         try:
             logging.debug('module {} '.format(module) )
+            logging.debug('module data1: {}'.format(self.weather_data))
+            logging.debug('module data: {}'.format(module['home_id'], module['type'],module['module_id']))
+            logging.debug('module data: {}'.format(self.weather_data[module['home_id']][module['type']]))
             logging.debug('module data: {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]))
             #logging.debug('get_online {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['online'],module['home_id'], module['type'], module['module_id'] ))
             if 'online' in self.weather_data[module['home_id']][module['type']][module['module_id']]:    
