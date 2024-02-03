@@ -168,7 +168,7 @@ class NetatmoWeather (NetatmoCloud):
                         cloud_mod_adr_data = self.cloud_data[home_id][module_type][module_adr]
                         if home_id in self.instant_data:
                             if module_type in self.instant_data[home_id]:
-                                if module_adr in self.instant_data[home_id][module_type]
+                                if module_adr in self.instant_data[home_id][module_type]:
                                     inst_mod_adr_data = self.instant_data[home_id][module_type][module_adr]
                                 else:
                                     inst_mod_adr_data = {}
@@ -176,7 +176,6 @@ class NetatmoWeather (NetatmoCloud):
                                 inst_mod_adr_data = {}
                         else:
                             inst_mod_adr_data = {}
-
                         #logging.debug('inst {} cloud {}'.format(inst_mod_adr_data, cloud_mod_adr_data))
                         cloud_ok =  'time_utc' in cloud_mod_adr_data
                         inst_ok = 'ts' in inst_mod_adr_data 
