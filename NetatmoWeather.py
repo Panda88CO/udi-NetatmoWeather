@@ -216,7 +216,7 @@ class NetatmoWeather (NetatmoCloud):
                         logging.debug(self.cloud_data[home_id][module_type][module_adr])
                         logging.debug(self.cloud_data)
                         cloud_mod_adr_data = self.cloud_data[home_id][module_type][module_adr]
-                        logging.debug(cloud_mod_adr_data)
+                        logging.debug(cloud_mod_adr_data['time_utc'])
                         for data in cloud_mod_adr_data:
                             logging.debug('for loop cloud only ONLY { }'.format(data))
                             data_str = self.merge_data_str(data)
