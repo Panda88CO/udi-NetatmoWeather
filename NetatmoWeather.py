@@ -150,6 +150,7 @@ class NetatmoWeather (NetatmoCloud):
 
     def merge_data(self, home_id):
         '''Merges/combines cloud data and instant data '''
+        cloud_mod_adr_data = {}
         try:
             logging.debug('merge_data')
             instant_data = self.instant_data != {}
@@ -513,9 +514,9 @@ class NetatmoWeather (NetatmoCloud):
         try:
             logging.debug('module {} '.format(module) )
             logging.debug('module data1: {}'.format(self.weather_data))
-            logging.debug('module data: {} - {} - {}'.format(module['home_id'], module['type'],module['module_id']))
-            logging.debug('module data: {}'.format(self.weather_data[module['home_id']]))
-            logging.debug('module data: {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]))
+            logging.debug('module data2: {} - {} - {}'.format(module['home_id'], module['type'],module['module_id']))
+            logging.debug('module data3: {}'.format(self.weather_data[module['home_id']]))
+            logging.debug('module data4: {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]))
             #logging.debug('get_online {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['online'],module['home_id'], module['type'], module['module_id'] ))
             if 'online' in self.weather_data[module['home_id']][module['type']][module['module_id']]:    
                 return(self.weather_data[module['home_id']][module['type']][module['module_id']]['online'])
