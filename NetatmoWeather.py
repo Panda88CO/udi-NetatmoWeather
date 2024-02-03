@@ -161,7 +161,7 @@ class NetatmoWeather (NetatmoCloud):
             if cloud_data and instant_data:
                 for module_type in self.cloud_data[home_id]:
                     for module_adr in self.cloud_data[home_id][module_type]:
-                        #logging.debug('Inner for loop {} {} {}'.format(home_id,module_type, module_adr))
+                        logging.debug('Inner for loop {} {} {}'.format(home_id,module_type, module_adr))
                         # data exists so data must exist for weather_data
                         inst_mod_adr_data = self.instant_data[home_id][module_type][module_adr]
 
@@ -181,7 +181,6 @@ class NetatmoWeather (NetatmoCloud):
                         inst_ok = 'ts' in inst_mod_adr_data 
                         if cloud_ok and inst_ok:
                             logging.debug('both cloud and instant')
-                            if 'time_utc' in  cloud_mod_adr_data and 
                             if cloud_mod_adr_data['time_utc'] > inst_mod_adr_data ['ts']:
                                 for data in inst_mod_adr_data:
                                     logging.debug('for loop inst {}'.format(data))
