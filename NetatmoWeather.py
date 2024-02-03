@@ -151,6 +151,8 @@ class NetatmoWeather (NetatmoCloud):
     def merge_data(self, home_id):
         '''Merges/combines cloud data and instant data '''
         cloud_mod_adr_data = {}
+        inst_mod_adr_data = {}
+        
         try:
             logging.debug('merge_data')
             instant_data = self.instant_data != {}
@@ -217,7 +219,7 @@ class NetatmoWeather (NetatmoCloud):
                         logging.debug(self.cloud_data[home_id][module_type][module_adr])
                         logging.debug(self.cloud_data)
                         cloud_mod_adr_data = self.cloud_data[home_id][module_type][module_adr]
-                        logging.debug(self.cloud_mod_adr_data)
+                        logging.debug(cloud_mod_adr_data)
                         logging.debug('data type {}'.format( type (cloud_mod_adr_data )))
                         for dat in cloud_mod_adr_data:
                             logging.debug('for loop cloud only ONLY { }'.format(dat))
