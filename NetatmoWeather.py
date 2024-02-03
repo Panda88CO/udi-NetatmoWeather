@@ -181,22 +181,23 @@ class NetatmoWeather (NetatmoCloud):
                         inst_ok = 'ts' in inst_mod_adr_data 
                         if cloud_ok and inst_ok:
                             logging.debug('both cloud and instant')
+                            if 'time_utc' in  cloud_mod_adr_data and 
                             if cloud_mod_adr_data['time_utc'] > inst_mod_adr_data ['ts']:
                                 for data in inst_mod_adr_data:
-                                    #logging.debug('for loop inst {}'.format(data))
+                                    logging.debug('for loop inst {}'.format(data))
                                     data_str = self.merge_data_str(data)
                                     self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr_data[data]
                                 for data in cloud_mod_adr_data:
-                                    #logging.debug('for loop cloud {}'.format(data))
+                                    logging.debug('for loop cloud {}'.format(data))
                                     data_str = self.merge_data_str(data)                               
                                     self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr_data[data]
                             else:
                                 for data in cloud_mod_adr_data:
-                                    #logging.debug('for loop cloud {}'.format(data))
+                                    logging.debug('for loop cloud {}'.format(data))
                                     data_str = self.merge_data_str(data)                            
                                     self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr_data[data]
                                 for data in inst_mod_adr_data:
-                                    #logging.debug('for loop inst {}'.format(data))
+                                    logging.debug('for loop inst {}'.format(data))
                                     data_str = self.merge_data_str(data)
                                     self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr_data[data]
                         elif cloud_ok:
