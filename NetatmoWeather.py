@@ -216,7 +216,8 @@ class NetatmoWeather (NetatmoCloud):
                         logging.debug(self.cloud_data[home_id][module_type][module_adr])
                         logging.debug(self.cloud_data)
                         cloud_mod_adr_data = self.cloud_data[home_id][module_type][module_adr]
-                        logging.debug(cloud_mod_adr_data['time_utc'], type (cloud_mod_adr_data ))
+                        logging.debug(self.cloud_mod_adr_data)
+                        logging.debug('data type {}'.format( type (cloud_mod_adr_data )))
                         for dat in cloud_mod_adr_data:
                             logging.debug('for loop cloud only ONLY { }'.format(dat))
                             data_str = self.merge_data_str(dat)
@@ -512,8 +513,8 @@ class NetatmoWeather (NetatmoCloud):
         try:
             logging.debug('module {} '.format(module) )
             logging.debug('module data1: {}'.format(self.weather_data))
-            logging.debug('module data: {}'.format(module['home_id'], module['type'],module['module_id']))
-            logging.debug('module data: {}'.format(self.weather_data[module['home_id']][module['type']]))
+            logging.debug('module data: {} - {} - {}'.format(module['home_id'], module['type'],module['module_id']))
+            logging.debug('module data: {}'.format(self.weather_data[module['home_id']]))
             logging.debug('module data: {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]))
             #logging.debug('get_online {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['online'],module['home_id'], module['type'], module['module_id'] ))
             if 'online' in self.weather_data[module['home_id']][module['type']][module['module_id']]:    
