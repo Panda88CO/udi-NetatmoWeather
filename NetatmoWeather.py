@@ -134,6 +134,7 @@ class NetatmoWeather (NetatmoCloud):
     
     def merge_data_str(self, data):
         '''merge_data_str'''
+        logging.debug('merge_data_str: {}'.format(data))
         if data == 'ts':
             data_str = 'time_stamp'
         if data == 'time_utc':
@@ -142,7 +143,6 @@ class NetatmoWeather (NetatmoCloud):
             data_str = 'absolute_pressure'
         elif data == 'reachable':
             data_str = 'online'
-
         else:
             data_str = data.lower()
         return(data_str)
@@ -188,7 +188,7 @@ class NetatmoWeather (NetatmoCloud):
                                     data_str = self.merge_data_str(data)
                                     self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr_data[data]
                                 for data in cloud_mod_adr_data:
-                                    logging.debug('for loop cloud {}'.format(data))
+                                    logging.debug('for loop cloud {} {}'.format(data, cloud_mod_adr_data))
                                     data_str = self.merge_data_str(data)                               
                                     self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr_data[data]
                             else:
