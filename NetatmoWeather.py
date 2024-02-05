@@ -413,10 +413,12 @@ class NetatmoWeather (NetatmoCloud):
             logging.debug('get_time_stamp {} {} {} {}'.format(self.weather_data[module['home_id']][module['type']][module['module_id']]['time_stamp'],module['home_id'], module['type'], module['module_id'] ))
             return(self.weather_data[module['home_id']][module['type']][module['module_id']]['time_stamp'])       
         except Exception as e:
-            logging.error('get_time_stamp exception; {}'.format(e))
+            logging.error('get_time_stamp exception: {}'.format(e))
             return(None)        
              
-
+    def get_time_since_time_stamp_min(self, module):
+        time = time.time.now()
+        
     def get_temp_trend(self, module):
         try:
             trend = self.weather_data[module['home_id']][module['type']][module['module_id']]['temp_trend']
