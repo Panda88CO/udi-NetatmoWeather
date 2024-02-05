@@ -162,6 +162,14 @@ class NetatmoWeather (NetatmoCloud):
                 for module_type in self.cloud_data[home_id]:
                     for module_adr in self.cloud_data[home_id][module_type]:
                         logging.debug('Inner for loop {} {} {}'.format(home_id,module_type, module_adr))
+                        
+                        if home_id not in self.weather_data:
+                            self.weather_data[home_id] = {}    
+                        if module_type not in self.weather_data[home_id]:
+                            self.weather_data[home_id][module_type]= {}
+                        if module_adr not in self.weather_data[home_id][module_type]:
+                            self.weather_data[home_id][module_type][module_adr]= {}
+
                         # data exists so data must exist for weather_data
                         cloud_mod_adr_data = self.cloud_data[home_id][module_type][module_adr]
                         if home_id in self.instant_data:
