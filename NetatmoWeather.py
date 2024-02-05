@@ -202,12 +202,12 @@ class NetatmoWeather (NetatmoCloud):
                                     self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr_data[data]
                         elif cloud_ok:
                             for data in cloud_mod_adr_data:
-                                logging.debug('for loop cloud only {}'.format(data))
+                                logging.debug('for loop cloud only {} weather{}  cloud{}'.format(data, self.weather_data, cloud_mod_adr_data))
                                 data_str = self.merge_data_str(data)                               
                                 self.weather_data[home_id][module_type][module_adr][data_str] =cloud_mod_adr_data[data]
                         elif inst_ok:
                             for data in inst_mod_adr_data:
-                                logging.debug('for loop inst only {}'.format(data))
+                                logging.debug('for loop inst only {} weather{}  inst{}'.format(data, self.weather_data, inst_mod_adr_data))
                                 data_str = self.merge_data_str(data)
                                 self.weather_data[home_id][module_type][module_adr][data_str] =inst_mod_adr_data[data]                            
             elif cloud_data: # instant_data must be False
