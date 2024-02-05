@@ -249,9 +249,9 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                     self.node.setDriver('GV7', (round(self.weather.get_max_temperature_C(self.module)*9/5+32,1)), True, False, 17 )                     
                 self.node.setDriver('CO2LVL', self.weather.get_co2(self.module), True, False, 54)
                 self.node.setDriver('CLIHUM', self.weather.get_humidity(self.module), True, False, 51)
-                self.node.setDriver('GV3', self.weather.get_noise(self.module), True, False, 12)
-                self.node.setDriver('BARPRES', self.weather.get_pressure(self.module), True, False, 117)
-                self.node.setDriver('GV5', self.weather.get_abs_pressure(self.module), True, False, 117)
+                self.node.setDriver('GV3', round(self.weather.get_noise(self.module),0), True, False, 12)
+                self.node.setDriver('BARPRES', round(self.weather.get_pressure(self.module),0), True, False, 117)
+                self.node.setDriver('GV5', round(self.weather.get_abs_pressure(self.module),0), True, False, 117)
 
                 temp_trend = self.weather.get_temp_trend(self.module)
                 self.node.setDriver('GV8', self.trend2ISY(temp_trend))
