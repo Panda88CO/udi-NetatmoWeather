@@ -19,7 +19,6 @@ except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
 
-from udiNetatmoCommon import getValidName, getValidAddress, convert_temp_unit, rfstate2ISY, battery2ISY, trend2ISY
 
 from udiNetatmoWeatherIndoor import udiN_WeatherIndoor
 from udiNetatmoWeatherOutdoor import udiN_WeatherOutdoor
@@ -125,7 +124,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
             time.sleep(0.1)
         self.n_queue.pop()
     
-    '''
+    
     def getValidName(self, name):
         name = bytes(name, 'utf-8').decode('utf-8','ignore')
         return re.sub(r"[^A-Za-z0-9_ ]", "", name)
@@ -136,7 +135,8 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         tmp = re.sub(r"[^A-Za-z0-9_]", "", name.lower())
         logging.debug('getValidAddress {}'.format(tmp))
         return tmp[:14]
-     def rfstate2ISY(self, rf_state):
+    
+    def rfstate2ISY(self, rf_state):
         if rf_state.lower() == 'full':
             rf = 0
         elif rf_state.lower() == 'medium':
@@ -184,7 +184,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         elif tempStr.capitalize()[:1] == 'K':
             return(0)
         
-    '''
+    
 
 
     def start(self):
@@ -207,10 +207,10 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 module = self.weather.get_module_info(self.module['home_id'], s_module)
                 logging.debug( 'module: {}'.format(module))
                 if 'name' in module:
-                    name = getValidName(module['name'])
+                    name = self.getValidName(module['name'])
                 else:
-                    name = getValidName(module['id'])
-                address = getValidAddress(module['id'])
+                    name = self.getValidName(module['id'])
+                address = self.getValidAddress(module['id'])
 
                 logging.debug(' types: {} {}'.format(module['type'], self.INDOOR_modules))
 
@@ -254,13 +254,13 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 self.node.setDriver('GV5', self.weather.get_abs_pressure(self.module), True, False, 117)
 
                 temp_trend = self.weather.get_temp_trend(self.module)
-                self.node.setDriver('GV8', trend2ISY(temp_trend))
+                self.node.setDriver('GV8', self.trend2ISY(temp_trend))
 
                 #hum_trend= self.weather.get_hum_trend(self.module)
                 #self.node.setDriver('GV9', trend_val)
                 self.node.setDriver('GV10', self.weather.get_time_stamp(self.module) , True, False, 151)
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
-                self.node.setDriver('GV11', rfstate2ISY(rf1) )
+                self.node.setDriver('GV11', self.rfstate2ISY(rf1) )
                 #self.node.setDriver('ERR', 0)    
             else:
                 self.node.setDriver('CLITEMP', 99, True, False, 25 )
