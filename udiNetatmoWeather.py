@@ -203,6 +203,7 @@ class NetatmoController(udi_interface.Node):
                         logging.error('Failed to create Main Weather station: {}'.format(node_name))
                     time.sleep(1)            
         #removing unused nodes
+        logging.debug('Checking for nodes not used - node list{}'.format(node_list))
         for nde in range(0, len(self.nodes_in_db)):
             node = self.nodes_in_db[nde]
             logging.debug('Scanning db for extra nodes : {}'.format(node))
