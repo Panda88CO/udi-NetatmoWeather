@@ -12,7 +12,7 @@ import time
 import traceback
 import re
 import sys
-from udiNetatmoCommon import getValidName, getValidAddress, convert_temp_unit, rfstate2ISY, battery2ISY, trend2ISY
+
 try:
     import udi_interface
     logging = udi_interface.LOGGER
@@ -26,7 +26,7 @@ from NetatmoWeather import NetatmoWeather
 from  udiNetatmoWeatherMain import udiNetatmoWeatherMain
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
-version = '0.1.0'
+version = '0.0.9'
 
 #polyglot = None
 #myNetatmo = None
@@ -84,7 +84,7 @@ class NetatmoController(udi_interface.Node):
         self.poly.updateProfile()
         self.poly.ready()
        
-    '''
+
     def node_queue(self, data):
         self.n_queue.append(data['address'])
 
@@ -110,8 +110,7 @@ class NetatmoController(udi_interface.Node):
             return(1)
         elif tempStr.capitalize()[:1] == 'C':
             return(0)
-    '''
-
+   
     def heartbeat(self):
         logging.debug('heartbeat: ' + str(self.hb))
         #if self.yoAccess.online:
@@ -154,7 +153,7 @@ class NetatmoController(udi_interface.Node):
         if self.home_ids:
             self.node.setDriver('ST', 1, True, True)
 
-        self.temp_unit = convert_temp_unit(self.myNetatmo.temp_unit)
+        self.temp_unit = self.convert_temp_unit(self.myNetatmo.temp_unit)
         logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
 
 
@@ -178,8 +177,8 @@ class NetatmoController(udi_interface.Node):
                 logging.debug('{} adding MAIN modules {} - {}'.format(home_name, m_module, main_modules))
                 mod_name = main_modules[m_module]['name']
                 node_name = home_name + '_'+ mod_name
-                node_address = getValidAddress(m_module)
-                node_name = getValidName(node_name)
+                node_address = self.getValidAddress(m_module)
+                node_name = self.getValidName(node_name)
                 tmp_module = {}
                 tmp_module['home'] = home
                 tmp_module['main_module'] = m_module

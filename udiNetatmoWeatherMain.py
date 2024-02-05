@@ -239,7 +239,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         if self.node is not None:
             if self.weather.get_online(self.module):
                 self.node.setDriver('ST', 1)
-                if convert_temp_unit(self.weather.temp_unit) == 1:
+                if self.convert_temp_unit(self.weather.temp_unit) == 1:
                     self.node.setDriver('CLITEMP', round(self.weather.get_temperature_C(self.module),1), True, False, 4 )
                     self.node.setDriver('GV6', round(self.weather.get_min_temperature_C(self.module),1), True, False, 4 )
                     self.node.setDriver('GV7', round(self.weather.get_max_temperature_C(self.module),1), True, False, 4 )
