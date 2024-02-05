@@ -2,6 +2,7 @@
 #!/usr/bin/env python3
 from  NetatmoOauth import NetatmoCloud 
 import urllib.parse
+from datetime import datetime
 
 #from oauth import OAuth
 try:
@@ -417,8 +418,11 @@ class NetatmoWeather (NetatmoCloud):
             return(None)        
              
     def get_time_since_time_stamp_min(self, module):
-        time = time.time.now()
-        
+        unix_timestamp = (datetime.now() - datetime(1970, 1, 1)).total_seconds()
+        meas_time = self.get_time_stamp(module)
+        delay = unix_timestamp-meas_time
+        return( round(delay/60, 2)) #delay min
+
     def get_temp_trend(self, module):
         try:
             trend = self.weather_data[module['home_id']][module['type']][module['module_id']]['temp_trend']
