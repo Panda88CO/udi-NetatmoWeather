@@ -30,7 +30,7 @@ drivers = [
             {'driver' : 'GV3', 'value': 0,  'uom':76},
             {'driver' : 'GV4', 'value': 0,  'uom':48},
             {'driver' : 'GV5', 'value': 0,  'uom':76},
-            {'driver' : 'GV6', 'value': 0,  'uom':151},
+            {'driver' : 'GV6', 'value': 0,  'uom':44},
             {'driver' : 'GV7', 'value': 0,  'uom':25},
             {'driver' : 'GV8', 'value': 0,  'uom':25},                
             {'driver' : 'ST', 'value': 0,  'uom':2},   
@@ -56,7 +56,7 @@ class udiN_WeatherWind(udi_interface.Node):
             {'driver' : 'GV3', 'value': 0,  'uom':76},
             {'driver' : 'GV4', 'value': 0,  'uom':48},
             {'driver' : 'GV5', 'value': 0,  'uom':76},
-            {'driver' : 'GV6', 'value': 0,  'uom':151},
+            {'driver' : 'GV6', 'value': 0,  'uom':44},
             {'driver' : 'GV7', 'value': 99,  'uom':25},
             {'driver' : 'GV8', 'value': 99,  'uom':25},
             {'driver' : 'ST', 'value': 0,  'uom':2},
@@ -164,7 +164,7 @@ class udiN_WeatherWind(udi_interface.Node):
                 self.node.setDriver('GV3', self.weather.get_gust_angle(self.module), True, False, 76)
                 self.node.setDriver('GV4', self.weather.get_max_wind_strength(self.module), True, False, 48)
                 self.node.setDriver('GV5', self.weather.get_max_wind_angle(self.module), True, False, 76)
-                self.node.setDriver('GV6', self.weather.get_time_stamp(self.module) , True, False, 151)
+                self.node.setDriver('GV6', self.weather.get_time_since_time_stamp_min(self.module) , True, False, 44)
                 
                 bat_state, bat_lvl  = self.weather.get_battery_info(self.module)    
                 self.node.setDriver('GV7', self.battery2ISY(bat_state), True, False, 25 )     

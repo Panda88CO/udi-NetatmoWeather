@@ -27,7 +27,7 @@ drivers = [
             {'driver' : 'GV1', 'value': 0,  'uom':82}, 
             {'driver' : 'GV2', 'value': 0,  'uom':82}, 
             {'driver' : 'GV3', 'value': 0,  'uom':12}, 
-            {'driver' : 'GV4', 'value': 0,  'uom':151}, 
+            {'driver' : 'GV4', 'value': 0,  'uom':44}, 
             {'driver' : 'GV5', 'value': 0,  'uom':51}, 
           
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
@@ -49,7 +49,7 @@ class udiN_WeatherRain(udi_interface.Node):
             {'driver' : 'GV0', 'value': 0,  'uom':82}, 
             {'driver' : 'GV1', 'value': 0,  'uom':82}, 
             {'driver' : 'GV2', 'value': 0,  'uom':82}, 
-            {'driver' : 'GV3', 'value': 0,  'uom':151}, 
+            {'driver' : 'GV3', 'value': 0,  'uom':44}, 
             {'driver' : 'GV4', 'value': 99,  'uom':25}, 
             {'driver' : 'GV5', 'value': 99,  'uom':25}, 
           
@@ -165,7 +165,7 @@ class udiN_WeatherRain(udi_interface.Node):
                 self.node.setDriver('GV1', self.weather.get_rain_1hour(self.module), True, False, 82)
                 self.node.setDriver('GV2', self.weather.get_rain_24hours(self.module), True, False, 82)
 
-                self.node.setDriver('GV3', self.weather.get_time_stamp(self.module) , True, False, 151)
+                self.node.setDriver('GV3', self.weather.get_time_since_time_stamp_min(self.module) , True, False, 44)
                 
                 bat_state, bat_lvl  = self.weather.get_battery_info(self.module)    
                 self.node.setDriver('GV4', self.battery2ISY(bat_state), True, False, 25 )     

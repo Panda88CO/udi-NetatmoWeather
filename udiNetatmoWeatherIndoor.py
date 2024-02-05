@@ -33,7 +33,7 @@ drivers = [
             {'driver' : 'GV3', 'value': 0,  'uom':4}, 
             {'driver' : 'GV4', 'value': 0,  'uom':4}, 
             {'driver' : 'GV5', 'value': 0,  'uom':25}, 
-            {'driver' : 'GV6', 'value': 0,  'uom':151}, 
+            {'driver' : 'GV6', 'value': 0,  'uom':44}, 
             {'driver' : 'GV7', 'value': 0,  'uom':51}, 
             {'driver' : 'GV8', 'value': 99,  'uom':25},          
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
@@ -60,7 +60,7 @@ class udiN_WeatherIndoor(udi_interface.Node):
             {'driver' : 'GV3', 'value': 0,  'uom':4}, 
             {'driver' : 'GV4', 'value': 0,  'uom':4}, 
             {'driver' : 'GV5', 'value': 99,  'uom':25}, 
-            {'driver' : 'GV6', 'value': 0,  'uom':151}, 
+            {'driver' : 'GV6', 'value': 0,  'uom':44}, 
             {'driver' : 'GV7', 'value': 99,  'uom':25}, 
             {'driver' : 'GV8', 'value': 99,  'uom':25},          
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
@@ -140,7 +140,7 @@ class udiN_WeatherIndoor(udi_interface.Node):
 
                 #hum_trend= self.weather.get_hum_trend(self.module)
                 #self.node.setDriver('GV9', trend_val)
-                self.node.setDriver('GV6', self.weather.get_time_stamp(self.module) , True, False, 151)
+                self.node.setDriver('GV6', self.weather.get_time_since_time_stamp_min(self.module) , True, False, 44)
 
                 bat_state, bat_lvl  = self.weather.get_battery_info(self.module)    
                 self.node.setDriver('GV7', self.battery2ISY(bat_state), True, False, 25 )           

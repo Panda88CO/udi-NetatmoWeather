@@ -58,7 +58,7 @@ drivers = [
             {'driver' : 'GV7', 'value': 0,  'uom':4}, 
             {'driver' : 'GV8', 'value': 0,  'uom':25}, 
             {'driver' : 'GV9', 'value': 0,  'uom':25}, 
-            {'driver' : 'GV10', 'value': 0,  'uom':151},
+            {'driver' : 'GV10', 'value': 0,  'uom':44},
             {'driver' : 'GV11', 'value': 0,  'uom':131},            
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
@@ -87,7 +87,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
             {'driver' : 'GV7', 'value': 0,  'uom':4}, 
             {'driver' : 'GV8', 'value': 99,  'uom':25}, 
             #{'driver' : 'GV9', 'value': 0,  'uom':25}, 
-            {'driver' : 'GV10', 'value': 0,  'uom':151},
+            {'driver' : 'GV10', 'value': 0,  'uom':44},
             {'driver' : 'GV11', 'value': 99,  'uom':25},         
             {'driver' : 'ST', 'value': 0,  'uom':2}, 
             ]
@@ -258,7 +258,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
 
                 #hum_trend= self.weather.get_hum_trend(self.module)
                 #self.node.setDriver('GV9', trend_val)
-                self.node.setDriver('GV10', self.weather.get_time_stamp(self.module) , True, False, 151)
+                self.node.setDriver('GV10', self.weather.get_time_since_time_stamp_min(self.module) , True, False, 44)
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
                 self.node.setDriver('GV11', self.rfstate2ISY(rf1) )
                 #self.node.setDriver('ERR', 0)    

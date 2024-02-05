@@ -38,7 +38,7 @@
     </editor>
 
     <editor id="t_timestamp">
-        <range uom="151" min="0" max="20000000000" prec="0" />
+        <range uom="44" min="0" max="525600" prec="2" />
         <range uom="25" subset="0,99" nls="error" />
     </editor>
 
