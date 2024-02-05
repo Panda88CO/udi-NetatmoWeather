@@ -19,6 +19,7 @@ except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
 
+from udiNetatmoCommon import getValidName, getValidAddress, convert_temp_unit, rfstate2ISY, battery2ISY, trend2ISY
 
 from udiNetatmoWeatherIndoor import udiN_WeatherIndoor
 from udiNetatmoWeatherOutdoor import udiN_WeatherOutdoor
@@ -115,8 +116,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.n_queue = []
         self.nodeDefineDone = False
 
-    
-    
+       
     def node_queue(self, data):
         self.n_queue.append(data['address'])
 
@@ -124,7 +124,8 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         while len(self.n_queue) == 0:
             time.sleep(0.1)
         self.n_queue.pop()
-
+    
+    '''
     def getValidName(self, name):
         name = bytes(name, 'utf-8').decode('utf-8','ignore')
         return re.sub(r"[^A-Za-z0-9_ ]", "", name)
@@ -135,63 +136,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         tmp = re.sub(r"[^A-Za-z0-9_]", "", name.lower())
         logging.debug('getValidAddress {}'.format(tmp))
         return tmp[:14]
-    
-    
-
-
-    def convert_temp_unit(self, tempStr):
-        if tempStr.capitalize()[:1] == 'F':
-            return(1)
-        elif tempStr.capitalize()[:1] == 'K':
-            return(0)
-        
-
-
-
-    def start(self):
-        logging.debug('Executing NetatmoWeatherMain start')
-        self.addNodes()
-        self.update() # get latest data 
-
-    def stop (self):
-        pass
-    
-    def addNodes(self):
-        '''addNodes'''
-        logging.debug('self.module {}'.format(self.module))
-        logging.debug('Adding subnodes to {}'.format(self.module['module_id']))
-        sub_modules = self.weather.get_sub_modules(self.module['home_id'], self.module['module_id'])
-        logging.debug('System sub modules: {}'.format(sub_modules))
-        if sub_modules:
-            for s_module in sub_modules:
-                logging.debug( 's_module: {}'.format(s_module))
-                module = self.weather.get_module_info(self.module['home_id'], s_module)
-                logging.debug( 'module: {}'.format(module))
-                if 'name' in module:
-                    name = self.getValidName(module['name'])
-                else:
-                    name = self.getValidName(module['id'])
-                address = self.getValidAddress(module['id'])
-
-                logging.debug(' types: {} {}'.format(module['type'], self.INDOOR_modules))
-
-                if module['type'] in self.INDOOR_modules:
-                    udiN_WeatherIndoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
-                elif module['type'] in self.OUTDOOR_modules:
-                    udiN_WeatherOutdoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
-                elif module['type'] in self.WIND_modules:
-                    udiN_WeatherWind(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
-                elif module['type'] in self.RAIN_modules:
-                    udiN_WeatherRain(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
-                else:
-                    logging.error('Unknown module type encountered: {}'.format(s_module['type']))
-                
-    def update(self, command = None):
-        self.weather.update_weather_info_cloud(self.module['home_id'])
-        self.weather.update_weather_info_instant(self.module['home_id'])
-        self.updateISYdrivers()
-
-    def rfstate2ISY(self, rf_state):
+     def rfstate2ISY(self, rf_state):
         if rf_state.lower() == 'full':
             rf = 0
         elif rf_state.lower() == 'medium':
@@ -232,6 +177,60 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         else:
             logging.error('unsupported temperature trend: {}'.format(trend))
             return(99)    
+
+    def convert_temp_unit(self, tempStr):
+        if tempStr.capitalize()[:1] == 'F':
+            return(1)
+        elif tempStr.capitalize()[:1] == 'K':
+            return(0)
+        
+    '''
+
+
+    def start(self):
+        logging.debug('Executing NetatmoWeatherMain start')
+        self.addNodes()
+        self.update() # get latest data 
+
+    def stop (self):
+        pass
+    
+    def addNodes(self):
+        '''addNodes'''
+        logging.debug('self.module {}'.format(self.module))
+        logging.debug('Adding subnodes to {}'.format(self.module['module_id']))
+        sub_modules = self.weather.get_sub_modules(self.module['home_id'], self.module['module_id'])
+        logging.debug('System sub modules: {}'.format(sub_modules))
+        if sub_modules:
+            for s_module in sub_modules:
+                logging.debug( 's_module: {}'.format(s_module))
+                module = self.weather.get_module_info(self.module['home_id'], s_module)
+                logging.debug( 'module: {}'.format(module))
+                if 'name' in module:
+                    name = getValidName(module['name'])
+                else:
+                    name = getValidName(module['id'])
+                address = getValidAddress(module['id'])
+
+                logging.debug(' types: {} {}'.format(module['type'], self.INDOOR_modules))
+
+                if module['type'] in self.INDOOR_modules:
+                    udiN_WeatherIndoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
+                elif module['type'] in self.OUTDOOR_modules:
+                    udiN_WeatherOutdoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
+                elif module['type'] in self.WIND_modules:
+                    udiN_WeatherWind(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
+                elif module['type'] in self.RAIN_modules:
+                    udiN_WeatherRain(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
+                else:
+                    logging.error('Unknown module type encountered: {}'.format(s_module['type']))
+                
+    def update(self, command = None):
+        self.weather.update_weather_info_cloud(self.module['home_id'])
+        self.weather.update_weather_info_instant(self.module['home_id'])
+        self.updateISYdrivers()
+
+   
         
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
@@ -240,7 +239,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         if self.node is not None:
             if self.weather.get_online(self.module):
                 self.node.setDriver('ST', 1)
-                if self.convert_temp_unit(self.weather.temp_unit) == 1:
+                if convert_temp_unit(self.weather.temp_unit) == 1:
                     self.node.setDriver('CLITEMP', round(self.weather.get_temperature_C(self.module),1), True, False, 4 )
                     self.node.setDriver('GV6', round(self.weather.get_min_temperature_C(self.module),1), True, False, 4 )
                     self.node.setDriver('GV7', round(self.weather.get_max_temperature_C(self.module),1), True, False, 4 )
@@ -255,13 +254,13 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 self.node.setDriver('GV5', self.weather.get_abs_pressure(self.module), True, False, 117)
 
                 temp_trend = self.weather.get_temp_trend(self.module)
-                self.node.setDriver('GV8', self.trend2ISY(temp_trend))
+                self.node.setDriver('GV8', trend2ISY(temp_trend))
 
                 #hum_trend= self.weather.get_hum_trend(self.module)
                 #self.node.setDriver('GV9', trend_val)
                 self.node.setDriver('GV10', self.weather.get_time_stamp(self.module) , True, False, 151)
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
-                self.node.setDriver('GV11', self.rfstate2ISY(rf1) )
+                self.node.setDriver('GV11', rfstate2ISY(rf1) )
                 #self.node.setDriver('ERR', 0)    
             else:
                 self.node.setDriver('CLITEMP', 99, True, False, 25 )

@@ -20,6 +20,8 @@ except ImportError:
     import logging
     logging.basicConfig(level=logging.DEBUG)
 
+from udiNetatmoCommon import getValidName, getValidAddress, convert_temp_unit, rfstate2ISY, battery2ISY, trend2ISY
+
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
 '''
@@ -87,7 +89,7 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         while len(self.n_queue) == 0:
             time.sleep(0.1)
         self.n_queue.pop()
-
+    '''
     def getValidName(self, name):
         name = bytes(name, 'utf-8').decode('utf-8','ignore')
         return re.sub(r"[^A-Za-z0-9_ ]", "", name)
@@ -104,16 +106,6 @@ class udiN_WeatherOutdoor(udi_interface.Node):
             return(1)
         elif tempStr.capitalize()[:1] == 'K':
             return(0)
-        
-
-    def start(self):
-        logging.debug('Executing NetatmoWeatherOutdoor start')
-        self.updateISYdrivers()
-
-    def update(self, command = None):
-        self.weather.update_weather_info_cloud(self.module['home_id'])
-        self.weather.update_weather_info_instant(self.module['home_id'])
-        self.updateISYdrivers()
 
 
     def rfstate2ISY(self, rf_state):
@@ -157,7 +149,19 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         else:
             logging.error('unsupported temperature trend: {}'.format(trend))
             return(99)    
-        
+                    
+    ''' 
+
+    def start(self):
+        logging.debug('Executing NetatmoWeatherOutdoor start')
+        self.updateISYdrivers()
+
+    def update(self, command = None):
+        self.weather.update_weather_info_cloud(self.module['home_id'])
+        self.weather.update_weather_info_instant(self.module['home_id'])
+        self.updateISYdrivers()
+
+
     def updateISYdrivers(self):
         logging.debug('updateISYdrivers')
         data = self.weather.get_module_data(self.module)
@@ -165,25 +169,25 @@ class udiN_WeatherOutdoor(udi_interface.Node):
         if self.node is not None:
             if self.weather.get_online(self.module):
                 self.node.setDriver('ST', 1)
-                if self.convert_temp_unit(self.weather.temp_unit) == 1:
-                    self.node.setDriver('CLITEMP', self.weather.get_temperature_C(self.module), True, False, 4 )
-                    self.node.setDriver('GV2', self.weather.get_min_temperature_C(self.module), True, False, 4 )
-                    self.node.setDriver('GV3', self.weather.get_max_temperature_C(self.module), True, False, 4 )
+                if convert_temp_unit(self.weather.temp_unit) == 1:
+                    self.node.setDriver('CLITEMP', round(self.weather.get_temperature_C(self.module),1), True, False, 4 )
+                    self.node.setDriver('GV2', round(self.weather.get_min_temperature_C(self.module),1), True, False, 4 )
+                    self.node.setDriver('GV3', round(self.weather.get_max_temperature_C(self.module),1), True, False, 4 )
                 else:
-                    self.node.setDriver('CLITEMP', (self.weather.get_temperature_C(self.module)*9/5+32), True, False, 17 )
-                    self.node.setDriver('GV2', (self.weather.get_min_temperature_C(self.module)*9/5+32), True, False, 17 )
-                    self.node.setDriver('GV3', (self.weather.get_max_temperature_C(self.module)*9/5+32), True, False, 17 )                     
+                    self.node.setDriver('CLITEMP', (round(self.weather.get_temperature_C(self.module)*9/5+32,1)), True, False, 17 )
+                    self.node.setDriver('GV2', (round(self.weather.get_min_temperature_C(self.module)*9/5+32,1)), True, False, 17 )
+                    self.node.setDriver('GV3', (round(self.weather.get_max_temperature_C(self.module)*9/5+32,1)), True, False, 17 )                     
                 temp_trend = self.weather.get_temp_trend(self.module)
-                self.node.setDriver('GV4', self.trend2ISY(temp_trend))
+                self.node.setDriver('GV4', trend2ISY(temp_trend))
 
                 #hum_trend= self.weather.get_hum_trend(self.module)
                 #self.node.setDriver('GV9', trend_val)
                 self.node.setDriver('GV5', self.weather.get_time_stamp(self.module) , True, False, 151)
 
                 bat_state, bat_lvl  = self.weather.get_battery_info(self.module)    
-                self.node.setDriver('GV6', self.battery2ISY(bat_state), True, False, 25 )           
+                self.node.setDriver('GV6', battery2ISY(bat_state), True, False, 25 )           
                 rf1, rf2 = self.weather.get_rf_info(self.module) 
-                self.node.setDriver('GV7', self.rfstate2ISY(rf1), True, False, 25  )
+                self.node.setDriver('GV7', rfstate2ISY(rf1), True, False, 25  )
                 #self.node.setDriver('ERR', 0)    
             else:
                 self.node.setDriver('CLITEMP', 99, True, False, 25 )
