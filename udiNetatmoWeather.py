@@ -168,7 +168,7 @@ class NetatmoController(udi_interface.Node):
         selected = False
         self.enabled_list = []
         self.homes_list = []
-        node_list = []
+        primary_node_list = ['controller'] # controller is there for sure 
         for home in self.home_ids:
             logging.debug('Adding from {}'.format(home))
             home_name = self.home_ids[home]['name']
@@ -198,21 +198,19 @@ class NetatmoController(udi_interface.Node):
                     #logging.debug('module info {}'.format(module))
 
                     logging.debug('Names: {}, Addresses {} info {}'.format(node_name , node_address, tmp_module ))
-                    if udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.myNetatmo, tmp_module):
-                        node_list.append(node_address)
-                    else:
-                        logging.error('Failed to create Main Weather station: {}'.format(node_name))
+                    udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.myNetatmo, tmp_module)
+                    primary_node_list.append(node_address)
                     time.sleep(1)            
         #removing unused nodes
         while not self.configDone:
             logging.info('Waiting for config to comlete')
             time.sleep(1)
-        logging.debug('Checking for nodes not used - node list{} - {} {}'.format(node_list, len(self.nodes_in_db), self.nodes_in_db))
+        logging.debug('Checking for nodes not used - node list {} - {} {}'.format(primary_node_list, len(self.nodes_in_db), self.nodes_in_db))
         for nde in range(0, len(self.nodes_in_db)):
             node = self.nodes_in_db[nde]
 
             logging.debug('Scanning db for extra nodes : {}'.format(node))
-            if node['primaryNode'] not in node_list:
+            if node['primaryNode'] not in primary_node_list:
                 logging.debug('Removing node : {} {}'.format(node['name'], node))
                 self.poly.delNode(node['address'])
 
