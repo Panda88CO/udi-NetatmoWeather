@@ -80,8 +80,6 @@ class NetatmoController(udi_interface.Node):
         #self.wait_for_node_done()
         #logging.debug('testing 4')
         self.node = self.poly.getNode(self.address)
-        self.nodes_in_db = self.poly.getNodesFromDb()
-        logging.debug('Nodes in Nodeserver - before cleanup: {} - {}'.format(len(self.nodes_in_db),self.nodes_in_db))
         #logging.debug('testing 5')
         self.nodes_in_db = self.poly.getNodesFromDb()
         self.poly.updateProfile()
