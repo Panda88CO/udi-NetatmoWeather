@@ -56,11 +56,11 @@ class NetatmoController(udi_interface.Node):
         self.nodes_in_db = self.poly.getNodesFromDb()
         self.myNetatmo = NetatmoWeather(self.poly)
         self.hb  = 0
-        logging.debug('testing 1')
+        #logging.debug('testing 1')
         #self.customParameters = Custom(self.poly, 'customparams')
         self.Notices = Custom(self.poly, 'notices')
         self.n_queue = []
-        logging.debug('drivers : {}'.format(self.drivers))
+        #logging.debug('drivers : {}'.format(self.drivers))
         self.poly.subscribe(self.poly.STOP, self.stopHandler)
         self.poly.subscribe(self.poly.START, self.start, address)
         self.poly.subscribe(self.poly.CUSTOMPARAMS, self.myNetatmo.customParamsHandler)
@@ -71,16 +71,17 @@ class NetatmoController(udi_interface.Node):
         self.poly.subscribe(self.poly.ADDNODEDONE, self.addNodeDoneHandler)
         self.poly.subscribe(self.poly.POLL, self.systemPoll)
 
-        logging.debug('testing 2')
+        #logging.debug('testing 2')
 
         self.poly.addNode(self)
-        logging.debug('drivers : {}'.format(self.drivers))
-        logging.debug('testing 3')
+        #logging.debug('drivers : {}'.format(self.drivers))
+        #logging.debug('testing 3')
         #self.wait_for_node_done()
-        logging.debug('testing 4')
+        #logging.debug('testing 4')
         self.node = self.poly.getNode(self.address)
         logging.debug(' Node: {}'.format(self.node))
-        logging.debug('testing 5')
+        #logging.debug('testing 5')
+        self.nodes_in_db = self.poly.getNodesFromDb()
         self.poly.updateProfile()
         self.poly.ready()
        
@@ -203,9 +204,10 @@ class NetatmoController(udi_interface.Node):
                         logging.error('Failed to create Main Weather station: {}'.format(node_name))
                     time.sleep(1)            
         #removing unused nodes
-        logging.debug('Checking for nodes not used - node list{}'.format(node_list))
+        logging.debug('Checking for nodes not used - node list{} - {} {}'.format(node_list, len(self.nodes_in_db), self.nodes_in_db))
         for nde in range(0, len(self.nodes_in_db)):
             node = self.nodes_in_db[nde]
+
             logging.debug('Scanning db for extra nodes : {}'.format(node))
             if node['primaryNode'] not in node_list:
                 logging.debug('Removing node : {} {}'.format(node['name'], node))
