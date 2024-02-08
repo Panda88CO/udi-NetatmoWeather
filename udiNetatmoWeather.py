@@ -177,7 +177,7 @@ class NetatmoController(udi_interface.Node):
             main_modules = self.myNetatmo.get_main_modules(home)
             logging.debug('main modules {} {} '.format(home, main_modules))
             for m_module in main_modules:
-                logging.debug('{} adding MAIN modules {} - {}'.format(home_name, m_module, main_modules))
+                logging.debug('{} Evalating MAIN module {} - {}'.format(home_name, m_module, main_modules))
                 mod_name = main_modules[m_module]['name']
                 node_name = home_name + '_'+ mod_name
                 node_address = self.getValidAddress(m_module)
@@ -185,6 +185,7 @@ class NetatmoController(udi_interface.Node):
                 tmp_module = {}
                 tmp_module['home'] = home
                 tmp_module['main_module'] = m_module
+                logging.debug('Module {} enabled = {}'.format(node_name, self.myNetatmo.main_module_enabled(node_name) ))
                 if self.myNetatmo.main_module_enabled(node_name):
                     #self.enabled_list.append(tmp_module)
                     #logging.debug('enabled list {}'.format(self.enabled_list))
@@ -257,17 +258,17 @@ class NetatmoController(udi_interface.Node):
                     #Keep token current
                     #self.node.setDriver('GV0', self.temp_unit, True, True)
                     
-                        #self.myNetatmo.refresh_token()
-                        for home in self.homes_list:
-                            self.myNetatmo.update_weather_info_cloud(home)
-                            self.myNetatmo.update_weather_info_instant(home)
+                    #self.myNetatmo.refresh_token()
+                    for home in self.homes_list:
+                        self.myNetatmo.update_weather_info_cloud(home)
+                        self.myNetatmo.update_weather_info_instant(home)
 
 
-                        #nodes = self.poly.getNodes()
-                        for nde in nodes:
-                            if nde.address != 'controller':   # but not the setup node
-                                logging.debug('updating node {} data'.format(nde))
-                                nde.updateISYdrivers()
+                    #nodes = self.poly.getNodes()
+                    for nde in nodes:
+                        if nde.address != 'controller':   # but not the setup node
+                            logging.debug('updating node {} data'.format(nde))
+                            nde.updateISYdrivers()
                                                 
                 if 'shortPoll' in polltype:
                     self.heartbeat()
