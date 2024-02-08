@@ -69,7 +69,7 @@ class NetatmoController(udi_interface.Node):
         self.poly.subscribe(self.poly.CUSTOMNS, self.myNetatmo.customNsHandler)
         self.poly.subscribe(self.poly.OAUTH, self.myNetatmo.oauthHandler)
         self.poly.subscribe(self.poly.CONFIGDONE, self.configDoneHandler)
-        self.poly.subscribe(self.poly.ADDNODEDONE, self.addNodeDoneHandler)
+        self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
         self.poly.subscribe(self.poly.POLL, self.systemPoll)
 
         #logging.debug('testing 2')
@@ -161,7 +161,7 @@ class NetatmoController(udi_interface.Node):
             logging.info('Waiting for configuration to complete')
             time.sleep(1)
         self.addNodes()
-        
+        self.wait_for_node_done()
 
 
     def addNodes(self):
@@ -239,13 +239,14 @@ class NetatmoController(udi_interface.Node):
 
         #self.poly.discoverDevices()
 
-    def addNodeDoneHandler(self, node):
-       
+    '''
+    def addNodeDoneHandler(self, data):
+        self.n_queue.append(data['address'])
         # We will automatically query the device after discovery
-        self.poly.addNodeDoneHandler(node)
+        #self.poly.addNodeDoneHandler(node)
         #self.nodeDefineDone = True
         #pass
-    
+    '''
     def systemPoll (self, polltype):
         if self.nodeDefineDone:
             logging.info('System Poll executing: {}'.format(polltype))

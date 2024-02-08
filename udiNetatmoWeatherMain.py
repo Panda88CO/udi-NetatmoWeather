@@ -72,7 +72,9 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.WIND_modules = ['NAModule2']
         self.RAIN_modules = ['NAModule3']
         self.INDOOR_modules = ['NAModule4']
+        
         self.n_queue = []
+        self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
         self.module = {'module_id':module_info['main_module'], 'type':'MAIN', 'home_id':module_info['home'] }
         logging.debug('self.module = {}'.format(self.module))
         self.id = 'mainunit'
@@ -112,8 +114,6 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.node = self.poly.getNode(address)
         logging.info('Start {} main module Node'.format(self.name))  
         time.sleep(1)
-        self.n_queue = []
-        self.nodeDefineDone = False
 
        
     def node_queue(self, data):
@@ -166,7 +166,6 @@ class udiNetatmoWeatherMain(udi_interface.Node):
             state = 99
         return(state)
     
-
     def trend2ISY (self, trend):
         if trend == 'stable':
             return(0)
@@ -177,6 +176,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         else:
             logging.error('unsupported temperature trend: {}'.format(trend))
             return(99)    
+
 
     def convert_temp_unit(self, tempStr):
         if tempStr.capitalize()[:1] == 'F':
