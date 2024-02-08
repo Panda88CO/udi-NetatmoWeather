@@ -43,8 +43,7 @@ class NetatmoController(udi_interface.Node):
         logging.debug('NetatmoController Initializing')
         logging.setLevel(10)
         self.poly = polyglot
-        self.nodes_in_db = self.poly.getNodesFromDb()
-        logging.debug('Nodes in Nodeserver - before cleanup: {} - {}'.format(len(self.nodes_in_db),self.nodes_in_db))
+
         self.id = 'controller'
         self.drivers =  [ {'driver': 'ST', 'value':0, 'uom':2}, ]
         self.accessTokenEn = True
@@ -207,6 +206,9 @@ class NetatmoController(udi_interface.Node):
                         logging.error('Failed to create Main Weather station: {}'.format(node_name))
                     time.sleep(1)            
         #removing unused nodes
+        while not self.configDone:
+            logging.info('Waiting for config to comlete')
+            time.sleep(1)
         logging.debug('Checking for nodes not used - node list{} - {} {}'.format(node_list, len(self.nodes_in_db), self.nodes_in_db))
         for nde in range(0, len(self.nodes_in_db)):
             node = self.nodes_in_db[nde]
@@ -224,7 +226,8 @@ class NetatmoController(udi_interface.Node):
         self.poly.Notices.clear()
         logging.info('configDoneHandler called')
         #self.myNetatmo.updateOauthConfig()
-        
+        self.nodes_in_db = self.poly.getNodesFromDb()
+        logging.debug('Nodes in Nodeserver - before cleanup: {} - {}'.format(len(self.nodes_in_db),self.nodes_in_db))
         self.configDone = True
         
         #res = self.myNetatmo.get_home_info()
