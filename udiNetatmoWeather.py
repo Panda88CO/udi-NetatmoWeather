@@ -26,7 +26,7 @@ from NetatmoWeather import NetatmoWeather
 from  udiNetatmoWeatherMain import udiNetatmoWeatherMain
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
-version = '0.0.9'
+version = '0.0.10'
 
 #polyglot = None
 #myNetatmo = None
