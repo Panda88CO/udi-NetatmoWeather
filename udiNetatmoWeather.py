@@ -43,6 +43,8 @@ class NetatmoController(udi_interface.Node):
         logging.debug('NetatmoController Initializing')
         logging.setLevel(10)
         self.poly = polyglot
+        self.nodes_in_db = self.poly.getNodesFromDb()
+        logging.debug('Nodes in Nodeserver - before cleanup: {} - {}'.format(len(self.nodes_in_db),self.nodes_in_db))
         self.id = 'controller'
         self.drivers =  [ {'driver': 'ST', 'value':0, 'uom':2}, ]
         self.accessTokenEn = True
