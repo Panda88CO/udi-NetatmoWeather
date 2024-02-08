@@ -70,7 +70,7 @@ class NetatmoCloud(OAuth):
         #    logging.debug('Waiting for customDataHandler to complete')
         #    time.sleep(1)
         super().customDataHandler(data)
-        self.customerDataHandlerDone = True
+        self.customDataHandlerDone = True
         logging.debug('customDataHandler Finished')
 
     def customNsHandler(self, key, data):
@@ -96,7 +96,7 @@ class NetatmoCloud(OAuth):
         return(self.customNsHandlerDone)
     
     def customDateDone(self):
-        return(self.customerDataHandlerDone )
+        return(self.customDataHandlerDone )
 
     def customParamsDone(self):
         return(self.handleCustomParamsDone)
