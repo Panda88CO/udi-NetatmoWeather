@@ -157,10 +157,7 @@ class NetatmoController(udi_interface.Node):
         self.temp_unit = self.convert_temp_unit(self.myNetatmo.temp_unit)
         logging.debug('TEMP_UNIT: {}'.format(self.temp_unit ))
 
-        while not (self.myNetatmo.handleCustomParamsDone 
-                and self.myNetatmo.customerDataHandlerDone
-                and self.myNetatmo.customNsHandlerDone 
-                and self.configDone):
+        while not (self.myNetatmo.handleCustomParamsDone and self.myNetatmo.customerDataHandlerDone and self.myNetatmo.customNsHandlerDone and self.configDone):
             logging.info('Waiting for configuration to complete')
             time.sleep(1)
         self.addNodes()
