@@ -108,9 +108,8 @@ class NetatmoCloud(OAuth):
     
     def main_module_enabled(self, node_name):
         logging.debug('main_module_enabled called {}'.format(node_name))
-        if node_name in self.customParameters :
-            logging.debug('main_module_enabled : {} {}'.format(self.customParameters[node_name] == 1, type(self.customParameters[node_name])))
-            return(self.customParameters[node_name] == 1)
+        if node_name in self.customParameters :           
+            return(int(self.customParameters[node_name]) == 1)
         else:
             self.customParameters[node_name] = 1 #add and enable by default
             self.poly.Notices['home_id'] = 'Check config to select which home/modules should be used (1 - used, 0 - not used) - then restart'
