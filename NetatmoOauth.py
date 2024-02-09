@@ -175,7 +175,7 @@ class NetatmoCloud(OAuth):
         oauthSettingsUpdate['cloudlink'] = True
         oauthSettingsUpdate['addRedirect'] = True
         self.updateOauthSettings(oauthSettingsUpdate)    
-        logging.debug('Updated oAuth config: {}'.format(self.getOauthSettings()))
+        #logging.debug('Updated oAuth config: {}'.format(self.getOauthSettings()))
         if client_ok and secret_ok:
             self.handleCustomParamsDone = True
             self.poly.Notices.clear()

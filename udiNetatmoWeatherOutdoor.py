@@ -102,7 +102,7 @@ class udiN_WeatherOutdoor(udi_interface.Node):
     def convert_temp_unit(self, tempStr):
         if tempStr.capitalize()[:1] == 'F':
             return(1)
-        elif tempStr.capitalize()[:1] == 'K':
+        elif tempStr.capitalize()[:1] == 'C':
             return(0)
         
 

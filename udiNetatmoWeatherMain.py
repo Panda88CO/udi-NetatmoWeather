@@ -181,7 +181,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
     def convert_temp_unit(self, tempStr):
         if tempStr.capitalize()[:1] == 'F':
             return(1)
-        elif tempStr.capitalize()[:1] == 'K':
+        elif tempStr.capitalize()[:1] == 'C':
             return(0)
         
     
@@ -239,6 +239,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         if self.node is not None:
             if self.weather.get_online(self.module):
                 self.node.setDriver('ST', 1)
+                logging.debug('TempUnit = {} {}'.format(self.weather.temp_unit, self.convert_temp_unit(self.weather.temp_unit)))
                 if self.convert_temp_unit(self.weather.temp_unit) == 0:
                     self.node.setDriver('CLITEMP', round(self.weather.get_temperature_C(self.module),1), True, False, 4 )
                     self.node.setDriver('GV6', round(self.weather.get_min_temperature_C(self.module),1), True, False, 4 )
