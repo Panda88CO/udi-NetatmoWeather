@@ -58,6 +58,7 @@ Copyright (C) 2023 Universal Devices
 MIT License
 """
 import json
+import time
 import requests
 from datetime import timedelta, datetime
 
@@ -81,7 +82,7 @@ class OAuth:
         self.oauthConfig = {}
         self.init = True
         self.poly = polyglot
-
+        #self.updated_oauth_data = {}
 
     # customData contains current oAuth tokens: self.customData['tokens']
     def _customDataHandler(self, data):
@@ -89,14 +90,19 @@ class OAuth:
         self.customData.load(data)
 
 
+
     # Gives us the oAuth config from the store
     def _customNsHandler(self, key, data):
-        logging.info('CustomNsHandler {}'.format(key))
-        #self.customNs.load(data)
+        logging.info('CustomNsHandler {} - data {}'.format(key, data))
+        #self.custom.load(data)
+        #logging.debug('_customNsHandler : {}'.format(self.oauthConfig))
         if key == 'oauth':
             logging.info('CustomNsHandler oAuth: {}'.format(json.dumps(data)))
 
             self.oauthConfig = data
+            #for key in self.updated_oauth_data:
+            #    self.oauthConfig[key] = self.updated_oauth_data[key]
+            logging.debug('updated oauthConfig : {}'.format(self.oauthConfig))
 
             if self.oauthConfig.get('auth_endpoint') is None:
                 logging.error('oAuth configuration is missing auth_endpoint')
@@ -113,7 +119,7 @@ class OAuth:
     # User proceeded through oAuth authentication.
     # The authorization_code has already been exchanged for access_token and refresh_token by PG3
     def _oauthHandler(self, token):
-        logging.info('Authentication completed')
+        logging.info('Authentication completed - {}'.format(self.oauthConfig))
         logging.debug('Received oAuth tokens: {}'.format(json.dumps(token)))
         self._saveToken(token)
 
@@ -123,6 +129,32 @@ class OAuth:
 
         # This updates our copy of customData, but also sends it to PG3 for storage
         self.customData['token'] = token
+        logging.debug('_saveToken: {}'.format(self.customData))
+
+
+
+    # temp function until oauth is getting fixed 
+    def _insert_refreshToken(self, refresh_token, clientId, clientSecret):
+        logging.debug('_insert_refreshToken')
+        data = {
+                'grant_type': 'refresh_token',
+                'refresh_token': refresh_token,
+                'client_id': clientId,
+                'client_secret':  clientSecret
+                }
+        try:
+            response = requests.post('https://api.netatmo.com/oauth2/token' , data=data)
+            response.raise_for_status()
+            token = response.json()
+            logging.info('Refreshing tokens successful')
+            logging.debug(f"Token refresh result [{ type(token) }]: { token }")
+            self._saveToken(token)
+            return('Success')
+          
+        except requests.exceptions.HTTPError as error:
+            logging.error(f"Failed to refresh  token: { error }")
+            return(None)
+            # NOTE: If refresh tokens fails, we keep the existing tokens available.
 
     def _oAuthTokensRefresh(self):
         logging.info('Refreshing oAuth tokens')
@@ -136,7 +168,9 @@ class OAuth:
             }
         else:
             logging.info('Access token is not yet available. Please authenticate.')
+            #logging.debug('self.oauthConfig : {}'.format(self.oauthConfig))           
             self.poly.Notices['auth'] = 'Please initiate authentication'
+
             return(None)
         try:
             response = requests.post(self.oauthConfig['token_endpoint'], data=data)
@@ -145,15 +179,19 @@ class OAuth:
             logging.info('Refreshing oAuth tokens successful')
             logging.debug(f"Token refresh result [{ type(token) }]: { token }")
             self._saveToken(token)
-
+            return('Success')
+        
         except requests.exceptions.HTTPError as error:
             logging.error(f"Failed to refresh oAuth token: { error }")
+            return(None)
             # NOTE: If refresh tokens fails, we keep the existing tokens available.
 
     # Gets the access token, and refresh if necessary
     # Should be called only after config is done
     def getAccessToken(self):
-        logging.info('Getting access token')
+        logging.info('Getting access token')           
+        logging.debug(self.customData)
+
         token = self.customData['token']
 
         if token is not None:
@@ -169,9 +207,10 @@ class OAuth:
 
             return self.customData.token.get('access_token')
         else:
-            return None
+            self._oAuthTokensRefresh()
+            return self.customData.token.get('access_token')
 
-    ## Mothod to add/overwrite external oauth parameters
+    ## Method to add/overwrite external oauth parameters
     def addOauthParameter(self, key, data):
-        self.oauthConfig[key] = data
+        self.oauthConfig[key] =  data
         logging.debug('[{}] {} added to oauthConfig: {}'.format(key, data, self.oauthConfig))

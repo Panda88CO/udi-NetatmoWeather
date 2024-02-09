@@ -1,13 +1,14 @@
 
 #!/usr/bin/env python3
 
-from  NetatmoControlCommon import NetatmoControlCommon
+from  NetatmoOauthDev import NetatmoCloud 
+#from NetatmoControl import NetatmoControl
 import urllib.parse
 
-from oauth import OAuth
+#from oauth import OAuth
 
 try:
-    import udi_interface
+    from udi_interface import LOGGER, Custom, OAuth
     logging = udi_interface.LOGGER
     Custom = udi_interface.Custom
 except ImportError:
@@ -16,9 +17,9 @@ except ImportError:
     
 
 
-class NetatmoControlPower (NetatmoControlCommon):
+class NetatmoControlPower (NetatmoCloud):
     def __init__(self):
-        super().__init__()
+        #super().__init__()
         self.instant_data = {}
         self.cloud_data = {}
         self.control_data = {}
@@ -34,3 +35,4 @@ class NetatmoControlPower (NetatmoControlCommon):
     def update_power_info(self, home_id):
         '''update_power_info'''    
 
+    
