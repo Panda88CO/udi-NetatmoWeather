@@ -4,57 +4,54 @@
 Netatmo Weather Station NodeServer for PG3, PG3x
 MIT license.
 
-This node server integrated the Netatmo Weather Station. You will need account access to your Netatmo via the Netatmo Developer API, and create an App on their developer site to get a Client ID and a Client Secret. As part of the integration one will need to Autheticate when starting the node server the first time from the PG3(x) web interface (will switch to diffent website to allow authentication)
+This node server integrated the Netatmo Weather Station. You will need account access to your Netatmo via the Netatmo Developer API https://dev.netatmo.com.  Log in and select My Apps and then Create  Fill in info and press save - This exposes a client ID and client secret. 
+Start the node server under PG3 - go to configuration and enter client ID and client Secret.  Then restart.   First time you do this you should see a text box asking to authendicate.  Press the authendicate button - you should be taken to a new webpage where you login using you Netatmo id and password (used to generate the clientID etc).  Then press accept and you will be returned to the PG3 interface. 
+After running a little the differnt main netatmo under the account should be listed in configuration.  By default all are active.  If you do not want one station included set the value to 0
+Restart and you should be up and running
 
+Good luck
 
 ## Installation
 
 1. Backup Your ISY in case of problems!
    * Really, do the backup, please
 2. Go to the Polyglot Store in the UI and install.
-3. Add NodeServer in Polyglot Web
-   * After the install completes, Polyglot will reboot your ISY, you can watch the status in the main polyglot log.
-4. Once your ISY is back up open the Admin Console.
-5. Configure the node server with your account username and password.
+3. Add NodeServer in PG3(x) 
+   Got ton configuration and enter clientId and client secret (see above)
+   Restart
+   Authendicate if asked
+   Select weather stations to be used in configuration (1 for enable, 0 for disable)
+   Restart node server
+   Go to Admin console 
 
 ### Node Settings
 The settings for this node are:
 
 #### Short Poll
-   * Query Weather Station instantaneous data. The default is 5 minutes as the server only updates every 10 minutes.
+   * Query Weather Station instantaneous data. The default is 5 minutes - sends a heart beat as well 0->1 or 1 -> 0
 #### Long Poll
    * Query Weather Station all data. Netatmo data is updated every 15 min or so.  The default is 30 minutes.
 
-#### Client ID
+#### ClientID
    * Your Netatmo App Client ID
 
-#### Client Secret
+#### ClientSecret
    * Your Netatmo App Client Secret
-###
+
+#### TEMP_UNIT
+   * C (default) of F
+
+#### Diffetn Weather stations
+   * Weather stations associated with teh account are listed - 1 to include 0 to disable 
 
 ## Requirements
 
-1. Polyglot V2 itself should be run on Raspian Stretch.
-  To check your version, ```cat /etc/os-release``` and the first line should look like
-  ```PRETTY_NAME="Raspbian GNU/Linux 9 (stretch)"```. It is possible to upgrade from Jessie to
-  Stretch, but I would recommend just re-imaging the SD card.  Some helpful links:
-   * https://www.raspberrypi.org/blog/raspbian-stretch/
-   * https://linuxconfig.org/raspbian-gnu-linux-upgrade-from-jessie-to-raspbian-stretch-9
-2. This has only been tested with ISY 5.0.13 so it is not guaranteed to work with any other version.
+   * PG3x ver 3.2.18 or greater
+   * UDI_interfae 3.1.1 or greater
 
-# Upgrading
-
-Open the Polyglot web page, go to nodeserver store and click "Update" for "Netatmo-Weather Statipn".
-
-For Polyglot 2.0.35, hit "Cancel" in the update window so the profile will not be updated and ISY rebooted.  The install procedure will properly handle this for you.  This will change with 2.0.36, for that version you will always say "No" and let the install procedure handle it for you as well.
-
-Then restart the Netatmo Weather Station NodeServer by selecting it in the Polyglot dashboard and select Control -> Restart, then watch the log to make sure everything goes well.
-
-The Netatmo Weather Station NodeServer keeps track of the version number and when a profile rebuild is necessary.  The profile/version.txt will contain the Netatmo Weather Station profile_version which is updated in server.json when the profile should be rebuilt.
 
 # Release Notes
+code somewhat based on original NEtatmoWeather node server (depreciated due to new authendication methods)
 
-- 1.0.0 06/21/2021
-   - Initial version published to github
-- 1.1.0 06/26/2021
-   - Added "Query All" Command to NodeServer
+- 0.1.0 02/07/2024
+   - Initial version published to github - 
