@@ -135,7 +135,7 @@ class NetatmoWeather (NetatmoCloud):
     
     def merge_data_str(self, data):
         '''merge_data_str'''
-        logging.debug('merge_data_str: {}'.format(data))
+        #logging.debug('merge_data_str: {}'.format(data))
         if data == 'ts':
             data_str = 'time_stamp'
         if data == 'time_utc':
