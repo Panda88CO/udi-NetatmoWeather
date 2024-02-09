@@ -420,12 +420,12 @@ class NetatmoWeather (NetatmoCloud):
     def get_time_since_time_stamp_min(self, module):
         unix_timestamp = (datetime.now() - datetime(1970, 1, 1)).total_seconds()
         logging.debug('UT1 : {}'.format(unix_timestamp))
-        tz_offset = datetime.now(timezone.utc)- datetime.now() 
+        tz_offset = datetime.now(timezone.utc) 
         logging.debug('TZ offset : {}'.format(tz_offset))
-        unix_timestamp = unix_timestamp-tz_offset
+        TZ_diff = unix_timestamp-tz_offset
         meas_time = self.get_time_stamp(module)
         logging.debug('MeasTime : {}'.format(meas_time))
-        delay = unix_timestamp-meas_time
+        delay = unix_timestamp+TZ_diff-meas_time
         return( round(delay/60, 2)) #delay min
 
     def get_temp_trend(self, module):
