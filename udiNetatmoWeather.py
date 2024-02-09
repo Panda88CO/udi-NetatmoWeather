@@ -114,16 +114,14 @@ class NetatmoController(udi_interface.Node):
    
     def heartbeat(self):
         logging.debug('heartbeat: ' + str(self.hb))
-        #if self.yoAccess.online:
-        #    self.node.setDriver('ST', 1)
-        #    if self.hb == 0:
-        #       self.reportCmd('DON',2)
-        #       self.hb = 1
-        #   else:
-        #       self.reportCmd('DOF',2)
-        #       self.hb = 0
-        #else:
-        #    self.node.setDriver('ST', 0)
+        self.node.setDriver('ST', 1)
+        if self.hb == 0:
+            self.reportCmd('DON',2)
+            self.hb = 1
+        else:
+            self.reportCmd('DOF',2)
+            self.hb = 0
+
         
 
     def start(self):
