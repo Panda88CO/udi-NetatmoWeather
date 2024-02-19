@@ -14,9 +14,8 @@ Good luck
 ## Installation
 
 1. Backup Your ISY in case of problems!
-   * Really, do the backup, please
 2. Go to the Polyglot Store in the UI and install.
-3. Add NodeServer in PG3(x) 
+3. Add NodeServer in PG3x - NOTE PG3 is not supported as OAuth library does not work on PG3 
    Got ton configuration and enter clientId and client secret (see above)
    Restart
    Authendicate if asked

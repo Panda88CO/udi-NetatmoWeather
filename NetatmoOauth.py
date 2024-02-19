@@ -85,9 +85,9 @@ class NetatmoCloud(OAuth):
 
     def oauthHandler(self, token):
         logging.debug('oauthHandler called')
-        #while not (self.customParamsDone() and self.customNsDone()):
-        #    logging.debug('Waiting for oauthHandler to complete')
-        #    time.sleep(1)
+        while not (self.customParamsDone() and self.customNsDone()):
+            logging.debug('Waiting for oauthHandler to complete')
+            time.sleep(5)
         super().oauthHandler(token)
         #self.customOauthHandlerDone = True
         logging.debug('oauthHandler Finished')
@@ -146,19 +146,6 @@ class NetatmoCloud(OAuth):
 
         if not client_ok  or not secret_ok:
             self.poly.Notices['client'] = 'Please enter valid clientID and clientSecret - then restart'
-        #if 'scope' in self.customParameters:
-        #    temp = self.customParameters['scope'] 
-        #    temp1 = temp.split()
-        #    self.scope_str = ''
-        #    for net_scope in temp1:
-        #        if net_scope in self.scopeList:
-        #            self.scope_str = self.scope_str + ' ' + net_scope
-        #        else:
-        #            logging.error('Unknown scope provided: {} - removed '.format(net_scope))
-        #    self.scope = self.scope_str.split()
-        #else:
-        #    self.customParameters['scope'] = 'enter desired scopes space separated'
-        #    self.scope_str = ""
 
         if "TEMP_UNIT" in self.customParameters:
             self.temp_unit = self.customParameters['TEMP_UNIT'][0].upper()
@@ -172,7 +159,7 @@ class NetatmoCloud(OAuth):
         oauthSettingsUpdate['scope'] = self.scope
         oauthSettingsUpdate['auth_endpoint'] = 'https://api.netatmo.com/oauth2/authorize'
         oauthSettingsUpdate['token_endpoint'] = 'https://api.netatmo.com/oauth2/token'
-        oauthSettingsUpdate['cloudlink'] = True
+        #oauthSettingsUpdate['cloudlink'] = True
         oauthSettingsUpdate['addRedirect'] = True
         self.updateOauthSettings(oauthSettingsUpdate)    
         #logging.debug('Updated oAuth config: {}'.format(self.getOauthSettings()))
