@@ -108,7 +108,7 @@ class NetatmoCloud(OAuth):
     
     def main_module_enabled(self, node_name):
         logging.debug('main_module_enabled called {}'.format(node_name))
-        if node_name in self.customParameters :           
+        if node_name in self.customParameters:           
             return(int(self.customParameters[node_name]) == 1)
         else:
             self.customParameters[node_name] = 1 #add and enable by default
