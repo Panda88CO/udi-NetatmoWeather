@@ -374,7 +374,8 @@ class NetatmoCloud(OAuth):
 
                 return(status)
         except Exception as e:
-            logging.error('Error get hiome status : {}'.format(e))
+            logging.error('Error get home status : {}'.format(e))
+            return(None)
 
     def get_modules(self, home_id):
         '''get_modules'''

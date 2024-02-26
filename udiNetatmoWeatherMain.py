@@ -72,7 +72,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.WIND_modules = ['NAModule2']
         self.RAIN_modules = ['NAModule3']
         self.INDOOR_modules = ['NAModule4']
-        
+        self.poly = polyglot
         self.n_queue = []
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
         self.module = {'module_id':module_info['main_module'], 'type':'MAIN', 'home_id':module_info['home'] }
@@ -96,7 +96,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.primary = primary
         self.address = address
         self.name = name
-        self.poly = polyglot
+
         self.weather = NetatmoWeather
         #self.home_id = module_info['home']
         #self.main_module_id = module_info['main_module']
