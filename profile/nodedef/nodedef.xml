@@ -8,7 +8,6 @@
       <sends />
       <accepts>
         <cmd id="UPDATE" /> 
-        <cmd id="QUERY" />     
       </accepts>
     </cmds>
   </nodeDef>

@@ -2,6 +2,7 @@
 ND-controller-NAME = Netatmo System
 ND-controller-ICON = Weather
 ST-ctl-ST-NAME = NodeServer Online
+CMD-ctrl-UPDATE-NAME = Force Update 
 
 ND-mainunit-NAME = Main Weather Station
 ND-mainunit-ICON = Weather
