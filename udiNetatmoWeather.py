@@ -293,7 +293,7 @@ class NetatmoController(udi_interface.Node):
                 node.setOffline()
         self.poly.stop()
 
-    def update(self):
+    def update(self, command=None):
         if self.nodeDefineDone:
             logging.info('update executing')
             nodes = self.poly.nodes()
