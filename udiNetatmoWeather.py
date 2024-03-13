@@ -310,7 +310,7 @@ class NetatmoController(udi_interface.Node):
     id = 'controller'
     drivers =  [ {'driver': 'ST', 'value':0, 'uom':2}, ]
     commands = { 'UPDATE': update, }
-    
+
 if __name__ == "__main__":
     try:
         logging.info ('starting')

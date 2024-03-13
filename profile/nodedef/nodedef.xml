@@ -1,5 +1,5 @@
 <nodeDefs>
-  <nodeDef id="controller" nls="ctl">
+  <nodeDef id="controller" nls="ctrl">
     <editors />
     <sts>
       <st id="ST" editor="bool" />
@@ -7,7 +7,7 @@
     <cmds>
       <sends />
       <accepts>
-        <cmd id="UPDATE" /> 
+        <cmd id="UPDATE" />  
       </accepts>
     </cmds>
   </nodeDef>
