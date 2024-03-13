@@ -26,7 +26,7 @@ from NetatmoWeather import NetatmoWeather
 from  udiNetatmoWeatherMain import udiNetatmoWeatherMain
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
-version = '0.1.1'
+version = '0.1.2'
 
 #polyglot = None
 #myNetatmo = None
@@ -44,8 +44,7 @@ class NetatmoController(udi_interface.Node):
         logging.setLevel(10)
         self.poly = polyglot
 
-        self.id = 'controller'
-        self.drivers =  [ {'driver': 'ST', 'value':0, 'uom':2}, ]
+
         self.accessTokenEn = True
         self.accessToken = None
         self.nodeDefineDone = False
@@ -293,6 +292,24 @@ class NetatmoController(udi_interface.Node):
                 node.setOffline()
         self.poly.stop()
 
+    def update(self, command=None):
+        if self.nodeDefineDone:
+            logging.info('update executing')
+            nodes = self.poly.nodes()
+            try:
+                for home in self.homes_list:
+                    self.myNetatmo.update_weather_info_cloud(home)
+                    self.myNetatmo.update_weather_info_instant(home)
+                for nde in nodes:
+                    if nde.address != 'controller':   # but not the setup node
+                        logging.debug('updating node {} data'.format(nde))
+                        nde.updateISYdrivers()
+                                            
+            except Exception as e:
+                    logging.error('Exeption occcured : {}'.format(e))
+    id = 'controller'
+    drivers =  [ {'driver': 'ST', 'value':0, 'uom':2}, ]
+    commands = { 'UPDATE': update, }
 
 if __name__ == "__main__":
     try:
