@@ -44,8 +44,7 @@ class NetatmoController(udi_interface.Node):
         logging.setLevel(10)
         self.poly = polyglot
 
-        self.id = 'controller'
-        self.drivers =  [ {'driver': 'ST', 'value':0, 'uom':2}, ]
+
         self.accessTokenEn = True
         self.accessToken = None
         self.nodeDefineDone = False
@@ -308,10 +307,10 @@ class NetatmoController(udi_interface.Node):
                                             
             except Exception as e:
                     logging.error('Exeption occcured : {}'.format(e))
-   
-    commands = {        
-                'UPDATE': update,
-                }
+    id = 'controller'
+    drivers =  [ {'driver': 'ST', 'value':0, 'uom':2}, ]
+    commands = { 'UPDATE': update, }
+    
 if __name__ == "__main__":
     try:
         logging.info ('starting')
