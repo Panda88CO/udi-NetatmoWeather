@@ -1,12 +1,11 @@
 ## Netatmo WeatherStation NodeServer Configuration
-####Configuration Parameters:
 
-- key: shortPoll, value: Refresh rate in second. Keep in mind that Netatmo only updates it's online information every 10 minutes
-- key: longPoll, value: not used
+#### Configuration Parameters:
 
-####Custom Configuration Parameters:
+- key: `shortPoll`, value: Refresh rate in seconds (default: 600). Keep in mind that Netatmo only updates its online information every 10 minutes.
+- key: `longPoll`, value: Not used (default: 1200).
 
-- key: Username, value: username for Netatmo weather station (required)
-- key: Password, value: password for Netatmo weather station (required)
-- key: ClientID, value: cliendID from Netatmo developer User App (required)
-- key: ClientSecret, value: cliendSecret from Netatmo developer User App (required)
+#### Custom Configuration Parameters:
+
+- key: `ClientID`, value: Client ID from Netatmo developer app at dev.netatmo.com (required)
+- key: `ClientSecret`, value: Client Secret from Netatmo developer app at dev.netatmo.com (required)

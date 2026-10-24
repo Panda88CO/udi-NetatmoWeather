@@ -20,8 +20,6 @@ class TestController(unittest.TestCase):
         self.assertEqual(self.controller.version, mainNetatmo.__version__)
         self.assertEqual(self.controller.version, '1.3.0')
         self.assertFalse(self.controller.configured)
-        self.assertEqual(self.controller.username, '')
-        self.assertEqual(self.controller.password, '')
         self.assertEqual(self.controller.clientId, '')
         self.assertEqual(self.controller.clientSecret, '')
 
@@ -46,26 +44,20 @@ class TestController(unittest.TestCase):
         """Verify check_params sets configured to True when all required credentials are present."""
         self.controller.polyConfig = {
             'customParams': {
-                'Username': 'user@example.com',
-                'Password': 'secretpassword',
                 'ClientID': 'client_id_123',
                 'ClientSecret': 'client_secret_abc'
             }
         }
         self.controller.check_params()
         self.assertTrue(self.controller.configured)
-        self.assertEqual(self.controller.username, 'user@example.com')
-        self.assertEqual(self.controller.password, 'secretpassword')
         self.assertEqual(self.controller.clientId, 'client_id_123')
         self.assertEqual(self.controller.clientSecret, 'client_secret_abc')
-        self.assertEqual(self.controller.custom_params['Username'], 'user@example.com')
+        self.assertEqual(self.controller.custom_params['ClientID'], 'client_id_123')
 
     def test_process_config_triggers_discovery_on_change(self):
         """Verify process_config detects parameter changes and triggers discover()."""
         config = {
             'customParams': {
-                'Username': 'newuser',
-                'Password': 'newpassword',
                 'ClientID': 'newclient',
                 'ClientSecret': 'newsecret'
             }
@@ -73,14 +65,12 @@ class TestController(unittest.TestCase):
         with patch.object(self.controller, 'discover') as mock_discover:
             self.controller.process_config(config)
             self.assertTrue(self.controller.configured)
-            self.assertEqual(self.controller.username, 'newuser')
+            self.assertEqual(self.controller.clientId, 'newclient')
             mock_discover.assert_called_once()
 
     def test_process_config_no_change_does_not_discover(self):
         """Verify process_config does not re-discover if customParams haven't changed."""
         initial_params = {
-            'Username': 'sameuser',
-            'Password': 'samepassword',
             'ClientID': 'sameclient',
             'ClientSecret': 'samesecret'
         }

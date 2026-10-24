@@ -115,8 +115,6 @@ class Controller(polyinterface.Controller):
         self.primary = self.address
         self.configured = False
         self.myConfig = {}
-        self.username = ''
-        self.password = ''
         self.clientId = ''
         self.clientSecret = ''
         self.connected = False
@@ -134,20 +132,6 @@ class Controller(polyinterface.Controller):
             if config['customParams'] != self.myConfig:
                 changed = False
 
-                if 'Username' in self.myConfig:
-                    if self.myConfig['Username'] != config['customParams']['Username']:
-                        changed = True
-                elif 'Username' in config['customParams']:
-                    if config['customParams']['Username'] != "":
-                        changed = True
-
-                if 'Password' in self.myConfig:
-                    if self.myConfig['Password'] != config['customParams']['Password']:
-                        changed = True
-                elif 'Password' in config['customParams']:
-                    if config['customParams']['Password'] != "":
-                        changed = True
-
                 if 'ClientID' in self.myConfig:
                     if self.myConfig['ClientID'] != config['customParams']['ClientID']:
                         changed = True
@@ -164,8 +148,6 @@ class Controller(polyinterface.Controller):
 
                 self.myConfig = config['customParams']
                 if changed:
-                    self.username = config['customParams']['Username']
-                    self.password = config['customParams']['Password']
                     self.clientId = config['customParams']['ClientID']
                     self.clientSecret = config['customParams']['ClientSecret']
                     self.configured = True
@@ -175,7 +157,7 @@ class Controller(polyinterface.Controller):
     def start(self):
         LOGGER.info(f'Starting Netatmo node server v{__version__}')
         self.check_params()
-        self.session = lnetatmo.ClientAuth(clientId=self.clientId, clientSecret=self.clientSecret, username=self.username, password=self.password)
+        self.session = lnetatmo.ClientAuth(clientId=self.clientId, clientSecret=self.clientSecret)
         #self.session = lnetatmo.ClientAuth()
         self.discover()
         LOGGER.info('Node server started')
@@ -299,12 +281,6 @@ class Controller(polyinterface.Controller):
         LOGGER.info('CHECK PARAMS Controller')
         self.configured = True
 
-        if 'Username' in self.polyConfig['customParams']:
-            self.username = self.polyConfig['customParams']['Username']
-
-        if 'Password' in self.polyConfig['customParams']:
-            self.password = self.polyConfig['customParams']['Password']
-
         if 'ClientID' in self.polyConfig['customParams']:
             self.clientId = self.polyConfig['customParams']['ClientID']
 
@@ -312,13 +288,11 @@ class Controller(polyinterface.Controller):
             self.clientSecret = self.polyConfig['customParams']['ClientSecret']
 
         self.addCustomParam( {
-            'Username': self.username,
-            'Password': self.password,
             'ClientID' : self.clientId,
             'ClientSecret' :self.clientSecret
             })
 
-        if self.username == '' or self.password == '' or self.clientId == '' or self.clientSecret == '':
+        if self.clientId == '' or self.clientSecret == '':
             self.configured = False
 
         self.removeNoticesAll()

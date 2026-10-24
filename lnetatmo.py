@@ -191,13 +191,16 @@ class ClientAuth:
                                  "read_presence access_presence write_presence read_thermostat write_thermostat"):
         
         postParams = {
-                "grant_type" : "password",
                 "client_id" : clientId,
                 "client_secret" : clientSecret,
-                "username" : username,
-                "password" : password,
                 "scope" : scope
                 }
+        if username and password:
+            postParams["grant_type"] = "password"
+            postParams["username"] = username
+            postParams["password"] = password
+        else:
+            postParams["grant_type"] = "client_credentials"
         resp = postRequest(_AUTH_REQ, postParams)
         if not resp: raise AuthFailure("Authentication request rejected")
 
