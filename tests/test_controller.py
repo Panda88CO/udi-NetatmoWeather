@@ -29,9 +29,6 @@ class TestController(unittest.TestCase):
         poly.start(mainNetatmo.__version__)
         self.assertEqual(poly.version, '1.4.0')
 
-        fb = mainNetatmo._FallbackInterface('Netatmo')
-        fb.start(mainNetatmo.__version__)
-        self.assertEqual(fb.version, '1.4.0')
 
     def test_check_params_unconfigured(self):
         """Verify check_params sets configured to False when credentials are empty."""
@@ -241,14 +238,6 @@ class TestController(unittest.TestCase):
             self.controller.shortPoll()
             self.assertEqual(self.controller.lastData, mock_data)
             child_node.get_status.assert_called_once_with(False)
-
-    def test_fallback_polyinterface_attributes(self):
-        """Verify fallback udi_interface provides expected Controller, Node, Interface, and LOGGER."""
-        fallback = mainNetatmo._FallbackUDIInterface()
-        self.assertTrue(hasattr(fallback, 'LOGGER'))
-        self.assertTrue(hasattr(fallback, 'Controller'))
-        self.assertTrue(hasattr(fallback, 'Node'))
-        self.assertTrue(hasattr(fallback, 'Interface'))
 
     def test_update_profile(self):
         """Verify update_profile calls poly.installprofile()."""
