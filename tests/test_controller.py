@@ -243,8 +243,8 @@ class TestController(unittest.TestCase):
             child_node.get_status.assert_called_once_with(False)
 
     def test_fallback_polyinterface_attributes(self):
-        """Verify fallback polyinterface provides expected Controller, Node, Interface, and LOGGER."""
-        fallback = mainNetatmo._FallbackPolyinterface()
+        """Verify fallback udi_interface provides expected Controller, Node, Interface, and LOGGER."""
+        fallback = mainNetatmo._FallbackUDIInterface()
         self.assertTrue(hasattr(fallback, 'LOGGER'))
         self.assertTrue(hasattr(fallback, 'Controller'))
         self.assertTrue(hasattr(fallback, 'Node'))

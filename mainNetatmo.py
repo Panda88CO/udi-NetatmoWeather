@@ -92,27 +92,23 @@ class _FallbackInterface:
     def onConfig(self, callback):
         self.callbacks.append(callback)
 
-class _FallbackPolyinterface:
+class _FallbackUDIInterface:
     LOGGER = _FallbackLogger()
     Node = _FallbackNode
     Interface = _FallbackInterface
     Custom = _FallbackCustom
     Controller = None
 
+# Backward compatibility alias
+_FallbackPolyinterface = _FallbackUDIInterface
+
 try:
     from udi_interface import Interface, Node, LOGGER, Custom
 except ImportError:
-    try:
-        import polyinterface
-        Interface = polyinterface.Interface
-        Node = polyinterface.Node
-        LOGGER = polyinterface.LOGGER
-        Custom = _FallbackCustom
-    except ImportError:
-        Interface = _FallbackInterface
-        Node = _FallbackNode
-        LOGGER = _FallbackLogger()
-        Custom = _FallbackCustom
+    Interface = _FallbackInterface
+    Node = _FallbackNode
+    LOGGER = _FallbackLogger()
+    Custom = _FallbackCustom
 
 def round_half_up(num, decimals = 0):
     temp_dec = 10 ** decimals

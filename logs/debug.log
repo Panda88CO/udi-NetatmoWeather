@@ -1,0 +1,18 @@
+2026-10-23 18:58:58.076 MainThread udi_interface      INFO     polylogger:set_basic_config: set_basic_config: enable=True level=30
+2026-10-23 18:58:58.076 MainThread udi_interface      INFO     __init__:<module>: UDI interface initializing
+2026-10-23 18:58:58.076 MainThread udi_interface      INFO     __init__:<module>: User=christianolgaard
+2026-10-23 18:58:58.076 MainThread udi_interface      INFO     __init__:<module>: Home=/Users/christianolgaard
+2026-10-23 18:58:58.076 MainThread udi_interface      INFO     __init__:<module>: Node Server Path=/Users/christianolgaard/Documents/GitHub/udi-NetatmoWeather
+2026-10-23 18:58:58.076 MainThread udi_interface      INFO     __init__:<module>: PG3INIT=Not set
+2026-10-23 18:58:58.076 MainThread udi_interface      INFO     __init__:<module>: Loading interface module
+2026-10-23 18:58:58.097 MainThread udi_interface      INFO     interface:<module>: Loading MQTT module
+2026-10-23 18:58:58.108 MainThread udi_interface      INFO     interface:<module>: MQTT module loaded
+2026-10-23 18:58:58.127 MainThread py.warnings        WARNING  warnings:_showwarnmsg: /Users/christianolgaard/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+2026-10-23 18:58:58.127 MainThread py.warnings        WARNING  warnings:_showwarnmsg: /Users/christianolgaard/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+2026-10-23 18:58:58.197 MainThread udi_interface      INFO     __init__:<module>: Loading udi_interface module
+2026-10-23 18:58:58.197 MainThread udi_interface      INFO     __init__:<module>: Loading node module
+2026-10-23 18:58:58.197 MainThread udi_interface      INFO     __init__:<module>: Loading custom module
+2026-10-23 18:58:58.197 MainThread udi_interface      INFO     __init__:<module>: Loading isy module
+2026-10-23 18:58:58.197 MainThread udi_interface      INFO     __init__:<module>: Loading OAuth module
+2026-10-23 18:58:58.197 MainThread udi_interface      INFO     __init__:<module>: UDI interface initialized
+2026-10-23 18:58:58.197 MainThread udi_interface      INFO     __init__:<module>: UDI Python Interface for Polyglot version 3 3.4.7 Starting...
