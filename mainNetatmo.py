@@ -11,7 +11,7 @@ import json
 import math
 import lnetatmo
 
-__version__ = '1.3.0'
+__version__ = '1.4.0'
 
 # Fallback dummy udi_interface for standalone execution, CI, and test environments
 class _FallbackLogger:

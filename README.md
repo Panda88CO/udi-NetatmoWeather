@@ -59,3 +59,7 @@ The Netatmo Weather Station NodeServer tracks version numbers and determines whe
    - Deterministic hardware-based addressing for indoor modules
    - Robust error and auth failure handling in shortPoll
    - Decoupled polyinterface with standalone fallback stub and comprehensive test suite
+- 1.4.0 10/23/2026
+   - Migrated to Polyglot v3 (udi_interface)
+   - Updated driver dictionaries with human-readable names from profile NLS
+   - Fixed executable mapping in server.json
