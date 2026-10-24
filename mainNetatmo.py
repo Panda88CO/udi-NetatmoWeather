@@ -6,6 +6,7 @@ and uses the "lnetatmo" library from Philippe Larduinat (https://github.com/phil
 Copyright (C) 2021 Daniel Caldentey
 """
 import logging
+import os
 import sys
 import json
 import math
@@ -15,10 +16,10 @@ __version__ = '1.4.0'
 
 # Fallback dummy udi_interface for standalone execution, CI, and test environments
 class _FallbackLogger:
-    def info(self, msg, *args): logging.info(str(msg), *args)
-    def debug(self, msg, *args): logging.debug(str(msg), *args)
-    def error(self, msg, *args): logging.error(str(msg), *args)
-    def warning(self, msg, *args): logging.warning(str(msg), *args)
+    def info(self, msg, *args, **kwargs): logging.info(str(msg), *args, **kwargs)
+    def debug(self, msg, *args, **kwargs): logging.debug(str(msg), *args, **kwargs)
+    def error(self, msg, *args, **kwargs): logging.error(str(msg), *args, **kwargs)
+    def warning(self, msg, *args, **kwargs): logging.warning(str(msg), *args, **kwargs)
 
 class _FallbackNode:
     def __init__(self, poly, primary, address, name):
@@ -33,6 +34,10 @@ class _FallbackNode:
         pass
 
 class _FallbackCustom(dict):
+    def __init__(self, poly=None, custom=None, *args, **kwargs):
+        super().__init__()
+        self.poly = poly
+        self.custom = custom
     def clear(self):
         super().clear()
     def load(self, data):
@@ -43,6 +48,8 @@ class _FallbackInterface:
     STOP = 'stop'
     CUSTOMPARAMS = 'customparams'
     POLL = 'poll'
+    CONFIGDONE = 'config_done'
+    DISCOVER = 'discover'
 
     def __init__(self, classes=None, options=None):
         self.classes = classes or []
@@ -159,12 +166,21 @@ class Controller(Node):
         self.custom_params = {}
         self.notices_removed = False
         self.version = __version__
+        self._startup_completed = False
 
+        self.Parameters = Custom(self.poly, 'customparams') if hasattr(self.poly, 'subscribe') else {}
+        self.Notices = getattr(self.poly, 'Notices', None) or (Custom(self.poly, 'notices') if hasattr(self.poly, 'subscribe') else {})
+
+        LOGGER.debug('[__init__] Subscribing to polyglot events')
         if hasattr(self.poly, 'subscribe'):
-            self.poly.subscribe(getattr(self.poly, 'START', 'start'), self.start, address)
+            self.poly.subscribe(getattr(self.poly, 'START', 'start'), self.start)
             self.poly.subscribe(getattr(self.poly, 'STOP', 'stop'), self.stop)
             self.poly.subscribe(getattr(self.poly, 'CUSTOMPARAMS', 'customparams'), self.process_config)
             self.poly.subscribe(getattr(self.poly, 'POLL', 'poll'), self.poll)
+            if hasattr(self.poly, 'CONFIGDONE'):
+                self.poly.subscribe(self.poly.CONFIGDONE, self.config_done)
+            if hasattr(self.poly, 'DISCOVER'):
+                self.poly.subscribe(self.poly.DISCOVER, self.discover)
 
         if hasattr(self.poly, 'onConfig'):
             self.poly.onConfig(self.process_config)
@@ -174,25 +190,40 @@ class Controller(Node):
                 self.poly.updateProfile()
             except Exception:
                 pass
-        if hasattr(self.poly, 'ready'):
-            self.poly.ready()
+
+        LOGGER.info('[__init__] Registering Netatmo Controller node')
         if hasattr(self.poly, 'addNode'):
             try:
                 self.poly.addNode(self, conn_status='ST')
             except TypeError:
                 self.poly.addNode(self)
+        self.nodes[self.address] = self
+
+        LOGGER.info('[__init__] Signaling polyglot ready')
+        if hasattr(self.poly, 'ready'):
+            self.poly.ready()
 
     def poll(self, flag):
+        if not self._startup_completed:
+            self._run_startup_once('POLL')
         if flag == 'shortPoll':
             self.shortPoll()
         elif flag == 'longPoll':
             self.longPoll()
+
+    def config_done(self, *_args, **_kwargs):
+        LOGGER.debug('Configuration done event received')
+        if not self._startup_completed:
+            self._run_startup_once('CONFIGDONE')
 
     # Process changes to customParameters
     def process_config(self, config):
         if not config:
             return
         params = config.get('customParams', config) if isinstance(config, dict) else {}
+        if hasattr(self, 'Parameters') and hasattr(self.Parameters, 'load'):
+            self.Parameters.load(params)
+
         # Check if anything we care about was changed...
         if params != self.myConfig:
             changed = False
@@ -211,21 +242,40 @@ class Controller(Node):
                 if params.get('ClientSecret') != "":
                     changed = True
 
-            self.myConfig = params
+            self.myConfig = dict(params)
             if changed:
                 self.clientId = params.get('ClientID', '')
                 self.clientSecret = params.get('ClientSecret', '')
                 if self.clientId and self.clientSecret:
                     self.configured = True
+                else:
+                    self.configured = False
                 self.removeNoticesAll()
+                if self.configured and self._startup_completed:
+                    try:
+                        self.session = lnetatmo.ClientAuth(clientId=self.clientId, clientSecret=self.clientSecret)
+                    except Exception as ex:
+                        LOGGER.info(f'ClientAuth failed: {ex}')
                 self.discover()
 
-    def start(self):
+    def start(self, *_args, **_kwargs):
         LOGGER.info(f'Starting Netatmo node server v{__version__}')
+        self._run_startup_once('START')
+
+    def _run_startup_once(self, source='START'):
+        if self._startup_completed:
+            return
+        LOGGER.info(f'Running Netatmo startup via {source}')
         self.check_params()
-        self.session = lnetatmo.ClientAuth(clientId=self.clientId, clientSecret=self.clientSecret)
-        #self.session = lnetatmo.ClientAuth()
-        self.discover()
+        if self.configured and self.clientId and self.clientSecret:
+            try:
+                self.session = lnetatmo.ClientAuth(clientId=self.clientId, clientSecret=self.clientSecret)
+                self.discover()
+            except Exception as ex:
+                LOGGER.error(f'Authentication or discovery failed during startup: {ex}')
+        else:
+            LOGGER.warning('Netatmo controller is not configured yet. Please configure ClientID and ClientSecret.')
+        self._startup_completed = True
         LOGGER.info('Node server started')
 
     def longPoll(self):
@@ -351,12 +401,14 @@ class Controller(Node):
         self.configured = True
 
         custom_params = {}
-        if hasattr(self.poly, 'config') and isinstance(self.poly.config, dict) and 'customParams' in self.poly.config:
-            custom_params = self.poly.config['customParams']
+        if hasattr(self, 'Parameters') and isinstance(self.Parameters, dict) and self.Parameters:
+            custom_params = dict(self.Parameters)
+        elif hasattr(self, 'myConfig') and self.myConfig:
+            custom_params = dict(self.myConfig)
         elif hasattr(self, 'polyConfig') and isinstance(self.polyConfig, dict) and 'customParams' in self.polyConfig:
             custom_params = self.polyConfig['customParams']
-        elif hasattr(self, 'myConfig'):
-            custom_params = self.myConfig
+        elif hasattr(self.poly, 'config') and isinstance(self.poly.config, dict) and 'customParams' in self.poly.config:
+            custom_params = self.poly.config['customParams']
 
         if 'ClientID' in custom_params:
             self.clientId = custom_params['ClientID']
@@ -365,15 +417,21 @@ class Controller(Node):
             self.clientSecret = custom_params['ClientSecret']
 
         if hasattr(self.poly, 'setCustomParams'):
-            self.poly.setCustomParams({
-                'ClientID': self.clientId,
-                'ClientSecret': self.clientSecret
-            })
+            try:
+                self.poly.setCustomParams({
+                    'ClientID': self.clientId,
+                    'ClientSecret': self.clientSecret
+                })
+            except Exception:
+                pass
         elif hasattr(self, 'addCustomParam'):
-            self.addCustomParam({
-                'ClientID': self.clientId,
-                'ClientSecret': self.clientSecret
-            })
+            try:
+                self.addCustomParam({
+                    'ClientID': self.clientId,
+                    'ClientSecret': self.clientSecret
+                })
+            except Exception:
+                pass
 
         self.custom_params = {
             'ClientID': self.clientId,
@@ -780,13 +838,50 @@ class rainModuleNode(Node):
 
 if __name__ == "__main__":
     try:
-        polyglot = Interface([Controller, mainModuleNode, indoorModuleNode, outdoorModuleNode, windModuleNode, rainModuleNode])
+        LOGGER.info("=" * 80)
+        LOGGER.info(f"Starting Netatmo PG3 Node Server v{__version__}")
+        LOGGER.info("=" * 80)
+
+        # In PG3 environment, PG3INIT is passed via os.environ.
+        # If running outside PG3 (e.g. standalone test in dev terminal),
+        # use the fallback interface instead of crashing on base64 decode of PG3INIT.
+        if 'PG3INIT' not in os.environ:
+            LOGGER.warning("PG3INIT environment variable is not set.")
+            LOGGER.warning("Node server was started outside of Polyglot (PG3) environment.")
+            if Interface is not _FallbackInterface:
+                LOGGER.info("Using fallback interface for standalone execution.")
+                Interface_Cls = _FallbackInterface
+            else:
+                Interface_Cls = Interface
+        else:
+            Interface_Cls = Interface
+
+        LOGGER.info("Creating polyglot interface")
+        polyglot = Interface_Cls([])
+
+        LOGGER.info("Starting polyglot interface")
         polyglot.start({'version': __version__, 'requestId': True})
+        LOGGER.info("Polyglot interface started")
+
         if hasattr(polyglot, 'setCustomParamsDoc'):
+            LOGGER.info("Setting custom params documentation")
             polyglot.setCustomParamsDoc()
+
+        LOGGER.info("Constructing Netatmo Controller node")
         control = Controller(polyglot, 'netatmo_ws', 'netatmo_ws', 'Netatmo Weather Station')
+        LOGGER.info("Netatmo Controller constructed successfully")
+
+        if 'PG3INIT' not in os.environ and hasattr(control, 'start'):
+            LOGGER.info("Executing standalone startup")
+            control.start()
+
+        LOGGER.info("Entering polyglot runForever() loop")
         polyglot.runForever()
     except (KeyboardInterrupt, SystemExit):
+        LOGGER.info("Shutdown signal received")
         sys.exit(0)
+    except Exception as err:
+        LOGGER.error(f"Fatal error in Netatmo node server: {err}", exc_info=True)
+        sys.exit(1)
         
 

@@ -35,6 +35,8 @@ class MockInterface:
     STOP = 'stop'
     CUSTOMPARAMS = 'customparams'
     POLL = 'poll'
+    CONFIGDONE = 'config_done'
+    DISCOVER = 'discover'
 
     def __init__(self, classes=None, options=None):
         self.classes = classes or []
