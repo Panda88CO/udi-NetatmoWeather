@@ -194,6 +194,28 @@ class TestNodes(unittest.TestCase):
         result = node.get_status(first=True)
         self.assertFalse(result)
 
+    def test_drivers_structure_and_names(self):
+        """Verify all node classes define drivers with driver, value, uom, and name."""
+        all_node_classes = [
+            mainNetatmo.Controller,
+            mainNetatmo.mainModuleNode,
+            mainNetatmo.indoorModuleNode,
+            mainNetatmo.outdoorModuleNode,
+            mainNetatmo.windModuleNode,
+            mainNetatmo.rainModuleNode,
+        ]
+        for node_cls in all_node_classes:
+            with self.subTest(node_class=node_cls.__name__):
+                self.assertTrue(hasattr(node_cls, 'drivers'))
+                self.assertGreater(len(node_cls.drivers), 0)
+                for d in node_cls.drivers:
+                    self.assertIn('driver', d)
+                    self.assertIn('value', d)
+                    self.assertIn('uom', d)
+                    self.assertIn('name', d)
+                    self.assertIsInstance(d['name'], str)
+                    self.assertGreater(len(d['name']), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

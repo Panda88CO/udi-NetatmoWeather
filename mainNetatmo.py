@@ -313,7 +313,7 @@ class Controller(polyinterface.Controller):
             }
 
     drivers = [
-            {'driver': 'ST', 'value': 1, 'uom': 2},   # node server status
+            {'driver': 'ST', 'value': 1, 'uom': 2, 'name': 'NodeServer Online'},
             ]
 
 class mainModuleNode(polyinterface.Node):
@@ -321,19 +321,19 @@ class mainModuleNode(polyinterface.Node):
     name = ''
     lastData = None
     drivers = [
-            {'driver': 'ST', 'value': 0, 'uom': 2},   # status
-            {'driver': 'GV0', 'value': 0, 'uom': 17},   # temperature fahrenheit
-            {'driver': 'GV1', 'value': 0, 'uom': 54},   # CO2
-            {'driver': 'GV2', 'value': 0, 'uom': 22},   # humidity
-            {'driver': 'GV3', 'value': 0, 'uom': 12},   # noise
-            {'driver': 'GV4', 'value': 0, 'uom': 23},   # pressure
-            {'driver': 'GV5', 'value': 0, 'uom': 23},   # absolute pressure
-            {'driver': 'GV6', 'value': 0, 'uom': 17},   # min temp
-            {'driver': 'GV7', 'value': 0, 'uom': 17},   # max temp
-            {'driver': 'GV8', 'value': 0, 'uom': 25},   # temp trend
-            {'driver': 'GV9', 'value': 0, 'uom': 25},   # pressure trend
-            {'driver': 'GV10', 'value': 0, 'uom': 56},   # when
-            {'driver': 'GV11', 'value': 0, 'uom': 56},   # wifi status
+            {'driver': 'ST', 'value': 0, 'uom': 2, 'name': 'Connected'},
+            {'driver': 'GV0', 'value': 0, 'uom': 17, 'name': 'Temperature'},
+            {'driver': 'GV1', 'value': 0, 'uom': 54, 'name': 'CO2'},
+            {'driver': 'GV2', 'value': 0, 'uom': 22, 'name': 'Humidity'},
+            {'driver': 'GV3', 'value': 0, 'uom': 12, 'name': 'Noise'},
+            {'driver': 'GV4', 'value': 0, 'uom': 23, 'name': 'Pressure'},
+            {'driver': 'GV5', 'value': 0, 'uom': 23, 'name': 'Absolute Pressure'},
+            {'driver': 'GV6', 'value': 0, 'uom': 17, 'name': 'Min Temperature'},
+            {'driver': 'GV7', 'value': 0, 'uom': 17, 'name': 'Max Temperature'},
+            {'driver': 'GV8', 'value': 0, 'uom': 25, 'name': 'Temperature Trend'},
+            {'driver': 'GV9', 'value': 0, 'uom': 25, 'name': 'Pressure Trend'},
+            {'driver': 'GV10', 'value': 0, 'uom': 56, 'name': 'Timestamp'},
+            {'driver': 'GV11', 'value': 0, 'uom': 56, 'name': 'Wi-Fi Status'},
             ]
 
     def temp_trend(self, json):
@@ -425,16 +425,16 @@ class indoorModuleNode(polyinterface.Node):
     name = ''
     lastData = None
     drivers = [
-            {'driver': 'ST', 'value': 0, 'uom': 2},   # status
-            {'driver': 'GV0', 'value': 0, 'uom': 17},   # temperature fahrenheit
-            {'driver': 'GV1', 'value': 0, 'uom': 54},   # CO2
-            {'driver': 'GV2', 'value': 0, 'uom': 22},   # humidity
-            {'driver': 'GV3', 'value': 0, 'uom': 17},   # min temp
-            {'driver': 'GV4', 'value': 0, 'uom': 17},   # max temp
-            {'driver': 'GV5', 'value': 0, 'uom': 25},   # temp trend
-            {'driver': 'GV6', 'value': 0, 'uom': 56},   # when
-            {'driver': 'GV7', 'value': 0, 'uom': 51},   # battery percent
-            {'driver': 'GV8', 'value': 0, 'uom': 56},   # rf status
+            {'driver': 'ST', 'value': 0, 'uom': 2, 'name': 'Connected'},
+            {'driver': 'GV0', 'value': 0, 'uom': 17, 'name': 'Temperature'},
+            {'driver': 'GV1', 'value': 0, 'uom': 54, 'name': 'CO2'},
+            {'driver': 'GV2', 'value': 0, 'uom': 22, 'name': 'Humidity'},
+            {'driver': 'GV3', 'value': 0, 'uom': 17, 'name': 'Min Temperature'},
+            {'driver': 'GV4', 'value': 0, 'uom': 17, 'name': 'Max Temperature'},
+            {'driver': 'GV5', 'value': 0, 'uom': 25, 'name': 'Temperature Trend'},
+            {'driver': 'GV6', 'value': 0, 'uom': 56, 'name': 'Timestamp'},
+            {'driver': 'GV7', 'value': 0, 'uom': 51, 'name': 'Battery'},
+            {'driver': 'GV8', 'value': 0, 'uom': 56, 'name': 'RF Status'},
             ]
 
     def temp_trend(self, json):
@@ -500,15 +500,15 @@ class outdoorModuleNode(polyinterface.Node):
     name = ''
     lastData = None
     drivers = [
-            {'driver': 'ST', 'value': 0, 'uom': 2},   # status
-            {'driver': 'GV0', 'value': 0, 'uom': 17},   # temperature fahrenheit
-            {'driver': 'GV1', 'value': 0, 'uom': 22},   # humidity
-            {'driver': 'GV2', 'value': 0, 'uom': 17},   # min temp
-            {'driver': 'GV3', 'value': 0, 'uom': 17},   # max temp
-            {'driver': 'GV4', 'value': 0, 'uom': 25},   # temp trend
-            {'driver': 'GV5', 'value': 0, 'uom': 56},   # when
-            {'driver': 'GV6', 'value': 0, 'uom': 51},   # battery percent
-            {'driver': 'GV7', 'value': 0, 'uom': 56},   # rf status
+            {'driver': 'ST', 'value': 0, 'uom': 2, 'name': 'Connected'},
+            {'driver': 'GV0', 'value': 0, 'uom': 17, 'name': 'Temperature'},
+            {'driver': 'GV1', 'value': 0, 'uom': 22, 'name': 'Humidity'},
+            {'driver': 'GV2', 'value': 0, 'uom': 17, 'name': 'Min Temperature'},
+            {'driver': 'GV3', 'value': 0, 'uom': 17, 'name': 'Max Temperature'},
+            {'driver': 'GV4', 'value': 0, 'uom': 25, 'name': 'Temperature Trend'},
+            {'driver': 'GV5', 'value': 0, 'uom': 56, 'name': 'Timestamp'},
+            {'driver': 'GV6', 'value': 0, 'uom': 51, 'name': 'Battery'},
+            {'driver': 'GV7', 'value': 0, 'uom': 56, 'name': 'RF Status'},
             ]
 
     def temp_trend(self, json):
@@ -572,16 +572,16 @@ class windModuleNode(polyinterface.Node):
     name = ''
     lastData = None
     drivers = [
-            {'driver': 'ST', 'value': 0, 'uom': 2},   # status
-            {'driver': 'GV0', 'value': 0, 'uom': 48},   # wind strength
-            {'driver': 'GV1', 'value': 0, 'uom': 76},   # wind angle
-            {'driver': 'GV2', 'value': 0, 'uom': 48},   # gust strength
-            {'driver': 'GV3', 'value': 0, 'uom': 76},   # gust angle
-            {'driver': 'GV4', 'value': 0, 'uom': 48},   # max wind strength
-            {'driver': 'GV5', 'value': 0, 'uom': 76},   # max wind angle
-            {'driver': 'GV6', 'value': 0, 'uom': 56},   # when
-            {'driver': 'GV7', 'value': 0, 'uom': 51},   # battery percent
-            {'driver': 'GV8', 'value': 0, 'uom': 56},   # rf status
+            {'driver': 'ST', 'value': 0, 'uom': 2, 'name': 'Connected'},
+            {'driver': 'GV0', 'value': 0, 'uom': 48, 'name': 'Wind Strength'},
+            {'driver': 'GV1', 'value': 0, 'uom': 76, 'name': 'Wind Angle'},
+            {'driver': 'GV2', 'value': 0, 'uom': 48, 'name': 'Gust Strength'},
+            {'driver': 'GV3', 'value': 0, 'uom': 76, 'name': 'Gust Angle'},
+            {'driver': 'GV4', 'value': 0, 'uom': 48, 'name': 'Max Wind Strength'},
+            {'driver': 'GV5', 'value': 0, 'uom': 76, 'name': 'Max Wind Angle'},
+            {'driver': 'GV6', 'value': 0, 'uom': 56, 'name': 'Timestamp'},
+            {'driver': 'GV7', 'value': 0, 'uom': 51, 'name': 'Battery'},
+            {'driver': 'GV8', 'value': 0, 'uom': 56, 'name': 'RF Status'},
             ]
 
     def get_status(self, first):
@@ -630,13 +630,13 @@ class rainModuleNode(polyinterface.Node):
     name = ''
     lastData = None
     drivers = [
-            {'driver': 'ST', 'value': 0, 'uom': 2},   # status
-            {'driver': 'GV0', 'value': 0, 'uom': 23},   # rain
-            {'driver': 'GV1', 'value': 0, 'uom': 23},   # sum rain 1h
-            {'driver': 'GV2', 'value': 0, 'uom': 23},   # sum rain 24h
-            {'driver': 'GV3', 'value': 0, 'uom': 56},   # when
-            {'driver': 'GV4', 'value': 0, 'uom': 51},   # battery percent
-            {'driver': 'GV5', 'value': 0, 'uom': 56},   # rf status
+            {'driver': 'ST', 'value': 0, 'uom': 2, 'name': 'Connected'},
+            {'driver': 'GV0', 'value': 0, 'uom': 23, 'name': 'Rain'},
+            {'driver': 'GV1', 'value': 0, 'uom': 23, 'name': 'Sum Rain 1h'},
+            {'driver': 'GV2', 'value': 0, 'uom': 23, 'name': 'Sum Rain 24h'},
+            {'driver': 'GV3', 'value': 0, 'uom': 56, 'name': 'Timestamp'},
+            {'driver': 'GV4', 'value': 0, 'uom': 51, 'name': 'Battery'},
+            {'driver': 'GV5', 'value': 0, 'uom': 56, 'name': 'RF Status'},
             ]
 
     def get_status(self, first):
