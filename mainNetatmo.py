@@ -7,7 +7,7 @@ Copyright (C) 2021 Daniel Caldentey
 """
 import logging
 
-__version__ = '1.2.0'
+__version__ = '0.1.3'
 
 # Fallback dummy polyinterface for standalone execution, CI, and test environments
 class _FallbackLogger:

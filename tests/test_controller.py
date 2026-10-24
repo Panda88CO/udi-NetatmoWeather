@@ -18,7 +18,7 @@ class TestController(unittest.TestCase):
         self.assertEqual(self.controller.address, 'netatmo_ws')
         self.assertEqual(self.controller.primary, 'netatmo_ws')
         self.assertEqual(self.controller.version, mainNetatmo.__version__)
-        self.assertEqual(self.controller.version, '1.2.0')
+        self.assertEqual(self.controller.version, '0.1.3')
         self.assertFalse(self.controller.configured)
         self.assertEqual(self.controller.username, '')
         self.assertEqual(self.controller.password, '')
@@ -29,11 +29,11 @@ class TestController(unittest.TestCase):
         """Verify polyglot.start accepts and stores __version__."""
         poly = MockInterface('Netatmo')
         poly.start(mainNetatmo.__version__)
-        self.assertEqual(poly.version, '1.2.0')
+        self.assertEqual(poly.version, '0.1.3')
 
         fb = mainNetatmo._FallbackInterface('Netatmo')
         fb.start(mainNetatmo.__version__)
-        self.assertEqual(fb.version, '1.2.0')
+        self.assertEqual(fb.version, '0.1.3')
 
     def test_check_params_unconfigured(self):
         """Verify check_params sets configured to False when credentials are empty."""
