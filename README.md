@@ -66,3 +66,9 @@ The Netatmo Weather Station NodeServer keeps track of the version number and whe
    - Initial version published to github
 - 1.1.0 06/26/2021
    - Added "Query All" Command to NodeServer
+- 1.2.0 10/23/2026
+   - Standardized profile definitions to uppercase alphanumeric without special characters or reserved words
+   - Fixed negative temperature rounding bug in round_half_up
+   - Deterministic hardware-based addressing for indoor modules
+   - Robust error and auth failure handling in shortPoll
+   - Decoupled polyinterface with standalone fallback stub and comprehensive test suite

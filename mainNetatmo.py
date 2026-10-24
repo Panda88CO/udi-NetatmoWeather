@@ -5,17 +5,74 @@ This project is based on the "udi-owm-poly" code from Bob Paauwe (https://github
 and uses the "lnetatmo" library from Philippe Larduinat (https://github.com/philippelt/netatmo-api-python)
 Copyright (C) 2021 Daniel Caldentey
 """
+import logging
+
+__version__ = '1.2.0'
+
+# Fallback dummy polyinterface for standalone execution, CI, and test environments
+class _FallbackLogger:
+    def info(self, msg, *args): logging.info(str(msg), *args)
+    def debug(self, msg, *args): logging.debug(str(msg), *args)
+    def error(self, msg, *args): logging.error(str(msg), *args)
+    def warning(self, msg, *args): logging.warning(str(msg), *args)
+
+class _FallbackController:
+    def __init__(self, polyglot):
+        self.poly = polyglot
+        self.nodes = {}
+        self.polyConfig = {'customParams': {}}
+    def addNode(self, node):
+        self.nodes[node.address] = node
+    def addCustomParam(self, params):
+        pass
+    def removeNoticesAll(self):
+        pass
+    def runForever(self):
+        pass
+
+class _FallbackNode:
+    def __init__(self, controller, primary, address, name):
+        self.controller = controller
+        self.primary = primary
+        self.address = address
+        self.name = name
+        self.driver_values = {}
+    def setDriver(self, driver, value, report=True, force=False, uom=None):
+        self.driver_values[driver] = value
+    def reportDrivers(self):
+        pass
+
+class _FallbackInterface:
+    def __init__(self, name='Netatmo'):
+        self.name = name
+        self.version = None
+    def start(self, version=None):
+        self.version = version
+    def restart(self):
+        pass
+    def installprofile(self):
+        return True
+    def onConfig(self, callback):
+        pass
+
+class _FallbackPolyinterface:
+    LOGGER = _FallbackLogger()
+    Controller = _FallbackController
+    Node = _FallbackNode
+    Interface = _FallbackInterface
+
 CLOUD = False
 try:
     import polyinterface
 except ImportError:
-    import pgc_interface as polyinterface
-    CLOUD = True
-from os import name
-from platform import node
-from ssl import match_hostname
+    try:
+        import pgc_interface as polyinterface
+        CLOUD = True
+    except ImportError:
+        polyinterface = _FallbackPolyinterface()
 import sys
 import json
+import math
 import lnetatmo
 #import requests
 
@@ -24,8 +81,7 @@ LOGGER = polyinterface.LOGGER
 def round_half_up(num, decimals = 0):
     temp_dec = 10 ** decimals
     result = num * temp_dec
-    result = result + 0.5
-    result = int(result)
+    result = math.floor(result + 0.5)
     result = result / temp_dec
     return result
 
@@ -46,12 +102,12 @@ def get_pressure(pressure_value):
         pressure_value = round_half_up(pressure_value,2)
         return pressure_value
     except:
-        LOGGER.info('Failed to convert temperature')
+        LOGGER.info('Failed to convert pressure')
     return 0
 
 
 class Controller(polyinterface.Controller):
-    id = 'Netatmo'
+    id = 'NETATMO'
     def __init__(self, polyglot):
         super(Controller, self).__init__(polyglot)
         self.name = 'Netatmo Weather Station'
@@ -67,6 +123,7 @@ class Controller(polyinterface.Controller):
         self.session = None
         self.weatherStation = None
         self.lastData = None
+        self.version = __version__
 
         self.poly.onConfig(self.process_config)
 
@@ -116,7 +173,7 @@ class Controller(polyinterface.Controller):
                     self.discover()
 
     def start(self):
-        LOGGER.info('Starting node server')
+        LOGGER.info(f'Starting Netatmo node server v{__version__}')
         self.check_params()
         self.session = lnetatmo.ClientAuth(clientId=self.clientId, clientSecret=self.clientSecret, username=self.username, password=self.password)
         #self.session = lnetatmo.ClientAuth()
@@ -127,15 +184,28 @@ class Controller(polyinterface.Controller):
         pass
 
     def shortPoll(self):
+        if not self.configured:
+            LOGGER.info('Skipping shortPoll because controller is not configured yet.')
+            return
+
         try:
             self.weatherStation = lnetatmo.WeatherStationData(self.session)
-        except:
-            LOGGER.info('Authentication from library failed - Restarting NodeServer')
+        except Exception as ex:
+            LOGGER.error(f'Authentication or data retrieval failed: {ex} - Restarting NodeServer')
             self.poly.restart()
+            return
+
+        if not self.weatherStation:
+            LOGGER.warning('No weather station data object available')
+            return
 
         self.lastData = self.weatherStation.lastData()
+        if not self.lastData:
+            LOGGER.warning('No module data available in lastData')
+            return
+
         for node in self.nodes:
-            if self.nodes[node].id != 'Netatmo':
+            if self.nodes[node].id != 'NETATMO':
                 self.nodes[node].weatherStation = self.weatherStation
                 self.nodes[node].lastData = self.lastData
                 self.nodes[node].get_status(False)
@@ -159,7 +229,7 @@ class Controller(polyinterface.Controller):
             LOGGER.info('Weather Station Name = ' + self.weatherStation.default_home)
             i = 0
             nodeAddress = ''
-            for moduleName in self.lastData.keys():
+            for moduleName in sorted(self.lastData.keys()):
                 LOGGER.info('Module name = ' + moduleName)
                 if 'Noise' in self.lastData[moduleName]:
                     #Master Module
@@ -167,10 +237,20 @@ class Controller(polyinterface.Controller):
                     weatherStation_node = mainModuleNode(self, self.address, nodeAddress,moduleName)
                     LOGGER.info('Master Module')
                 elif 'CO2' in self.lastData[moduleName]:
-                    #Indoor Module
-                    nodeAddress = 'netwsin' + str(i)
-                    weatherStation_node = indoorModuleNode(self, self.address, nodeAddress,moduleName)
-                    LOGGER.info('Indoor Module')
+                    #Indoor Module: prefer deterministic address derived from hardware ID
+                    mod = None
+                    if hasattr(self.weatherStation, 'moduleByName'):
+                        try:
+                            mod = self.weatherStation.moduleByName(moduleName)
+                        except Exception:
+                            mod = None
+                    if mod and '_id' in mod:
+                        clean_id = mod['_id'].replace(':', '').lower()
+                        nodeAddress = 'nwin' + clean_id[-6:]
+                    else:
+                        nodeAddress = 'netwsin' + str(i)
+                    weatherStation_node = indoorModuleNode(self, self.address, nodeAddress, moduleName)
+                    LOGGER.info(f'Indoor Module: {moduleName} -> {nodeAddress}')
                     i = i + 1
                 elif 'Temperature' in self.lastData[moduleName]:
                     #Outside Module
@@ -195,8 +275,8 @@ class Controller(polyinterface.Controller):
                 self.addNode(weatherStation_node)
                 self.nodes[nodeAddress].get_status(True)
 
-        except:
-            LOGGER.error('Authentication failed or no modules found.')
+        except Exception as ex:
+            LOGGER.error(f'Authentication failed or error during discovery: {ex}')
             
 
     # Delete the node server from Polyglot
@@ -263,7 +343,7 @@ class Controller(polyinterface.Controller):
             ]
 
 class mainModuleNode(polyinterface.Node):
-    id = 'main_netatmo'
+    id = 'MAINNETATMO'
     name = ''
     lastData = None
     drivers = [
@@ -292,7 +372,7 @@ class mainModuleNode(polyinterface.Node):
             else:
                 return 2
         except:
-            LOGGER.info('failed to parse mower status type.')
+            LOGGER.info('Failed to parse trend status type.')
         return 99
 
     def pressure_trend(self, json):
@@ -305,7 +385,7 @@ class mainModuleNode(polyinterface.Node):
             else:
                 return 2
         except:
-            LOGGER.info('failed to parse mower status type.')
+            LOGGER.info('Failed to parse trend status type.')
         return 99
 
     def get_status(self, first):
@@ -358,7 +438,7 @@ class mainModuleNode(polyinterface.Node):
                 except:
                     LOGGER.error('Failed to update node status')
             except:
-                LOGGER.error('Failed to parse mower status JSON')
+                LOGGER.error('Failed to parse Netatmo status JSON')
 
         except Exception as ex:
             LOGGER.info('In exception handler, no data for this node')
@@ -367,7 +447,7 @@ class mainModuleNode(polyinterface.Node):
         return True
 
 class indoorModuleNode(polyinterface.Node):
-    id = 'in_netatmo'
+    id = 'INNETATMO'
     name = ''
     lastData = None
     drivers = [
@@ -393,7 +473,7 @@ class indoorModuleNode(polyinterface.Node):
             else:
                 return 2
         except:
-            LOGGER.info('failed to parse mower status type.')
+            LOGGER.info('Failed to parse trend status type.')
         return 99
 
     def get_status(self, first):
@@ -433,7 +513,7 @@ class indoorModuleNode(polyinterface.Node):
                 except:
                     LOGGER.error('Failed to update node status')
             except:
-                LOGGER.error('Failed to parse mower status JSON')
+                LOGGER.error('Failed to parse Netatmo status JSON')
 
         except Exception as ex:
             LOGGER.info('In exception handler, node data not found')
@@ -442,7 +522,7 @@ class indoorModuleNode(polyinterface.Node):
         return True
 
 class outdoorModuleNode(polyinterface.Node):
-    id = 'out_netatmo'
+    id = 'OUTNETATMO'
     name = ''
     lastData = None
     drivers = [
@@ -467,7 +547,7 @@ class outdoorModuleNode(polyinterface.Node):
             else:
                 return 2
         except:
-            LOGGER.info('failed to parse mower status type.')
+            LOGGER.info('Failed to parse trend status type.')
         return 99
 
     def get_status(self, first):
@@ -505,7 +585,7 @@ class outdoorModuleNode(polyinterface.Node):
                 except:
                     LOGGER.error('Failed to update node status')
             except:
-                LOGGER.error('Failed to parse mower status JSON')
+                LOGGER.error('Failed to parse Netatmo status JSON')
 
         except Exception as ex:
             LOGGER.info('In exception handler, node data not found')
@@ -514,7 +594,7 @@ class outdoorModuleNode(polyinterface.Node):
         return True
 
 class windModuleNode(polyinterface.Node):
-    id = 'wind_netatmo'
+    id = 'WINDNETATMO'
     name = ''
     lastData = None
     drivers = [
@@ -563,7 +643,7 @@ class windModuleNode(polyinterface.Node):
                 except:
                     LOGGER.error('Failed to update node status')
             except:
-                LOGGER.error('Failed to parse mower status JSON')
+                LOGGER.error('Failed to parse Netatmo status JSON')
 
         except Exception as ex:
             LOGGER.info('In exception handler, node data not found')
@@ -572,7 +652,7 @@ class windModuleNode(polyinterface.Node):
         return True
 
 class rainModuleNode(polyinterface.Node):
-    id = 'rain_netatmo'
+    id = 'RAINNETATMO'
     name = ''
     lastData = None
     drivers = [
@@ -612,7 +692,7 @@ class rainModuleNode(polyinterface.Node):
                 except:
                     LOGGER.error('Failed to update node status')
             except:
-                LOGGER.error('Failed to parse mower status JSON')
+                LOGGER.error('Failed to parse Netatmo status JSON')
 
         except Exception as ex:
             LOGGER.info('In exception handler, node data not found')
@@ -624,7 +704,7 @@ class rainModuleNode(polyinterface.Node):
 if __name__ == "__main__":
     try:
         polyglot = polyinterface.Interface('Netatmo')
-        polyglot.start()
+        polyglot.start(__version__)
         control = Controller(polyglot)
         control.runForever()
     except (KeyboardInterrupt, SystemExit):

@@ -1,58 +1,53 @@
 <editors>
-    <editor id="status">
+    <editor id="BOOL">
         <range uom="2" subset="0,1" />
     </editor>
 
-    <editor id="bool">
-        <range uom="2" subset="0,1" />
-    </editor>
-
-    <editor id="temperature">
+    <editor id="TEMPERATURE">
         <range uom="17" min="-50" max="150" prec="1" />
     </editor>
 
-    <editor id="co2">
+    <editor id="CO2">
         <range uom="54" min="0" max="1000" prec="0" />
     </editor>
 
-    <editor id="humidity">
+    <editor id="HUMIDITY">
         <range uom="22" min="0" max="100" prec="0" />
     </editor>
 
-    <editor id="noise">
+    <editor id="NOISE">
         <range uom="12" min="0" max="1000" prec="1" />
     </editor>
 
-    <editor id="pressure">
+    <editor id="PRESSURE">
         <range uom="23" min="0" max="10000" prec="2" />
     </editor>
 
-    <editor id="trend">
-        <range uom="25" subset="0-2" nls="EN_TREND" />
+    <editor id="TREND">
+        <range uom="25" subset="0-2" nls="ENTREND" />
     </editor>
 
-    <editor id="t_timestamp">
+    <editor id="TTIMESTAMP">
         <range uom="56" min="0" max="20000000000" prec="0" />
     </editor>
 
-    <editor id="wifi_rf_status">
+    <editor id="WIFIRFSTATUS">
         <range uom="56" min="0" max="100000" prec="0" />
     </editor>
 
-    <editor id="percent">
+    <editor id="PERCENT">
         <range uom="51" min="0" max="100" prec="0" />
     </editor>
 
-    <editor id="rain">
+    <editor id="RAIN">
         <range uom="23" min="0" max="100000" prec="3" />
     </editor>
 
-    <editor id="w_strength">
+    <editor id="WSTRENGTH">
         <range uom="48" min="0" max="1000" prec="0" />
     </editor>
 
-    <editor id="w_angle">
+    <editor id="WANGLE">
         <range uom="76" min="0" max="360" prec="0" />
     </editor>
-
 </editors>
