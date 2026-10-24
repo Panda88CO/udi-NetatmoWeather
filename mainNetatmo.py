@@ -6,14 +6,38 @@ and uses the "lnetatmo" library from Philippe Larduinat (https://github.com/phil
 Copyright (C) 2021 Daniel Caldentey
 """
 import sys
+import os
+import site
 import math
+
+# Ensure user site-packages are in sys.path for --user installations
+try:
+    user_site = site.getusersitepackages()
+    if user_site and user_site not in sys.path and os.path.exists(user_site):
+        sys.path.insert(0, user_site)
+except Exception:
+    pass
+
+# Initialize udi_interface first so logging and file handlers are active
+try:
+    import udi_interface
+    LOGGER = udi_interface.LOGGER
+    Custom = udi_interface.Custom
+    Node = udi_interface.Node
+except Exception as err:
+    import logging
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s [%(levelname)s] [%(threadName)s] %(message)s",
+        handlers=[
+            logging.FileHandler("debug.log"),
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
+    logging.error(f"Failed to import udi_interface: {err}", exc_info=True)
+    sys.exit(1)
+
 import lnetatmo
-
-import udi_interface
-
-LOGGER = udi_interface.LOGGER
-Custom = udi_interface.Custom
-Node = udi_interface.Node
 
 __version__ = '1.4.0'
 
@@ -722,5 +746,8 @@ if __name__ == "__main__":
         polyglot.runForever()
     except (KeyboardInterrupt, SystemExit):
         sys.exit(0)
+    except Exception as err:
+        LOGGER.error(f"Fatal error starting Netatmo node server: {err}", exc_info=True)
+        sys.exit(1)
         
 

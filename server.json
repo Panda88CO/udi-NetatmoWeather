@@ -1,23 +1,26 @@
 {
-    "name": "NetatmoWeather",
-    "docs": "https://github.com/Panda88CO/udi-NetatmoWeather",
-    "type": "python3",
-    "executable": "mainNetatmo.py",
-    "install": "install.sh",
-    "install_cloud": "",
-    "description": "Netatmo Weather Station",
-    "notice": "",
-    "shortPoll": "600",
-    "longPoll": "1200",
-    "profile_version": "1.4.0",
-    "credits": [
-    	{
-    		"title": "Netatmo Weather Station: A node server to view Netatmo Weather Station",
-    		"author": "Panda88CO",
-    		"version": "1.4.0",
-    		"date": "October 23, 2026",
-    		"source": "https://github.com/Panda88CO/udi-NetatmoWeather",
-		    "license": "https://github.com/Panda88CO/udi-NetatmoWeather/blob/main/LICENSE"
-		}
-	]
+  "credits": [
+    {
+      "title": "Netatmo Weather Station: A node server to view Netatmo Weather Station",
+      "author": "Panda88CO",
+      "version": "1.4.0",
+      "date": "October 23, 2026",
+      "source": "https://github.com/Panda88CO/udi-NetatmoWeather",
+      "license": "https://github.com/Panda88CO/udi-NetatmoWeather/blob/main/LICENSE"
+    }
+  ],
+  "name": "Netatmo Weather Station",
+  "docs": "README.md",
+  "type": "python3",
+  "language": "python3",
+  "executable": "mainNetatmo.py",
+  "install": "install.sh",
+  "description": "Netatmo Weather Station",
+  "notice": "",
+  "shortPoll": 600,
+  "longPoll": 1200,
+  "version": "1.4.0",
+  "profile_version": "1.4.0",
+  "logLevel": "DEBUG",
+  "restart": true
 }

@@ -19,7 +19,10 @@ from os import getenv
 from os.path import expanduser, exists
 import platform
 import json, time
-import imghdr
+try:
+    import imghdr
+except ImportError:
+    imghdr = None
 import warnings
 import logging
 
@@ -594,7 +597,7 @@ class HomeData:
             "key" : key
             }
         resp = postRequest(_GETCAMERAPICTURE_REQ, postParams)
-        image_type = imghdr.what('NONE.FILE',resp)
+        image_type = imghdr.what('NONE.FILE', resp) if imghdr else 'jpg'
         return resp, image_type
 
     def getProfileImage(self, name):
