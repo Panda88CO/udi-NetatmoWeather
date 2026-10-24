@@ -22,23 +22,68 @@ class MockLogger:
         self.logs.append(('WARNING', str(msg)))
 
 
+class MockNotices(dict):
+    def clear(self):
+        super().clear()
+
+    def load(self, data):
+        self.update(data or {})
+
+
 class MockInterface:
-    def __init__(self, name='MockNetatmo'):
-        self.name = name
+    START = 'start'
+    STOP = 'stop'
+    CUSTOMPARAMS = 'customparams'
+    POLL = 'poll'
+
+    def __init__(self, classes=None, options=None):
+        self.classes = classes or []
+        self.options = options or {}
+        self.name = 'MockNetatmo'
         self.version = None
         self.callbacks = []
+        self.subscribers = {}
         self.restarted = False
         self.profile_installed = False
+        self.nodes = {}
+        self.custom_params = {}
+        self.Notices = MockNotices()
 
-    def start(self, version=None):
-        self.version = version
+    def subscribe(self, event, callback, *args):
+        self.subscribers.setdefault(event, []).append(callback)
 
-    def restart(self):
-        self.restarted = True
+    def start(self, options=None):
+        if isinstance(options, dict):
+            self.version = options.get('version')
+        else:
+            self.version = options
+
+    def ready(self):
+        pass
+
+    def updateProfile(self):
+        self.profile_installed = True
+        return True
 
     def installprofile(self):
         self.profile_installed = True
         return True
+
+    def setCustomParamsDoc(self):
+        pass
+
+    def setCustomParams(self, params):
+        self.custom_params.update(params)
+
+    def addNode(self, node, conn_status=None, rename=False):
+        self.nodes[node.address] = node
+        return node
+
+    def restart(self):
+        self.restarted = True
+
+    def runForever(self):
+        pass
 
     def onConfig(self, callback):
         self.callbacks.append(callback)
@@ -66,8 +111,9 @@ class MockController:
 
 
 class MockNode:
-    def __init__(self, controller, primary, address, name):
-        self.controller = controller
+    def __init__(self, poly, primary, address, name):
+        self.poly = poly
+        self.controller = poly
         self.primary = primary
         self.address = address
         self.name = name
@@ -89,14 +135,33 @@ class MockNode:
         self.report_drivers_called = True
 
 
+class MockCustom(dict):
+    def __init__(self, poly=None, custom="customparams"):
+        super().__init__()
+        self.poly = poly
+        self.custom = custom
+
+    def load(self, data):
+        self.update(data or {})
+
+
 def install_mock():
-    """Install mock polyinterface into sys.modules if not present."""
+    """Install mock polyinterface and udi_interface into sys.modules if not present."""
+    logger = MockLogger()
     if 'polyinterface' not in sys.modules:
-        mod = types.ModuleType('polyinterface')
-        mod.LOGGER = MockLogger()
-        mod.Interface = MockInterface
-        mod.Controller = MockController
-        mod.Node = MockNode
-        sys.modules['polyinterface'] = mod
+        mod_p = types.ModuleType('polyinterface')
+        mod_p.LOGGER = logger
+        mod_p.Interface = MockInterface
+        mod_p.Controller = MockController
+        mod_p.Node = MockNode
+        sys.modules['polyinterface'] = mod_p
+
+    if 'udi_interface' not in sys.modules:
+        mod_u = types.ModuleType('udi_interface')
+        mod_u.LOGGER = logger
+        mod_u.Interface = MockInterface
+        mod_u.Node = MockNode
+        mod_u.Custom = MockCustom
+        sys.modules['udi_interface'] = mod_u
     return sys.modules['polyinterface']
 

@@ -1,8 +1,8 @@
 {
     "name": "NetatmoWeather",
-    "docs": "https://github.com/Panda88CO/udi-NetatmoWeathero",
+    "docs": "https://github.com/Panda88CO/udi-NetatmoWeather",
     "type": "python3",
-    "executable": "udiNetatmoWeather.py",
+    "executable": "mainNetatmo.py",
     "install": "install.sh",
     "install_cloud": "",
     "description": "Netatmo Weather Station",
