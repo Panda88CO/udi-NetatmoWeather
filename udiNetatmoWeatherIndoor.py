@@ -1,0 +1,221 @@
+#!/usr/bin/env python3
+
+"""
+Polyglot v3 node server
+Copyright (C) 2023 Universal Devices
+
+MIT License
+"""
+
+
+import time
+import traceback
+import re
+
+try:
+    import udi_interface
+    logging = udi_interface.LOGGER
+    Custom = udi_interface.Custom
+except ImportError:
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+
+
+#from nodes.controller import Controller
+#from udi_interface import logging, Custom, Interface
+class udiN_WeatherIndoor(udi_interface.Node):
+    id = 'INDOOR'
+    drivers = [
+        {'driver' : 'ST', 'value': 0,  'uom':4, 'name': 'Temperature'}, 
+        {'driver' : 'CO2LVL', 'value': 0,  'uom':54, 'name': 'CO2'}, 
+        {'driver' : 'CLIHUM', 'value': 0,  'uom':51, 'name': 'Humidity'}, 
+        {'driver' : 'GV3', 'value': 0,  'uom':4, 'name': 'Min Temperature'}, 
+        {'driver' : 'GV4', 'value': 0,  'uom':4, 'name': 'Max Temperature'}, 
+        {'driver' : 'GV5', 'value': 99,  'uom':25, 'name': 'Temperature Trend'}, 
+        {'driver' : 'GV7', 'value': 99,  'uom':25, 'name': 'Battery'}, 
+        {'driver' : 'GV8', 'value': 99,  'uom':25, 'name': 'RF Status'},          
+        {'driver' : 'GV9', 'value': 0,  'uom':2, 'name': 'Connected'}, 
+        {'driver' : 'TIME', 'value': 0,  'uom':151, 'name': 'Time of last data'}, 
+    ]
+
+    def __init__(self, polyglot, primary, address, name, NetatmoWeather, home, module):
+        super().__init__(polyglot, primary, address, name)
+        self.poly = polyglot
+        self.weather= NetatmoWeather
+        self.module = {'module_id':module, 'type':'INDOOR', 'home_id':home }
+        self.primary = primary
+        self.address = address
+        self.name = name        
+        self.n_queue = []
+
+        self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
+
+        self.poly.addNode(self)
+        self.wait_for_node_done(self.address)
+        self.node = self.poly.getNode(address)
+        logging.info('Start {} Indoor Node'.format(self.name))  
+        self.updateISYdrivers()
+        self.nodeDefineDone = True
+
+    def node_queue(self, data):
+        if data and 'address' in data:
+            self.n_queue.append(data['address'])
+
+    def wait_for_node_done(self, address=None, timeout=15):
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            if address is None:
+                if len(self.n_queue) > 0:
+                    return self.n_queue.pop(0)
+            elif address in self.n_queue:
+                self.n_queue.remove(address)
+                return True
+            time.sleep(0.1)
+        if address:
+            logging.warning('Timeout waiting for node {} to be added'.format(address))
+        return False
+
+    def getValidName(self, name):
+        name = bytes(name, 'utf-8').decode('utf-8','ignore')
+        return re.sub(r"[^A-Za-z0-9_ ]", "", name)
+
+    # remove all illegal characters from node address
+    def getValidAddress(self, name):
+        name = bytes(name, 'utf-8').decode('utf-8','ignore')
+        tmp = re.sub(r"[^A-Za-z0-9_]", "", name.lower())
+        logging.debug('getValidAddress {}'.format(tmp))
+        return tmp[:14]
+    
+    def trend2ISY (self, trend):
+        if trend is None:
+            return 99
+        if trend == 'stable':
+            return(0)
+        elif trend == 'up':
+            return(1)
+        elif trend =='down':
+            return(2)
+        else:
+            logging.error('unsupported temperature trend: {}'.format(trend))
+            return(99)    
+        
+    def rfstate2ISY(self, rf_state):
+        if rf_state is None:
+            return 99
+        if rf_state.lower() == 'full':
+            rf = 0
+        elif rf_state.lower() == 'medium':
+            rf = 1
+        elif rf_state.lower() == 'low':
+            rf = 2
+        else:
+            rf= 99
+            logging.error('Unsupported RF state {}'.format(rf_state))
+        return(rf)
+    
+
+    def battery2ISY(self, batlvl):
+        if batlvl is None:
+            return 99
+        if batlvl == 'max':
+            state = 0
+        elif batlvl == 'full':
+            state = 1
+        elif batlvl == 'high':
+            state = 2
+        elif batlvl == 'medium':
+            state = 3
+        elif batlvl == 'low':
+            state = 4
+        elif batlvl == 'very low':
+            state = 5
+        else:
+            state = 99
+        return(state)
+    def convert_temp_unit(self, tempStr):
+        if tempStr.capitalize()[:1] == 'F':
+            return(1)
+        elif tempStr.capitalize()[:1] == 'C':
+            return(0)
+        
+
+    def start(self):
+        logging.debug('Executing NetatmoWeatherIndoor start')
+        self.updateISYdrivers()        
+
+
+   
+        
+    def updateISYdrivers(self):
+        logging.debug('updateISYdrivers')
+        data = self.weather.get_module_data(self.module)
+        logging.debug('Indoor module data: {}'.format(data))
+        if self.node is not None:
+            if self.weather.get_online(self.module):
+                self.node.setDriver('GV9', 1)
+                temp = self.weather.get_temperature_C(self.module)
+                min_temp = self.weather.get_min_temperature_C(self.module)
+                max_temp = self.weather.get_max_temperature_C(self.module)
+                if self.convert_temp_unit(self.weather.temp_unit) == 0:
+                    if temp is not None:
+                        self.node.setDriver('ST', round(temp, 1), True, False, 4)
+                    if min_temp is not None:
+                        self.node.setDriver('GV3', round(min_temp, 1), True, False, 4)
+                    if max_temp is not None:
+                        self.node.setDriver('GV4', round(max_temp, 1), True, False, 4)
+                else:
+                    if temp is not None:
+                        self.node.setDriver('ST', round(temp * 9 / 5 + 32, 1), True, False, 17)
+                    if min_temp is not None:
+                        self.node.setDriver('GV3', round(min_temp * 9 / 5 + 32, 1), True, False, 17)
+                    if max_temp is not None:
+                        self.node.setDriver('GV4', round(max_temp * 9 / 5 + 32, 1), True, False, 17)
+                co2 = self.weather.get_co2(self.module)
+                if co2 is not None:
+                    self.node.setDriver('CO2LVL', co2, True, False, 54)
+                hum = self.weather.get_humidity(self.module)
+                if hum is not None:
+                    self.node.setDriver('CLIHUM', hum, True, False, 51)
+ 
+                temp_trend = self.weather.get_temp_trend(self.module)
+                self.node.setDriver('GV5', self.trend2ISY(temp_trend))
+
+                time_stamp = self.weather.get_time_stamp(self.module)
+                if time_stamp is not None:
+                    try:
+                        ts_val = int(time_stamp)
+                        if ts_val > 0:
+                            self.node.setDriver('TIME', ts_val, True, False, 151)
+                    except (ValueError, TypeError):
+                        pass
+
+                bat_state, bat_lvl  = self.weather.get_battery_info(self.module)    
+                self.node.setDriver('GV7', self.battery2ISY(bat_state), True, False, 25 )           
+                rf1, rf2 = self.weather.get_rf_info(self.module) 
+                self.node.setDriver('GV8', self.rfstate2ISY(rf1), True, False, 25  )
+                #self.node.setDriver('ERR', 0)                     
+
+            else:
+                self.node.setDriver('ST', 99, True, False, 25 )
+                self.node.setDriver('GV3', 99, True, False, 25 )
+                self.node.setDriver('GV4', 99, True, False, 25 )
+                self.node.setDriver('CO2LVL', 99, True, False, 25 )
+                self.node.setDriver('CLIHUM', 99, True, False, 25 )
+                self.node.setDriver('GV5', 99, True, False, 25 )
+                self.node.setDriver('GV7', 99, True, False, 25 )
+                self.node.setDriver('GV8', 99, True, False, 25 )
+                self.node.setDriver('GV9', 0) 
+                #self.node.setDriver('ERR', 1)                     
+
+
+
+    def update(self, command = None):
+        self.weather.update_weather_info_cloud(self.module['home_id'])
+        self.weather.update_weather_info_instant(self.module['home_id'])
+        self.updateISYdrivers()
+
+
+    commands = {        
+                'UPDATE': update,
+                'QUERY' : update, 
+                }

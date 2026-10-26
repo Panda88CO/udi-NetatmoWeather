@@ -2,7 +2,7 @@
     "name": "Netatmo-WS",
     "docs": "https://github.com/danielcaldentey/udi-netatmo",
     "type": "python3",
-    "executable": "mainNetatmo.py",
+    "executable": "udiNetatmoWeather.py",
     "install": "install.sh",
     "install_cloud": "",
     "description": "Netatmo Weather Station Status",
