@@ -62,7 +62,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         {'driver' : 'TIME', 'value': 0,  'uom':151, 'name': 'Time of last data'},
     ]
 
-    def __init__(self, polyglot, primary, address, name, NetatmoWeather, module_info):
+    def __init__(self, polyglot, primary, address, name, NetatmoWeather, module_info, controller=None):
         super().__init__(polyglot, primary, address, name)
         self.MAIN_modules = ['NAMain']
         self.OUTDOOR_modules = ['NAModule1']
@@ -70,6 +70,7 @@ class udiNetatmoWeatherMain(udi_interface.Node):
         self.RAIN_modules = ['NAModule3']
         self.INDOOR_modules = ['NAModule4']
         self.poly = polyglot
+        self.controller = controller or self.poly.getNode('controller')
         self.n_queue = []
         self.poly.subscribe(self.poly.ADDNODEDONE, self.node_queue)
         self.module = {'module_id':module_info['main_module'], 'type':'MAIN', 'home_id':module_info['home'] }
@@ -201,21 +202,26 @@ class udiNetatmoWeatherMain(udi_interface.Node):
                 if not module:
                     continue
                 if 'name' in module:
-                    name = self.getValidName(module['name'])
+                    api_name = self.getValidName(module['name'])
                 else:
-                    name = self.getValidName(module['id'])
+                    api_name = self.getValidName(module['id'])
                 address = self.getValidAddress(module['id'])
+
+                if self.controller and hasattr(self.controller, 'resolve_node_name'):
+                    name = self.controller.resolve_node_name(address, api_name)
+                else:
+                    name = api_name
 
                 logging.debug(' types: {} {}'.format(module.get('type'), self.INDOOR_modules))
 
                 if module.get('type') in self.INDOOR_modules:
-                    udiN_WeatherIndoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
+                    udiN_WeatherIndoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module, controller=self.controller)
                 elif module.get('type') in self.OUTDOOR_modules:
-                    udiN_WeatherOutdoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
+                    udiN_WeatherOutdoor(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module, controller=self.controller)
                 elif module.get('type') in self.WIND_modules:
-                    udiN_WeatherWind(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
+                    udiN_WeatherWind(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module, controller=self.controller)
                 elif module.get('type') in self.RAIN_modules:
-                    udiN_WeatherRain(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module)
+                    udiN_WeatherRain(self.poly, self.primary, address, name, self.weather, self.module['home_id'], s_module, controller=self.controller)
                 else:
                     logging.error('Unknown module type encountered: {}'.format(module.get('type')))
                     continue

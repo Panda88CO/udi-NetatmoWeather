@@ -9,8 +9,8 @@
     "notice": "",
     "shortPoll": "600",
     "longPoll": "1200",
-    "version": "1.0.3",
-    "profile_version": "1.0.3",
+    "version": "1.0.4",
+    "profile_version": "1.0.4",
     "credits": [
     	{
     		"title": "Netatmo Weather Station: A node server to view Netatmo Weather Station",

@@ -38,9 +38,10 @@ class udiN_WeatherIndoor(udi_interface.Node):
         {'driver' : 'TIME', 'value': 0,  'uom':151, 'name': 'Time of last data'}, 
     ]
 
-    def __init__(self, polyglot, primary, address, name, NetatmoWeather, home, module):
+    def __init__(self, polyglot, primary, address, name, NetatmoWeather, home, module, controller=None):
         super().__init__(polyglot, primary, address, name)
         self.poly = polyglot
+        self.controller = controller
         self.weather= NetatmoWeather
         self.module = {'module_id':module, 'type':'INDOOR', 'home_id':home }
         self.primary = primary

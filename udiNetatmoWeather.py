@@ -25,7 +25,7 @@ from NetatmoWeather import NetatmoWeather
 from  udiNetatmoWeatherMain import udiNetatmoWeatherMain
 #from nodes.controller import Controller
 #from udi_interface import logging, Custom, Interface
-version = '1.0.3'
+version = '1.0.4'
 
 class NetatmoController(udi_interface.Node):
     id = 'CONTROLLER'
@@ -44,6 +44,8 @@ class NetatmoController(udi_interface.Node):
         self.accessToken = None
         self.nodeDefineDone = False
         self.configDone = False
+        self.customDataDone = False
+        self.customData = Custom(self.poly, 'customdata')
         self.name = name
         self.primary = primary
         self.address = address
@@ -59,7 +61,7 @@ class NetatmoController(udi_interface.Node):
         self.poly.subscribe(self.poly.STOP, self.stopHandler)
         self.poly.subscribe(self.poly.START, self.start, address)
         self.poly.subscribe(self.poly.CUSTOMPARAMS, self.myNetatmo.customParamsHandler)
-        #self.poly.subscribe(self.poly.CUSTOMDATA, self.myNetatmo.customDataHandler)
+        self.poly.subscribe(self.poly.CUSTOMDATA, self.customDataHandler)
         self.poly.subscribe(self.poly.CUSTOMNS, self.myNetatmo.customNsHandler)
         self.poly.subscribe(self.poly.OAUTH, self.myNetatmo.oauthHandler)
         self.poly.subscribe(self.poly.CONFIGDONE, self.configDoneHandler)
@@ -105,6 +107,109 @@ class NetatmoController(udi_interface.Node):
         return tmp[:14]
     
 
+    def customDataHandler(self, data):
+        logging.debug('customDataHandler called: {}'.format(data))
+        if data:
+            self.customData.load(data)
+        self.customDataDone = True
+
+    def resolve_node_name(self, address, api_name):
+        """
+        Determines the appropriate node name based on:
+        1. original_name from API
+        2. new_name (if renamed in PG3)
+        3. current API name
+        Rules:
+        - If API presents the same name as original, use stored name (preserving PG3 rename).
+        - If API name is different from original, use the new API name and update stored info.
+        """
+        db_name = self.poly.getNodeNameFromDb(address)
+        stored = self.customData[address] if address in self.customData else None
+
+        if isinstance(stored, dict) and 'original_name' in stored:
+            original_name = stored.get('original_name')
+            stored_new_name = stored.get('new_name')
+
+            # Check if user changed the name in PG3
+            if db_name and db_name != stored_new_name and db_name != original_name:
+                logging.info('Node {} renamed in PG3: from "{}" to "{}"'.format(address, stored_new_name, db_name))
+                stored_new_name = db_name
+
+            if api_name != original_name:
+                # Netatmo API name changed!
+                logging.info('Node {} API name changed: from "{}" to "{}". Using API name.'.format(address, original_name, api_name))
+                node_name = api_name
+                self.customData[address] = {
+                    'original_name': api_name,
+                    'new_name': api_name
+                }
+                if hasattr(self.customData, 'save'):
+                    self.customData.save()
+                if db_name and db_name != node_name:
+                    self.poly.renameNode(address, node_name)
+                return node_name
+            else:
+                # API presents the same name as original -> use the name stored
+                node_name = stored_new_name if stored_new_name else (db_name if db_name else api_name)
+                if stored.get('new_name') != node_name:
+                    self.customData[address] = {
+                        'original_name': original_name,
+                        'new_name': node_name
+                    }
+                    if hasattr(self.customData, 'save'):
+                        self.customData.save()
+                return node_name
+        else:
+            # First time this node is encountered
+            if db_name and db_name != api_name:
+                logging.info('Existing node {} in DB has name "{}", API name is "{}". Using DB name.'.format(address, db_name, api_name))
+                node_name = db_name
+                self.customData[address] = {
+                    'original_name': api_name,
+                    'new_name': db_name
+                }
+            else:
+                node_name = api_name
+                self.customData[address] = {
+                    'original_name': api_name,
+                    'new_name': api_name
+                }
+            if hasattr(self.customData, 'save'):
+                self.customData.save()
+            return node_name
+
+    def check_node_names(self):
+        try:
+            for home in self.homes_list:
+                home_name = self.home_ids[home]['name'] if home in self.home_ids else self.myNetatmo.get_home_name(home)
+                main_modules = self.myNetatmo.get_main_modules(home)
+                if not main_modules:
+                    continue
+                for m_module in main_modules:
+                    mod_name = main_modules[m_module].get('name', m_module)
+                    raw_api_name = (home_name + '_' + mod_name) if home_name else mod_name
+                    api_name = self.getValidName(raw_api_name)
+                    node_address = self.getValidAddress(m_module)
+                    resolved_name = self.resolve_node_name(node_address, api_name)
+                    node = self.poly.getNode(node_address)
+                    if node and node.name != resolved_name:
+                        node.name = resolved_name
+
+                    sub_modules = self.myNetatmo.get_sub_modules(home, m_module)
+                    if sub_modules:
+                        for s_module in sub_modules:
+                            mod = self.myNetatmo.get_module_info(home, s_module)
+                            if not mod:
+                                continue
+                            sub_api_name = self.getValidName(mod.get('name', mod.get('id', s_module)))
+                            sub_address = self.getValidAddress(mod.get('id', s_module))
+                            sub_resolved_name = self.resolve_node_name(sub_address, sub_api_name)
+                            sub_node = self.poly.getNode(sub_address)
+                            if sub_node and sub_node.name != sub_resolved_name:
+                                sub_node.name = sub_resolved_name
+        except Exception as e:
+            logging.error('check_node_names error: {}'.format(e))
+
     def convert_temp_unit(self, tempStr):
         if tempStr.capitalize()[:1] == 'F':
             return(1)
@@ -125,10 +230,10 @@ class NetatmoController(udi_interface.Node):
 
     def start(self):
         logging.info('Executing start')
-        while not (self.configDone and self.myNetatmo.customParamsDone() and self.myNetatmo.customNsDone()):
+        while not (self.configDone and self.myNetatmo.customParamsDone() and self.myNetatmo.customNsDone() and self.customDataDone):
             time.sleep(1)
-            logging.debug('Waiting for config to complete: configDone={}, customParams={}, customNs={}'.format(
-                self.configDone, self.myNetatmo.customParamsDone(), self.myNetatmo.customNsDone()))
+            logging.debug('Waiting for config to complete: configDone={}, customParams={}, customNs={}, customData={}'.format(
+                self.configDone, self.myNetatmo.customParamsDone(), self.myNetatmo.customNsDone(), self.customDataDone))
 
         while not self.myNetatmo.authendicated():
             logging.warning('Access token is not yet available. Please authenticate.')
@@ -170,16 +275,18 @@ class NetatmoController(udi_interface.Node):
             for m_module in main_modules:
                 logging.debug('{} Evaluating MAIN module {} - {}'.format(home_name, m_module, main_modules))
                 mod_name = main_modules[m_module]['name']
-                node_name = self.getValidName(home_name + '_' + mod_name)
+                raw_api_name = home_name + '_' + mod_name
+                api_name = self.getValidName(raw_api_name)
                 node_address = self.getValidAddress(m_module)
+                node_name = self.resolve_node_name(node_address, api_name)
                 tmp_module = {'home': home, 'main_module': m_module}
-                logging.debug('Module {} enabled = {}'.format(node_name, self.myNetatmo.main_module_enabled(node_name)))
-                if self.myNetatmo.main_module_enabled(node_name):
+                logging.debug('Module {} enabled = {}'.format(api_name, self.myNetatmo.main_module_enabled(api_name)))
+                if self.myNetatmo.main_module_enabled(api_name):
                     if home not in self.homes_list:
                         self.homes_list.append(home)
 
                     logging.info('Adding Main Station node: {} ({})'.format(node_name, node_address))
-                    main_node = udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.myNetatmo, tmp_module)
+                    main_node = udiNetatmoWeatherMain(self.poly, node_address, node_address, node_name, self.myNetatmo, tmp_module, controller=self)
                     self.wait_for_node_done(node_address)
                     primary_node_list.append(node_address)
 
@@ -205,6 +312,7 @@ class NetatmoController(udi_interface.Node):
         #self.myNetatmo.updateOauthConfig()
         self.nodes_in_db = self.poly.getNodesFromDb()
         logging.debug('Nodes in Nodeserver - before cleanup: {} - {}'.format(len(self.nodes_in_db),self.nodes_in_db))
+        self.customDataDone = True
         self.configDone = True
         
         #res = self.myNetatmo.get_home_info()
@@ -241,6 +349,7 @@ class NetatmoController(udi_interface.Node):
                         self.myNetatmo.update_weather_info_cloud(home)
                         self.myNetatmo.update_weather_info_instant(home)
 
+                    self.check_node_names()
 
                     #nodes = self.poly.getNodes()
                     for nde in nodes:
